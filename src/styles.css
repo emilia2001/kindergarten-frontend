@@ -1,0 +1,95 @@
+@import "~bootstrap/dist/css/bootstrap.css";
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+body {
+  background-color: #f9f6f1 !important;
+}
+
+app-admin {
+  display: block;
+  height: fit-content;
+  min-height: calc(100% - 112px);
+}
+
+@media only screen and (min-width: 1200px) {
+  .pt-lg-6 {
+    padding-top: 6rem !important;
+  }
+}
+.bg-dark {
+  background-color: #3b3d73 !important;
+}
+
+.bg-light {
+  background-color: #f9f6f1 !important;
+}
+
+.bg-lighter {
+  background-color: #fcfbf8 !important;
+}
+
+.text-light {
+  color: #fefdfd !important;
+}
+
+.text-dark {
+  color: #393d72 !important;
+}
+
+html {
+  background-color: #f9f6f1;
+}
+
+.footer {
+  position: static !important;
+}
+
+.btn-primary {
+  --bs-btn-color: #f19d38;
+  --bs-btn-bg: #f19d38;
+  --bs-btn-border-color: #f19d38;
+  --bs-btn-hover-color: #f19d38;
+  --bs-btn-hover-bg: #e6840b;
+  --bs-btn-hover-border-color: #e6840b;
+  --bs-btn-active-color: #e6840b;
+  --bs-btn-active-bg: #e6840b;
+  --bs-btn-active-border-color: #e6840b;
+  --bs-btn-disabled-color: #f5ba74;
+  --bs-btn-disabled-bg: #f5ba74;
+  --bs-btn-disabled-border-color: #f5ba74;
+}
+
+btn:focus, a:focus {
+  outline: none;
+}
+
+.form-control:focus, input:-internal-autofill-selected {
+  color: #393d72 !important;
+  background-color: #fff;
+  border-color: #c4c5d5;
+  outline: 0;
+  box-shadow: 0 0 0 0.1rem #c4c5d5;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+input:-webkit-autofill {
+  -webkit-text-fill-color: #393d72 !important !important;
+}
+
+/*# sourceMappingURL=styles.css.map */

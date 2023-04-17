@@ -1,1 +1,124 @@
-/* You can add global styles to this file, and also import other style files */
+@import "~bootstrap/dist/css/bootstrap.css" ;
+@import "./_variables.scss";
+
+* {
+  padding: 0;
+  margin: 0;
+  border: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+}
+
+body {
+  background-color: $light !important;
+}
+
+app-admin {
+  display: block;
+  height: fit-content;
+  min-height: calc(100% - 112px);
+}
+
+$spacer: 1rem;
+
+@media only screen and (min-width: 1200px) {
+  .pt-lg-6 {
+    padding-top: $spacer * 6 !important;
+  }
+}
+
+.bg-dark {
+  background-color: $purple !important;
+}
+
+.bg-light {
+  background-color: $light !important;
+}
+
+.bg-lighter {
+  background-color: $light-medium !important;
+}
+
+.text-light {
+  color: $text-light;
+}
+
+.text-dark {
+  color: $text-dark;
+}
+
+html {
+  background-color: $light;
+}
+
+.footer {
+  position: static !important;
+}
+
+//.btn-primary {
+//  background-color: $purple;
+//  &:hover{
+//    background-color: $purple-dark;
+//  }
+//}
+
+.btn-primary {
+  --bs-btn-color: #f19d38;
+  --bs-btn-bg: #f19d38;
+  --bs-btn-border-color: #f19d38;
+  --bs-btn-hover-color: #f19d38;
+  --bs-btn-hover-bg: #e6840b;
+  --bs-btn-hover-border-color: #e6840b;
+  //--bs-btn-focus-shadow-rgb: 49, 132, 253;
+  --bs-btn-active-color: #e6840b;
+  --bs-btn-active-bg: #e6840b;
+  --bs-btn-active-border-color: #e6840b;
+  //--bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+  --bs-btn-disabled-color: #f5ba74;
+  --bs-btn-disabled-bg: #f5ba74;
+  --bs-btn-disabled-border-color: #f5ba74;
+}
+
+//.btn-secondary {
+//  --bs-btn-color: #fff;
+//  --bs-btn-bg: #6c757d;
+//  --bs-btn-border-color: #6c757d;
+//  --bs-btn-hover-color: #fff;
+//  --bs-btn-hover-bg: #5c636a;
+//  --bs-btn-hover-border-color: #565e64;
+//  --bs-btn-focus-shadow-rgb: 130, 138, 145;
+//  --bs-btn-active-color: #fff;
+//  --bs-btn-active-bg: #565e64;
+//  --bs-btn-active-border-color: #51585e;
+//  --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+//  --bs-btn-disabled-color: #fff;
+//  --bs-btn-disabled-bg: #6c757d;
+//  --bs-btn-disabled-border-color: #6c757d;
+//}
+
+btn:focus, a:focus
+{
+  outline: none;
+}
+.form-control:focus, input:-internal-autofill-selected {
+  color: $text-dark;
+  background-color: #fff;
+  border-color: $purple-light;
+  outline: 0;
+  box-shadow: 0 0 0 0.1rem $purple-light;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active{
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+input:-webkit-autofill{
+  -webkit-text-fill-color: $text-dark !important;
+}

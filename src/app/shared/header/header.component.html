@@ -1,0 +1,18 @@
+<header>
+  <nav class="navbar navbar-expand-md navbar-dark bg-dark px-4 py-3">
+    <div><a href="admin" class="navbar-brand fw-semibold">
+      Dumbrava Minunata</a></div>
+
+    <ul class="navbar-nav">
+      <li><a *ngIf="accountService.getIsAdminLoggedIn()" routerLink="/admin" class="nav-link" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:
+true}">Acasa</a></li>
+      <li><a *ngIf="accountService.getIsAdminLoggedIn()" routerLink="/admin/children" class="nav-link" routerLinkActive="active-link" [routerLinkActiveOptions]="{exact:
+true}">Copii</a></li>
+    </ul>
+
+    <ul class="navbar-nav navbar-collapse justify-content-end">
+      <li><a *ngIf="!accountService.getIsAdminLoggedIn()" routerLink="/admin/login" class="nav-link">Logare</a></li>
+      <li><a *ngIf="accountService.getIsAdminLoggedIn()" routerLink="/admin" (click)="handleLogout()" class="nav-link">Delogare</a></li>
+    </ul>
+  </nav>
+</header>
