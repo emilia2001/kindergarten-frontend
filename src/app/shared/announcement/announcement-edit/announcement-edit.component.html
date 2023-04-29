@@ -1,0 +1,57 @@
+<div class="bg-light container mb-5 mt-5">
+  <div class="row h-100 container">
+    <div class="col-12">
+      <div class="card shadow-lg " style="border-radius: 1rem;">
+
+        <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        <div class="card-body px-3 px-sm-4 p-4 text-dark" *ngIf="!isLoading">
+
+          <h3 class="mb-4 text-dark">Editare anunt</h3>
+
+          <form class="text-start row" [formGroup]="announcementForm" (ngSubmit)="handleSubmitAnnouncement()">
+            <div
+              class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline col-12 col-md-3">
+<!--              <img class="card-img-top" *ngIf="!id" [src]="imageUrl" alt="...">-->
+              <img class="card-img-top" *ngIf="!id" [src]="imageUrl" alt="...">
+<!--              <img class="card-img-top" *ngIf="id" [src]="'data:image/jpeg;base64,' + announcement.picture" alt="...">-->
+              <label class="form-label input-group-text" for="profilePicture">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-plus-circle" viewBox="0 0 16 16">
+                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                </svg>
+              </label>
+              <input type="file" id="profilePicture" class="form-control" formControlName="picture"
+                     (change)="onImageSelected($event)" accept="image/*">
+            </div>
+            <div class="col-12 col-md-9">
+              <div class="form-outline mb-3">
+                <label class="form-label ms-2" for="title">Titlu</label>
+                <input type="text" id="title" formControlName="title" class="form-control"
+                       [(ngModel)]="announcement.title"/>
+              </div>
+
+              <div class="form-outline mb-3">
+                <label class="form-label ms-2" for="description">Descriere</label>
+                <textarea class="form-control" id="description" formControlName="description" rows="3"
+                          [(ngModel)]="announcement.description"></textarea>
+              </div>
+
+              <div class="text-danger fw-semibold" *ngIf='errors && !isLoading'>{{errors}}</div>
+
+              <div class="d-flex justify-content-center strong mt-4">
+                <button type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light">Salvare
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -122,3 +122,215 @@ input:-webkit-autofill:active{
 input:-webkit-autofill{
   -webkit-text-fill-color: $text-dark !important;
 }
+
+.itemsContainer {
+  .stretched-link::after {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: auto;
+    content: "";
+    background-color: rgba(0, 0, 0, 0);
+  }
+
+  .media {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
+    align-items: flex-start;
+  }
+
+  .media-body {
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+  }
+
+  body {
+    //font-size: 16px;
+    //line-height: 1.8;
+    //font-weight: normal;
+    //background: #f8f9fd;
+    //color: lighten($black, 50%);
+  }
+
+  a {
+    transition: .3s all ease;
+
+    &:hover, &:focus {
+      color: $purple-dark;
+    }
+  }
+
+  .ftco-section {
+    padding: 7em 0;
+  }
+
+  .ftco-no-pt {
+    padding-top: 0;
+  }
+
+  .ftco-no-pb {
+    padding-bottom: 0;
+  }
+
+  .table {
+    width: 100%;
+    -webkit-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
+    -moz-box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
+    box-shadow: 0px 5px 12px -12px rgba(0, 0, 0, 0.29);
+
+    thead {
+      th {
+        border: none;
+        padding: 30px;
+        //font-size: 13px;
+        font-weight: 500;
+        color: $light-grey;
+      }
+
+      tr {
+        background: $white;
+        border-bottom: 4px solid darken($table-spacer-color, 3%);
+      }
+    }
+
+    tbody {
+      tr {
+        margin-bottom: 10px;
+        border-bottom: 4px solid $table-spacer-color;
+
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+
+      th, td {
+        border: none;
+        padding: 30px;
+        font-size: 14px;
+        background: $white;
+        vertical-align: middle;
+      }
+
+      td {
+        &.status {
+          span {
+            position: relative;
+            border-radius: 30px;
+            padding: 4px 10px 4px 25px;
+
+            &:after {
+              position: absolute;
+              top: 9px;
+              left: 10px;
+              width: 10px;
+              height: 10px;
+              content: '';
+              border-radius: 50%;
+            }
+          }
+
+          .paid {
+            background: lighten($success, 25%);
+            color: darken($success, 25%);
+
+            &:after {
+              background: darken($success, 20%);
+            }
+          }
+
+          .unpaid {
+            background: lighten($danger, 25%);
+            color: darken($danger, 25%);
+
+            &:after {
+              background: darken($danger, 15%);
+            }
+          }
+        }
+
+        .img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+        }
+
+        .email {
+          span {
+            display: block;
+
+            &:last-child {
+              font-size: 12px;
+              color: rgba(0, 0, 0, .3);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.checkbox-wrap {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.checkbox-wrap input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "\f0c8";
+  font-family: "FontAwesome";
+  position: absolute;
+  color:rgba(0,0,0,.1);
+  font-size: 20px;
+  margin-top: -14px;
+  //@include transition(.3s);
+}
+
+/* Show the checkmark when checked */
+.checkbox-wrap{
+  input:checked ~ .checkmark:after {
+    display: block;
+    content: "\f14a";
+    font-family: "FontAwesome";
+    color: rgba(0,0,0,.2);
+  }
+}
+
+/* Style the checkmark/indicator */
+
+.checkbox-primary{
+  color: darken($success, 25%);
+  input:checked ~ .checkmark:after {
+    color: darken($success, 25%);
+  }
+}

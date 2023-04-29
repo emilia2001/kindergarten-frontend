@@ -1,0 +1,32 @@
+textarea {
+  resize: none;
+}
+
+form {
+  text-align: left;
+}
+
+.card-img-top {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.input-group-text {
+  display: block;
+  background: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+svg{
+  position: absolute;
+  left: 0;
+  top: 0;
+}

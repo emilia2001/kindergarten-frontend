@@ -1,52 +1,62 @@
 import {Injectable} from '@angular/core';
-import {map, Observable, of, switchMap, throwError} from "rxjs";
-import {IChild} from "../../shared/models/IChild";
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 
-import {environment} from 'src/environments/environment';
-import {IAdminLoginData} from "../../shared/models/IAdminLoginData";
+import {map, Observable} from "rxjs";
 import {CookieService} from "ngx-cookie-service";
+import jwt_decode from "jwt-decode";
+
+import {Role} from "../../shared/models/IAdminLoginData";
+import {api, login} from "../../shared/utils/endpoints";
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
-  private _apiUrl = environment.apiEndpoint;
 
   constructor(private _httpClient: HttpClient,
-              private _cookieService: CookieService) {
-  }
+              private _cookieService: CookieService) {}
 
-  loginAdmin$(username: string, password: string): Observable<any> {
+  login$(username: string, password: string, role: Role): Observable<any> {
     return this._httpClient.post<any>(
-      `${this._apiUrl}/login`, {
-        username, password, role: "ADMIN"
+      `${api}${login}`, {
+        username, password, role
       })
-      // .pipe(
-      //   map(
-      //     data => {
-      //       console.log(data)
-      //       this._cookieService.set('Token', data.token)
-      //     }
-      //   )
-      // );
+      .pipe(
+        map(
+          data => {
+            this._cookieService.set('Token', data.token)
+            return data;
+          }
+        )
+      );
   }
 
-  getAuthenticatedToken() {
-      return this._cookieService.get("Token");
+  getAuthenticatedToken(): string {
+    return this._cookieService.get("Token");
   }
 
-  getIsAdminLoggedIn(): boolean {
+  getIsLoggedIn(): boolean {
     return this._cookieService.get("Token") !== '';
   }
 
-  logout() {
+  getIsAdminLoggedIn(): boolean {
+    const token = this._cookieService.get("Token");
+    // @ts-ignore
+    return token !== '' && jwt_decode(token)['role'] == Role.ADMIN;
+  }
+
+  getIsParentLoggedIn(): boolean {
+    const token = this._cookieService.get("Token");
+    // @ts-ignore
+    return token !== '' && jwt_decode(token)['role'] == Role.PARENT;
+
+  }
+
+  logout(): void {
+    this._cookieService.deleteAll();
     this._cookieService.delete('Token');
+    window.location.reload();
   }
 }
 
-export class AuthenticationBean {
-  constructor(public message: string) {
-  }
-}

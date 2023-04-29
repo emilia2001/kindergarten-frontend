@@ -1,0 +1,36 @@
+//@include "./node_modules/bootstrap/scss/mixins";
+@import "./src/_variables.scss";
+
+.bold {
+  font-weight: bold;
+}
+
+.current-day {
+  background: darken($table-spacer-color, 3%) !important;
+}
+
+td {
+  &.current-day {
+    border-bottom: 4px solid darken($table-spacer-color, 3%) !important;
+  }
+}
+.centered {
+  vertical-align: middle;
+}
+td, th {
+  padding: 20px 10px !important;
+}
+
+@media (max-width: 1400px) {
+
+  td, th {
+    padding: 10px 6px !important;
+  }
+
+  .itemsContainer .table tbody td .img {
+    //width: 40px;
+    //height: 40px;
+  }
+
+}
+

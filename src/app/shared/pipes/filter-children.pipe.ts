@@ -15,10 +15,9 @@ export class FilterChildrenPipe implements PipeTransform {
     }
     searchText = searchText.toLowerCase();
     return children.filter(child => {
-      // return true;
       return child.firstName.toLowerCase().includes(searchText) ||
-        child.lastName.toLowerCase().includes(searchText) ||
-        child.group.toString().includes(searchText);
+        child.lastName.toLowerCase().includes(searchText)
+        // child.group.toString().includes(searchText);
     });
   }
 }

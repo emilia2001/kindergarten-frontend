@@ -1,6 +1,10 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+
+import {Observable} from "rxjs";
+
 import {IChild} from "../../shared/models/IChild";
+import {all, api, children, get, update, add, teacher} from "../../shared/utils/endpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -9,42 +13,35 @@ export class ChildrenService {
 
   constructor(
     private _httpClient: HttpClient
-  ) { }
+  ) {}
 
-  getChildren() {
-    let basicAuthHeader = this.createAuthenticationHttpHeader();
-    // let headers = new HttpHeaders({
-    //   Authorization: basicAuthHeader
-    // })
-    return this._httpClient.get<IChild[]>("http://localhost:8080/admin/children",
-      // {headers: headers}
-    );
+  getAll(): Observable<IChild[]> {
+    return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
   }
 
   deleteChild(id?: number) {
     return this._httpClient.delete(`http://localhost:8080/admin/children/${id}`);
   }
 
-  retrieveChild(id: number) {
-    return this._httpClient.get<IChild>(`http://localhost:8080/admin/children/${id}`);
+  getOneById(id: string): Observable<IChild> {
+    return this._httpClient.get<IChild>(`${api}${children}${get}/${id}`);
   }
 
-  updateChild(id: number, child: IChild) {
-    return this._httpClient.put(
-      `http://localhost:8080/admin/children/${id}`
-      , child);
+  update(id: string, child: IChild): Observable<any> {
+    return this._httpClient.put(`${api}${children}${update}/${id}`, child);
   }
 
-  createChild(child: IChild) {
-    return this._httpClient.post(
-      `http://localhost:8080/admin/children`
-      , child);
+  add(child: IChild): Observable<any> {
+    // debugger;
+    // console.log(`${api}${children}${add}`)
+    // return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
+
+    return this._httpClient.post(`${api}${children}${add}`, child);
   }
 
-  createAuthenticationHttpHeader() {
-    let username = 'a';
-    let password = 'a';
-    let basicAuthHeaderString = 'Basic ' + window.btoa(`${username}:${password}`);
-    return basicAuthHeaderString;
+  addChild(child: IChild): Observable<any> {
+    // return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
+    return this._httpClient.post(`${api}${children}${add}`, child);
+
   }
 }

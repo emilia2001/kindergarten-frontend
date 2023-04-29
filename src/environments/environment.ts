@@ -4,7 +4,22 @@
 
 export const environment = {
   production: false,
-  apiEndpoint: 'http://localhost:8080'
+  endpoins: {
+    api: 'http://localhost:8080',
+    login: '/login',
+    register: '/register',
+    teacher: '/teacher',
+    group: '/group',
+    children: '/children',
+    attendance: '/attendance',
+    announcement: '/announcement',
+    payment: '/payment',
+    get: '/get',
+    add: '/add',
+    update: '/update',
+    delete: '/delete',
+    all: '/all',
+  }
 };
 
 /*

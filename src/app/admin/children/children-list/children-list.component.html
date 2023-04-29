@@ -1,0 +1,49 @@
+<section class="mt-4 container">
+  <div class="row justify-content-center">
+    <h1 class="heading-section">Lista copii inscrisi</h1>
+  </div>
+  <div class="row justify-content-end mb-4 ">
+    <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
+      <a class="btn btn-primary text-light text-center" routerLink="/admin/children/add" (click)="addChild()">
+        Adaugare copil
+      </a>
+    </div>
+  </div>
+  <form [formGroup]="searchForm">
+    <div class="form-outline mb-3">
+      <input type="text" formControlName="search" placeholder="Cauta..." class="form-control"/>
+    </div>
+  </form>
+  <div class="itemsContainer text-dark row">
+    <div class="col-md-12">
+      <div class="table-wrap">
+        <table class=" table table-responsive-xl">
+          <thead>
+          <tr>
+            <th></th>
+            <th>CNP</th>
+            <th>Nume</th>
+            <th>Varsta</th>
+            <th>Grupa</th>
+            <th>Persoana contact</th>
+            <th>Telefon contact</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let child of childrenList | filterChildren:searchForm.get('search')!.value!">
+            <td><img class="img" [src]="'data:image/jpeg;base64,' + child.picture" alt="Child Picture"></td>
+            <td>{{child.cnp}}</td>
+            <td>{{child.firstName + ' ' +  child.lastName}}</td>
+            <td>{{child.dateOfBirth | date | uppercase}}</td>
+            <td>{{child.group.name}}</td>
+            <td>{{child.parent!.firstName + ' ' + child.parent!.lastName}}</td>
+            <td>{{child.parent!.phoneNumber}}</td>
+            <td><a class="text-dark" [routerLink]="['/admin/children', child.cnp]">Editare</a></td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>

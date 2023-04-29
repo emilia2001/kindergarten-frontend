@@ -3,27 +3,34 @@ import {BrowserModule} from '@angular/platform-browser';
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {FooterComponent} from './shared/footer/footer.component';
 import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BasicAuthInterceptor} from "./interceptors/basic-auth.interceptor";
-import {UserComponent} from './user/user.component';
-import {HeaderComponent} from './shared/header/header.component';
+import {ParentComponent} from './parent/parent.component';
 import {AdminModule} from "./admin/admin.module";
-import {ChildrenModule} from "./children/children.module";
+import {SharedModule} from "./shared/shared.module";
+import { SubmittedRequestsListComponent } from './parent/request/submitted-requests-list/submitted-requests-list.component';
+import { NewRequestComponent } from './parent/request/new-request/new-request.component';
+import { ParentPaymentListComponent } from './parent/payment/parent-payment-list/parent-payment-list.component';
+import { NewPaymentComponent } from './parent/payment/new-payment/new-payment.component';
+import {DatePipe} from "@angular/common";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
     AppComponent,
-    FooterComponent,
-    UserComponent,
-    HeaderComponent,
+    ParentComponent,
+    SubmittedRequestsListComponent,
+    NewRequestComponent,
+    ParentPaymentListComponent,
+    NewPaymentComponent,
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     HttpClientModule,
     AppRoutingModule,
     AdminModule,
-    ChildrenModule
+    SharedModule
   ],
   providers: [
     {

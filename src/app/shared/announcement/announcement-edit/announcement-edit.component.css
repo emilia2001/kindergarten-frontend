@@ -1,0 +1,34 @@
+textarea {
+  resize: none;
+}
+
+form {
+  text-align: left;
+}
+
+.card-img-top {
+  height: 100%;
+  width: 100%;
+  border-radius: 5%;
+}
+
+input[type=file] {
+  display: none;
+}
+
+.input-group-text {
+  display: block;
+  background: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+svg {
+  position: absolute;
+  left: -10px;
+  top: 0;
+}
+
+/*# sourceMappingURL=announcement-edit.component.css.map */

@@ -2,6 +2,7 @@ $purple: #3b3d73;
 $purple-secondary: #353768;
 $purple-dark: #2f315c;
 $purple-light: #c4c5d5;
+$purple-light-secondary: #76779d;
 
 $light: #f9f6f1;
 $light-medium: #fcfbf8;
@@ -17,3 +18,12 @@ $pink: #fc6091;
 //$text-dark: #18182e;
 $text-dark: #393d72 !important;
 $text-light: #fefdfd !important;
+
+$black: #000;
+$light-grey: lighten($black, 50%);
+$table-spacer-color: #f8f9fd;
+
+$success: #64e291;
+$warning: #f6d365;
+$black: #000;
+$danger: red;

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import {AccountService} from "../../services/account/account.service";
 import {Router} from "@angular/router";
+
+import {AccountService} from "../../services/account/account.service";
 
 @Component({
   selector: 'app-header',
@@ -15,7 +16,12 @@ export class HeaderComponent {
 
   handleLogout(){
     this.accountService.logout();
-    this.router.navigate(['/admin'])
-    window.location.reload();
+    this.isAdminPage() ? this.router.navigate(['/admin']) : this.router.navigate([''])
+    // this.router.navigate(['/admin'])
+    // window.location.reload();
+  }
+
+  isAdminPage() {
+    return this.router.url.startsWith('/admin');
   }
 }
