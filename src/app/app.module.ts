@@ -11,9 +11,10 @@ import {SharedModule} from "./shared/shared.module";
 import { SubmittedRequestsListComponent } from './parent/request/submitted-requests-list/submitted-requests-list.component';
 import { NewRequestComponent } from './parent/request/new-request/new-request.component';
 import { ParentPaymentListComponent } from './parent/payment/parent-payment-list/parent-payment-list.component';
-import { NewPaymentComponent } from './parent/payment/new-payment/new-payment.component';
-import {DatePipe} from "@angular/common";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { CancelPaymentComponent } from './parent/payment/cancel-payment/cancel-payment.component';
+import { SuccessPaymentComponent } from './parent/payment/success-payment/success-payment.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -22,16 +23,18 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     SubmittedRequestsListComponent,
     NewRequestComponent,
     ParentPaymentListComponent,
-    NewPaymentComponent,
+    CancelPaymentComponent,
+    SuccessPaymentComponent,
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    HttpClientModule,
-    AppRoutingModule,
-    AdminModule,
-    SharedModule
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        HttpClientModule,
+        AppRoutingModule,
+        AdminModule,
+        SharedModule,
+        FormsModule,
+    ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,

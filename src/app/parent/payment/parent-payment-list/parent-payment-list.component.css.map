@@ -1,1 +1,1 @@
-{"version":3,"sourceRoot":"","sources":[],"names":[],"mappings":"","file":"parent-payment-list.component.css"}
+{"version":3,"sourceRoot":"","sources":["parent-payment-list.component.scss"],"names":[],"mappings":"AAAA;EACE;EACA","file":"parent-payment-list.component.css"}

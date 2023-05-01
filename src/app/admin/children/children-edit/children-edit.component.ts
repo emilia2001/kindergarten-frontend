@@ -1,11 +1,15 @@
 import {Component} from '@angular/core';
+
+import {finalize, take} from "rxjs";
+import { GoogleAuth } from 'google-auth-library';
+// import { gapi } from 'gapi-client';
+
 import {IChild} from "../../../shared/models/IChild";
 import {ChildrenService} from "../../../services/children/children.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {IGroup} from "../../../shared/models/IGroup";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {GroupService} from "../../../services/group/group.service";
-import {finalize, take} from "rxjs";
 
 @Component({
   selector: 'app-children-edit',
@@ -35,7 +39,12 @@ export class ChildrenEditComponent {
     },
     picture: this.imageUrl
 
-  }
+  };
+
+  CLIENT_ID = 'your-client-id';
+  API_KEY = 'your-api-key';
+  DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
+  SCOPES = 'https://www.googleapis.com/auth/drive.file';
 
   constructor(
     private _groupService: GroupService,
@@ -78,6 +87,14 @@ export class ChildrenEditComponent {
         error: errors => this.errors = errors
       });
     }
+    // gapi.load('client:auth2', () => {
+    //   gapi.client.init({
+    //     apiKey: this.API_KEY,
+    //     clientId: this.CLIENT_ID,
+    //     discoveryDocs: this.DISCOVERY_DOCS,
+    //     scope: this.SCOPES,
+    //   });
+    // });
   }
 
   getGroupList() {

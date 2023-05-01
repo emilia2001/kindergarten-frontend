@@ -24,4 +24,8 @@ body.confirmation-modal-open {
   overflow: hidden;
 }
 
+.confirmation-modal-body {
+  border-radius: 10px;
+}
+
 /*# sourceMappingURL=confirmation-modal.component.css.map */

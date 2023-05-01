@@ -1,7 +1,11 @@
-<app-confirmation-modal id="paymentConfirmationModal">
-  <h1>A custom modal popup</h1>
-  <p>Home page text: <input type="text" [(ngModel)]="bodyText" /></p>
-  <button (click)="modalService.close();">Close</button>
+<app-confirmation-modal id="paymentConfirmationModal"
+                        title=">A custom modal popup"
+                        text="Home page text: "
+                        cancelText="Cancel"
+                        confirmText="Ok">
+<!--  <h1>A custom modal popup</h1>-->
+<!--  <p>Home page text: <input type="text" [(ngModel)]="bodyText" /></p>-->
+<!--  <button (click)="modalService.close();">Close</button>-->
 </app-confirmation-modal>
 
 

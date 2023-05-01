@@ -1,1 +1,108 @@
-<p>parent-payment-list works!</p>
+
+<div class="container">
+  <div class="row justify-content-center">
+    <h1 class="heading-section mt-4">Lista plati</h1>
+  </div>
+
+  <section class="container mb-4">
+    <div class="itemsContainer text-dark row">
+      <div class="col-md-12">
+        <div class="table-wrap">
+          <table class=" table table-responsive-xl">
+            <thead>
+            <tr>
+              <th></th>
+              <th>Plata pentru</th>
+              <th>Suma restanta</th>
+              <th>Suma actuala</th>
+              <th>Total suma</th>
+              <th>Luna</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let payment of paymentList | async " class="alert" role="alert">
+              <td><img class="img" [src]="'data:image/jpeg;base64,' + payment.child.picture" alt="Child Picture"></td>
+              <td class="">
+                {{payment.child.firstName + ' ' + payment.child.lastName}}
+              </td>
+              <td>{{payment.outstandingAmount}}</td>
+              <td>{{payment.currentAmount}}</td>
+              <td>{{payment.totalAmount}}</td>
+              <td>{{payment.month}}</td>
+              <td>
+
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID'">
+                  <button (click)="makePayment(payment.totalAmount)" class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'" >Plateste {{payment.totalAmount}}</button>
+                </div>
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'">
+<!--                  <button (click)="makePayment(payment.totalAmount)" class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'" >Plateste {{payment.totalAmount}}</button>-->
+                <span class="text-success">Platita</span>
+                </div>
+              </td>
+              <td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+
+<!--<form action='/charge' method='POST' id='checkout-form'>-->
+<!--  <input type='hidden' value='${amount}' name='amount' />-->
+<!--  <label>Price:<span text='${amount/100}' ></span></label>-->
+<!--  &lt;!&ndash; NOTE: data-key/data-amount/data-currency will be rendered by Thymeleaf &ndash;&gt;-->
+<!--  <script-->
+<!--    src='https://checkout.stripe.com/checkout.js'-->
+<!--    class='stripe-button'-->
+<!--    attr='data-key=${stripePublicKey},-->
+<!--         data-amount=${amount},-->
+<!--         data-currency=${currency}'-->
+<!--    data-name='Baeldung'-->
+<!--    data-description='Spring course checkout'-->
+<!--    data-image-->
+<!--      ='https://www.baeldung.com/wp-content/themes/baeldung/favicon/android-chrome-192x192.png'-->
+<!--    data-locale='auto'-->
+<!--    data-zip-code='false'>-->
+<!--  </script>-->
+<!--</form>-->
+
+
+<!--to be done-->
+<!--<form>-->
+<!--  <div>-->
+<!--    <label for="name">Name</label>-->
+<!--    <input type="text" id="name" name="name" required>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    <label for="email">Email</label>-->
+<!--    <input type="email" id="email" name="email" required>-->
+<!--  </div>-->
+<!--  <div>-->
+<!--    <label for="card-element">Credit or debit card</label>-->
+<!--    <div id="card-element">&lt;!&ndash; Stripe Elements Placeholder &ndash;&gt;</div>-->
+<!--  </div>-->
+<!--  <button type="submit" (click)="handleSubmit()">Pay</button>-->
+<!--</form>-->
+
+
+<!--<button class="btn btn-primary text-light" (click)="openModal(content)">Open</button>-->
+<!--<ng-template #content let-modal>-->
+<!--  <div class="modal-header">-->
+<!--    <h4 class="modal-title">Modal Title</h4>-->
+<!--    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">-->
+<!--      <span aria-hidden="true">&times;</span>-->
+<!--    </button>-->
+<!--  </div>-->
+<!--  <div class="modal-body">-->
+<!--    Modal Content-->
+<!--  </div>-->
+<!--  <div class="modal-footer">-->
+<!--    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel click')">Close</button>-->
+<!--    <button type="button" class="btn btn-primary" (click)="modal.close('Save click')">Save changes</button>-->
+<!--  </div>-->
+<!--</ng-template>-->

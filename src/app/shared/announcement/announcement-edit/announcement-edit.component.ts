@@ -21,7 +21,7 @@ export class AnnouncementEditComponent implements OnInit {
   constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
-    private _announcementService: AnnouncementService
+    private _announcementService: AnnouncementService,
   ) { }
 
   ngOnInit() {
@@ -60,6 +60,7 @@ export class AnnouncementEditComponent implements OnInit {
     console.log(this.announcement)
     if (this._route.snapshot.queryParamMap.get('entity')) this._announcementService.update(this.announcement).subscribe(data => console.log(data))
     else this._announcementService.add(this.announcement).subscribe(data => console.log(data));
+
   }
 
   onImageSelected($event: any) {

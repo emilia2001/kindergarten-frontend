@@ -6,6 +6,7 @@ export interface IPayment {
   outstandingAmount: number,
   currentAmount: number,
   totalAmount: number,
+  month: string,
   status: EPaymentStatus
 }
 
@@ -13,4 +14,3 @@ export enum EPaymentStatus {
   UNPAID = 'UNPAID',
   PAID = 'PAID'
 }
-

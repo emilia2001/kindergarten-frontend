@@ -13,6 +13,10 @@ export class ConfirmationModalComponent {
   @Input() id?: string;
   isOpen = false;
   private element: any;
+  @Input() title: string = '';
+  @Input() text: string = '';
+  @Input() cancelText: string = '';
+  @Input() confirmText: string = '';
 
   constructor(private modalService: ModalService, private el: ElementRef) {
     this.element = el.nativeElement;
@@ -43,7 +47,7 @@ export class ConfirmationModalComponent {
   }
 
   open() {
-    console.log("pula")
+    console.log("in open modal")
     this.element.style.display = 'block';
     document.body.classList.add('confirmation-modal-open');
     this.isOpen = true;
@@ -53,5 +57,13 @@ export class ConfirmationModalComponent {
     this.element.style.display = 'none';
     document.body.classList.remove('confirmation-modal-open');
     this.isOpen = false;
+  }
+
+  cancel() {
+    close();
+  }
+
+  confirm() {
+    close();
   }
 }
