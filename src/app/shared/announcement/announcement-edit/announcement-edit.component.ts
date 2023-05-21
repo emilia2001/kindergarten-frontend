@@ -1,8 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {IAnnouncement} from "../../models/IAnnouncement";
 import {ActivatedRoute} from "@angular/router";
+
+import {finalize, take} from "rxjs";
+
+import {IAnnouncement} from "../../models/IAnnouncement";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AnnouncementService} from "../../../services/announcement/announcement.service";
+import {FileUpload} from "../../models/FileUpload";
+import {FirebaseService} from "../../../services/firebase/firebase.service";
 
 @Component({
   selector: 'app-announcement-edit',
@@ -12,88 +17,91 @@ import {AnnouncementService} from "../../../services/announcement/announcement.s
 export class AnnouncementEditComponent implements OnInit {
   announcementForm!: FormGroup;
   isLoading!: boolean;
-  id!: string;
-  imageUrl: string = '';
-  selectedFile!: Uint8Array | null;
+  id!: number;
   announcement!: IAnnouncement;
   errors!: string;
+  selectedFiles?: FileList;
+  currentFileUpload?: FileUpload;
 
   constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _announcementService: AnnouncementService,
-  ) { }
+    private _firebaseService: FirebaseService
+  ) {
+  }
 
   ngOnInit() {
-    this.imageUrl = "./assets/images/default_picture_article.png";
-    const entity = this._route.snapshot.queryParamMap.get('entity');
-    if (entity) {
-      this.announcement = JSON.parse(decodeURIComponent(entity));
-    } else {
-      this.announcement = {
-        description: "", picture: "", title: ""
-      }
-    }
     this.announcementForm = this._formBuilder.group({
       title: ["", Validators.required],
       description: ["", Validators.required],
       picture: ["", Validators.required]
     });
-    console.log(this.imageUrl)
+    const idParam = this._route.snapshot.paramMap.get('id');
+    if (idParam) {
+      this.id = +idParam;
+      this.isLoading = true;
+      this._announcementService.getOneById(this.id)
+        .pipe(
+          take(1),
+          finalize(() => this.isLoading = false)
+        ).subscribe({
+          next: data => {
+            this.announcement = data;
+            this.errors = ''
+          },
+          error: errors => this.errors = errors
+        }
+      )
+    } else {
+      this.announcement = {
+        description: "",
+        title: "",
+        picturePath: './assets/images/default_picture_article.png'
+      };
+    }
   }
 
   handleSubmitAnnouncement() {
     const formValues = this.announcementForm.value;
-    let pictureString = '';
-    if (this.announcementForm.controls['picture'].dirty) {
-      for (let i = 0; i < this.selectedFile!.length; i++) {
-        pictureString += String.fromCharCode(this.selectedFile![i]);
-      }
-    } else pictureString = this.announcement.picture
+    let newPicture = this.announcement.picturePath;
 
     this.announcement = {
+      picturePath: newPicture,
       id: this.announcement.id,
       title: formValues.title,
-      description: formValues.description,
-      picture: btoa(pictureString)
+      description: formValues.description
     };
-    console.log(this.announcement)
-    if (this._route.snapshot.queryParamMap.get('entity')) this._announcementService.update(this.announcement).subscribe(data => console.log(data))
-    else this._announcementService.add(this.announcement).subscribe(data => console.log(data));
 
+    if (this.id) this._announcementService.update(this.announcement).subscribe(data => console.log(data))
+    else this._announcementService.add(this.announcement).subscribe(data => console.log(data));
   }
 
   onImageSelected($event: any) {
-    const file = $event.target!.files[0];
-    this.readImage(file);
+    this.selectedFiles = $event.target.files;
+    this.upload();
   }
 
-  readImage(file: File): void {
-    console.log(file)
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.imageUrl = reader.result as string;
-      this.selectedFile = this.convertDataURIToBinary(reader.result);
-      let pictureString = '';
-      for (let i = 0; i < this.selectedFile!.length; i++) {
-        pictureString += String.fromCharCode(this.selectedFile![i]);
+  upload(): void {
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
+      this.selectedFiles = undefined;
+
+      if (file) {
+        this.currentFileUpload = new FileUpload(file);
+
+        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'announcements').subscribe(
+          (downloadURL: string) => {
+            this.announcement.picturePath = downloadURL;
+            console.log('File is accessible:', downloadURL);
+            // Perform further operations with the file
+          },
+          (error) => {
+            console.error('Error occurred during file upload:', error);
+          }
+        );
       }
-      this.announcement.picture = btoa(pictureString)
-    };
-  }
-
-  convertDataURIToBinary(dataURI: any) {
-    var base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
-    var base64 = dataURI.substring(base64Index);
-    var raw = window.atob(base64);
-    var rawLength = raw.length;
-    var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-    for (let i = 0; i < rawLength; i++) {
-      array[i] = raw.charCodeAt(i);
     }
-
-    return array;
   }
+
 }

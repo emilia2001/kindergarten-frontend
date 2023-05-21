@@ -1,0 +1,25 @@
+<div class="bg-light container mb-5 mt-5 pb-5">
+  <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="row h-100" *ngIf="!isLoading">
+    <div class="col-12 col-lg-12 ">
+      <div class="card shadow-lg " style="border-radius: 1rem;">
+        <div class="card-body px-3 px-sm-4 p-4 text-dark row">
+
+          <h1 class="mb-4 text-dark">Editare cerere</h1>
+          <div class=" text-start fw-semibold d-sm-flex">
+            <p>Comentarii adaugate:</p>
+            <p class=" ms-4 text-danger" *ngIf="comments">{{ comments }}</p>
+            <p class="ms-4 text-dark" *ngIf="!comments">Niciun comentariu</p>
+          </div>
+          <hr>
+          <app-registration-request *ngIf="requestType==='registration'"></app-registration-request>
+          <app-extension-request *ngIf="requestType==='extension'"></app-extension-request>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

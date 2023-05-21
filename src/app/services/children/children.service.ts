@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 import {IChild} from "../../shared/models/IChild";
-import {all, api, children, get, update, add, teacher} from "../../shared/utils/endpoints";
+import {all, api, children, get, update, add} from "../../shared/utils/endpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,7 @@ export class ChildrenService {
   }
 
   update(id: string, child: IChild): Observable<any> {
-    return this._httpClient.put(`${api}${children}${update}/${id}`, child);
+    return this._httpClient.put(`${api}${children}${update}`, child);
   }
 
   add(child: IChild): Observable<any> {

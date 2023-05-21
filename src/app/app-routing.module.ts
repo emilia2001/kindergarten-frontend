@@ -18,6 +18,10 @@ import {AnnouncementListComponent} from "./shared/announcement/announcement-list
 import {ClassBookComponent} from "./admin/classbook/class-book.component";
 import {RequestListComponent} from "./admin/request/request-list/request-list.component";
 import {AnnouncementEditComponent} from "./shared/announcement/announcement-edit/announcement-edit.component";
+import {NewRequestComponent} from "./parent/request/new-request/new-request.component";
+import {EditRequestComponent} from "./parent/request/edit-request/edit-request.component";
+import {RequestEditComponent} from "./admin/request/request-edit/request-edit.component";
+import {RegisterComponent} from "./parent/register/register.component";
 
 const routes: Routes = [
   {
@@ -56,6 +60,11 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
+        path: 'requests/:id',
+        component: RequestEditComponent,
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'teachers',
         component: TeacherListComponent,
         canActivate: [AuthGuard],
@@ -80,12 +89,12 @@ const routes: Routes = [
         component: AnnouncementListComponent,
       },
       {
-        path: 'announcements/:id',
+        path: 'announcements/add',
         component: AnnouncementEditComponent,
         canActivate: [AuthGuard],
       },
       {
-        path: 'announcements/add',
+        path: 'announcements/:id',
         component: AnnouncementEditComponent,
         canActivate: [AuthGuard],
       },
@@ -105,6 +114,16 @@ const routes: Routes = [
         canActivate: [AuthGuard],
       },
       {
+        path: 'requests/add',
+        component: NewRequestComponent,
+        canActivate: [AuthGuard],
+      },
+      {
+        path: 'requests/:id',
+        component: EditRequestComponent,
+        canActivate: [AuthGuard],
+      },
+      {
         path: 'payments',
         component: ParentPaymentListComponent,
         canActivate: [AuthGuard],
@@ -112,6 +131,10 @@ const routes: Routes = [
       {
         path: 'announcements',
         component: AnnouncementListComponent,
+      },
+      {
+        path: 'register',
+        component: RegisterComponent,
       },
     ]
   },

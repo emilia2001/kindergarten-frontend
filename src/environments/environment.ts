@@ -14,11 +14,14 @@ export const environment = {
     attendance: '/attendance',
     announcement: '/announcement',
     payment: '/payment',
+    registrationRequest: '/registration-request',
+    extensionRequest: '/extension-request',
     get: '/get',
     add: '/add',
     update: '/update',
     delete: '/delete',
     all: '/all',
+    spots: '/spots'
   },
   web: {
     client_id: "820913190664-fbfch7ja0c8v88pqv0utku5p7gm3qabn.apps.googleusercontent.com",
@@ -31,6 +34,14 @@ export const environment = {
       "http://localhost:4020",
       "http://localhost:8080"
     ]
+  },
+  firebaseConfig: {
+    apiKey: "AIzaSyCIsH-U5K-0L8ucxuBsPXIviOeKxjQK5w0",
+    authDomain: "kindergarten-management-3ca8d.firebaseapp.com",
+    projectId: "kindergarten-management-3ca8d",
+    storageBucket: "kindergarten-management-3ca8d.appspot.com",
+    messagingSenderId: "709837940411",
+    appId: "1:709837940411:web:c9a45686acfd1c9d972b9e"
   }
 };
 

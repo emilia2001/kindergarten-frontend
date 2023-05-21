@@ -17,8 +17,6 @@ export class HeaderComponent {
   handleLogout(){
     this.accountService.logout();
     this.isAdminPage() ? this.router.navigate(['/admin']) : this.router.navigate([''])
-    // this.router.navigate(['/admin'])
-    // window.location.reload();
   }
 
   isAdminPage() {

@@ -1,3 +1,168 @@
+.mainContainer {
+  max-width: 850px;
+  margin: 0 auto;
+  background: rgba(249, 246, 241, 0.2);
+}
+@media only screen and (min-width: 1400px) {
+  .mainContainer {
+    max-width: 60%;
+  }
+}
 
+ngb-carousel img {
+  width: 100%;
+  outline: none;
+}
+@media only screen and (min-width: 768px) {
+  ngb-carousel img {
+    height: 480px;
+  }
+}
+@media only screen and (min-width: 1400px) {
+  ngb-carousel img {
+    height: 600px;
+  }
+}
+
+ngb-carousel {
+  width: inherit;
+  height: inherit;
+}
+
+.carousel-inner {
+  overflow: visible;
+}
+
+.carousel-item {
+  display: flex !important;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1.2s ease-in-out, visibility 1.2s;
+  z-index: -1;
+}
+
+.carousel-item.active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 10;
+}
+
+.carousel-control-prev {
+  z-index: 20;
+}
+
+.carousel-control-next {
+  z-index: 20;
+}
+
+.carousel-indicators {
+  z-index: 20;
+}
+
+.team-boxed p {
+  color: #7d8285;
+}
+
+.team-boxed h2 {
+  font-weight: bold;
+  margin-bottom: 40px;
+  padding-top: 40px;
+  color: inherit;
+}
+
+@media (max-width: 767px) {
+  .team-boxed h2 {
+    margin-bottom: 25px;
+    padding-top: 25px;
+    font-size: 24px;
+  }
+}
+.team-boxed .intro {
+  font-size: 16px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.team-boxed .intro p {
+  margin-bottom: 0;
+}
+
+.team-boxed .people {
+  padding: 50px 0;
+}
+
+.team-boxed .item {
+  text-align: center;
+}
+
+.team-boxed .item .box {
+  border-radius: 5px;
+  text-align: center;
+  padding: 30px;
+  background-color: #fff;
+  margin-bottom: 30px;
+  height: 500px;
+  overflow: hidden;
+}
+
+.team-boxed .item .name {
+  font-weight: bold;
+  margin-top: 28px;
+  margin-bottom: 8px;
+  color: inherit;
+}
+
+.team-boxed .item .title {
+  text-transform: uppercase;
+  font-weight: bold;
+  color: #d0d0d0;
+  letter-spacing: 2px;
+  font-size: 13px;
+}
+
+.team-boxed .item .description {
+  font-size: 15px;
+  margin-top: 15px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.team-boxed .item img {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto;
+}
+@media (max-width: 767px) {
+  .team-boxed .item img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+.team-boxed .social {
+  font-size: 18px;
+  color: #a2a8ae;
+}
+
+.team-boxed .social a {
+  color: inherit;
+  margin: 0 10px;
+  display: inline-block;
+  opacity: 0.7;
+}
+
+.team-boxed .social a:hover {
+  opacity: 1;
+}
+
+.carousel {
+  display: flex;
+  justify-content: center;
+}
+
+.item {
+  flex: 0 0 auto;
+  padding: 0 10px;
+}
 
 /*# sourceMappingURL=homepage.component.css.map */

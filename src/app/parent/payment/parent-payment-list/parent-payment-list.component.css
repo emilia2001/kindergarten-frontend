@@ -1,6 +1,14 @@
 #card-element {
   border: 1px solid #ccc;
   padding: 10px;
+  border-radius: 5px;
+}
+#card-element:focus, #card-element:active, #card-element:hover {
+  color: #393d72 !important;
+  background-color: #fff;
+  border-color: #c4c5d5;
+  outline: 0;
+  box-shadow: 0 0 0 0.1rem #c4c5d5;
 }
 
 /*# sourceMappingURL=parent-payment-list.component.css.map */

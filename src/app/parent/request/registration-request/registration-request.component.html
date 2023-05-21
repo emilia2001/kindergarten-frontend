@@ -1,0 +1,95 @@
+<div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+  <div class="spinner-border" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<form class="text-start row" [formGroup]="requestForm" (ngSubmit)="handleSubmit()" *ngIf="!isLoading">
+
+  <fieldset class="border p-2 mt-4 col-12 col-lg-5">
+    <legend class="border-0 px-2 w-auto">Informatii copil</legend>
+    <div class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline">
+
+      <img class="card-img-top" [src]="request.child.picturePath" alt="...">
+      <label class="form-label input-group-text" for="profilePicture">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle"
+             viewBox="0 0 16 16">
+          <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+          <path
+            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+        </svg>
+      </label>
+      <input type="file" id="profilePicture" class="form-control pictureInput" formControlName="profilePicture"
+             (change)="onImageSelected($event)" accept="image/*">
+    </div>
+    <div class="form-outline mb-3">
+      <label class="form-label ms-2" for="cnp">CNP</label>
+      <input type="text" id="cnp" formControlName="cnp" class="form-control" [(ngModel)]="request.child.cnp"/>
+    </div>
+    <div class="form-outline mb-3">
+      <label class="form-label ms-2" for="lastName">Nume de familie</label>
+      <input type="text" id="lastName" formControlName="lastName" class="form-control"
+             [(ngModel)]="request.child.lastName"/>
+    </div>
+
+    <div class="form-outline mb-3">
+      <label class="form-label ms-2" for="firstName">Prenume</label>
+      <input id="firstName" formControlName="firstName"
+             type="text"
+             class="form-control"
+             [(ngModel)]="request.child.firstName"/>
+    </div>
+
+    <div class="form-group mb-3">
+      <label for="dateOfBirth" class="form-label ms-2">Zi de nastere</label>
+      <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
+             required="required" [(ngModel)]="request.child.dateOfBirth">
+    </div>
+
+    <div class="form-group mb-3">
+      <label class="form-label ms-2" for="group">Grupa</label>
+      <select id="group" class="form-control" formControlName="group" [(ngModel)]="request.child.group.id">
+        <option selected disabled hidden>Alege grupa</option>
+        <option *ngFor="let group of groupList" [value]="group.id">{{group.name}} ({{group.groupType}})</option>
+      </select>
+    </div>
+  </fieldset>
+
+  <div class="col-lg-1"></div>
+
+  <fieldset class="border p-2 mt-4 col-12 col-lg-6">
+    <legend class="border-0 px-2 w-auto">Incarcarea documentelor necesare</legend>
+
+    <div class="mb-3">
+      <label for="applicationPdf" class="form-label">Cerere tip completata</label>
+      <input type="file" class="form-control" id="applicationPdf" formControlName="applicationPdf"
+             (change)="onApplicationUpload($event)">
+    </div>
+
+    <div class="mb-3">
+      <label for="parentIC" class="form-label">Copie carte identitate parinte (.png sau .pdf)</label>
+      <input type="file" class="form-control" id="parentIC" formControlName="parentIC"
+             (change)="onParentICUpload($event)">
+    </div>
+
+    <div class="mb-3">
+      <label for="childBirthCertificate" class="form-label">Copie certificat nastere copil (.png sau .pdf)</label>
+      <input type="file" class="form-control" id="childBirthCertificate" formControlName="childBirthCertificate"
+             (change)="onChildBirthCertificateUpload($event)">
+    </div>
+
+    <div class="mb-3">
+      <label for="parentsEmployeeCertificates" class="form-label">Copie certificate angajat ambii parintii(un singur
+        pdf)</label>
+      <input type="file" class="form-control" id="parentsEmployeeCertificates"
+             formControlName="parentsEmployeeCertificates" (change)="onParentsEmployeeCertificatesUpload($event)">
+    </div>
+
+    <div class="mb-3">
+      <label for="extraDocuments" class="form-label">Documente extra(un singur pdf)</label>
+      <input type="file" class="form-control" id="extraDocuments" formControlName="extraDocuments"
+             (change)="onExtraDocumentsUpload($event)">
+    </div>
+  </fieldset>
+  <button type="submit" class="btn btn-primary text-light mt-4 offset-2 offset-sm-4 col-8 col-sm-4">Submit</button>
+</form>

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-import {ConfirmationModalComponent} from "../../shared/modals/confirmation-modal/confirmation-modal.component";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ModalService {
 
-  private modals: ConfirmationModalComponent[] = [];
+  private modals: any[] = [];
 
-  add(modal: ConfirmationModalComponent) {
+  add(modal: any) {
     // ensure component has a unique id attribute
     console.log(modal)
     if (!modal.id || this.modals.find(x => x.id === modal.id)) {
@@ -19,7 +18,7 @@ export class ModalService {
     this.modals.push(modal);
   }
 
-  remove(modal: ConfirmationModalComponent) {
+  remove(modal: any) {
     // remove modal from array of active modals
     this.modals = this.modals.filter(x => x === modal);
   }

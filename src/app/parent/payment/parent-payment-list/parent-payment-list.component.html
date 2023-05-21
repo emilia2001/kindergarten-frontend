@@ -1,10 +1,53 @@
+<ng-template #myModal let-modalRef="modalRef">
+  <div class="modal-header">
+    <h4 class="modal-title">Efectuare plata</h4>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Se incarca...</span>
+      </div>
+    </div>
+    <form *ngIf="!isLoading" [formGroup]="paymentForm" (submit)="handleSubmit()">
+      <div class="form-outline mb-3 text-start">
+        <label class="form-label ms-2" for="amount">Suma</label>
+        <input type="text" id="amount" formControlName="amountInput" class="form-control" [(ngModel)]="amount"/>
+      </div>
+      <div class="text-start">
+        <label class="ms-2 mb-2">Informatii card</label>
+        <div id="card-element" *ngIf="stripe"></div>
+      </div>
+      <div id="card-errors" role="alert"></div>
+      <button type="submit" class="btn btn-primary text-light mt-3" *ngIf="!isPaymentLoading && status == 'success'">
+        Submit Payment
+      </button>
+      <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Se incarca...</span>
+        </div>
+      </div>
+      <div class="success" *ngIf="status == 'success'">
+        <span class="fw-semibold text-success">Plata s-a efectuat cu succes</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold class="bi bi-check-lg"
+             viewBox="0 0 16 16">
+          <path
+            d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+        </svg>
+      </div>
+      <div *ngIf="errors">
+        {{errors}}
+      </div>
+    </form>
+  </div>
+</ng-template>
 
-<div class="container">
+
+<div class="container pb-4">
   <div class="row justify-content-center">
-    <h1 class="heading-section mt-4">Lista plati</h1>
+    <h2 class="text-light heading-section mt-4">Lista plati</h2>
   </div>
 
-  <section class="container mb-4">
+  <section class="container my-4">
     <div class="itemsContainer text-dark row">
       <div class="col-md-12">
         <div class="table-wrap">
@@ -23,7 +66,7 @@
             </thead>
             <tbody>
             <tr *ngFor="let payment of paymentList | async " class="alert" role="alert">
-              <td><img class="img" [src]="'data:image/jpeg;base64,' + payment.child.picture" alt="Child Picture"></td>
+              <td><img class="img" [src]="payment.child.picturePath" alt="Child Picture"></td>
               <td class="">
                 {{payment.child.firstName + ' ' + payment.child.lastName}}
               </td>
@@ -34,11 +77,20 @@
               <td>
 
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID'">
-                  <button (click)="makePayment(payment.totalAmount)" class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'" >Plateste {{payment.totalAmount}}</button>
+                  <button (click)="openModal(myModal, payment.totalAmount, payment.id)"
+                          class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'">Plateste
+                    <br>{{payment.totalAmount}} RON
+                  </button>
                 </div>
-                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'">
-<!--                  <button (click)="makePayment(payment.totalAmount)" class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'" >Plateste {{payment.totalAmount}}</button>-->
-                <span class="text-success">Platita</span>
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'"
+                     class="fw-semibold fs-5">
+                  <!--                  <button (click)="makePayment(payment.totalAmount)" class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'" >Plateste {{payment.totalAmount}}</button>-->
+                  <span class="text-success">Platita</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold
+                       class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path
+                      d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                  </svg>
                 </div>
               </td>
               <td>

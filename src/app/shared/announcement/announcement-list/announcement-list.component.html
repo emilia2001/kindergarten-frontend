@@ -1,6 +1,6 @@
 <section class="light container">
   <div class="container pb-2">
-    <h1 class="heading-section my-4" id="pageHeaderTitle">Anunturi</h1>
+    <h2 class="text-light heading-section my-4" id="pageHeaderTitle">Anunturi</h2>
 
     <div class="row justify-content-end mb-4 " *ngIf="isAdminLoggedIn">
       <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
@@ -14,14 +14,14 @@
 
     <article class="postcard" *ngFor="let announcement of announcementList | async">
       <a class="postcard_img_link">
-        <img class="postcard_img" src="https://picsum.photos/1000/1000" alt="Image Title"/>
+        <img class="postcard_img" src="{{announcement.picturePath}}" alt="Image Title"/>
       </a>
       <div class="postcard_text t-dark">
         <h1 class="postcard_title blue mb-4">{{announcement.title}}</h1>
 
         <div class="postcard_preview-txt">{{announcement.description}}</div>
         <ul class="postcard_tagbox text-light" *ngIf="isAdminLoggedIn">
-          <li class="tag_item" [routerLink]="['/admin/announcements', announcement.id]" [queryParams]="{entity: encodeAnnouncement(announcement)}">
+          <li class="tag_item" [routerLink]="['/admin/announcements/', announcement.id]">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                  class="bi bi-pencil-square" viewBox="0 0 16 16">
               <path

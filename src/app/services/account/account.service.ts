@@ -7,6 +7,7 @@ import jwt_decode from "jwt-decode";
 
 import {Role} from "../../shared/models/IAdminLoginData";
 import {api, login} from "../../shared/utils/endpoints";
+import {IParentDto} from "../../shared/models/IParent";
 
 
 @Injectable({
@@ -30,6 +31,10 @@ export class AccountService {
           }
         )
       );
+  }
+
+  register(parent: IParentDto) {
+    console.log(parent);
   }
 
   getAuthenticatedToken(): string {

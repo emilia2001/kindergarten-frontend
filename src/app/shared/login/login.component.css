@@ -1,5 +1,4 @@
 :host {
-  background-color: #fff !important;
   display: block;
   height: 100%;
 }
@@ -29,6 +28,15 @@
   border-right: 0;
   outline: 0;
   box-shadow: -0.1rem 0 0 #c4c5d5, 0 -0.1rem 0 #c4c5d5, 0 0.1rem 0 #c4c5d5;
+}
+
+.registerLink {
+  color: #353768;
+}
+.registerLink:hover {
+  cursor: pointer;
+  color: #2f315c;
+  font-weight: 500;
 }
 
 /*# sourceMappingURL=login.component.css.map */

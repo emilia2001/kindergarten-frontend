@@ -1,12 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ActivatedRoute} from "@angular/router";
 
 import {GroupService} from "../../../services/group/group.service";
 import {IGroup} from "../../../shared/models/IGroup";
 import {TeacherService} from "../../../services/teacher/teacher.service";
-import {ITeacher, ITeacherAdd} from "../../../shared/models/ITeacher";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ITeacherAdd} from "../../../shared/models/ITeacher";
 import {finalize, take} from "rxjs";
+import {FileUpload} from "../../../shared/models/FileUpload";
+import {FirebaseService} from "../../../services/firebase/firebase.service";
 
 @Component({
   selector: 'app-teacher-edit',
@@ -16,32 +18,24 @@ import {finalize, take} from "rxjs";
 export class TeacherEditComponent implements OnInit {
   teacherForm!: FormGroup;
   groupList: IGroup[] = [];
-  imageUrl: string = '';
-  selectedFile!: Uint8Array | null;
   id: number | null = null;
-  teacher: ITeacherAdd = {
-    firstName: "",
-    lastName: "",
-    description: "",
-    dateOfBirth: new Date(),
-    groupId: 0,
-    picture: this.imageUrl
-  };
+  teacher!: ITeacherAdd;
+  selectedFiles?: FileList;
+  currentFileUpload?: FileUpload;
   isLoading: boolean = false;
   errors: string = '';
 
   constructor(
-    private _groupService: GroupService,
+    private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
+    private _groupService: GroupService,
     private _teacherService: TeacherService,
-    private _route: ActivatedRoute
+    private _firebaseService: FirebaseService
   ) {
   }
 
   ngOnInit() {
     this.getGroupList();
-    this.imageUrl = "./assets/images/default_picture.png";
-    // this.selectedFile = this.convertDataURIToBinary(this.imageUrl);
     this.teacherForm = this._formBuilder.group({
       firstName: ["", Validators.required],
       lastName: ["", Validators.required],
@@ -65,6 +59,15 @@ export class TeacherEditComponent implements OnInit {
         },
         error: errors => this.errors = errors
       });
+    } else {
+      this.teacher = {
+        firstName: "",
+        lastName: "",
+        description: "",
+        dateOfBirth: new Date(),
+        groupId: 0,
+        picturePath: './assets/images/default_picture.png'
+      };
     }
   }
 
@@ -78,12 +81,7 @@ export class TeacherEditComponent implements OnInit {
 
   handleSubmitTeacher() {
     const formValues = this.teacherForm.value;
-    let pictureString = '';
-    if (this.teacherForm.controls['profilePicture'].dirty) {
-      for (let i = 0; i < this.selectedFile!.length; i++) {
-        pictureString += String.fromCharCode(this.selectedFile![i]);
-      }
-    } else pictureString = this.teacher.picture
+    let newPicture = this.teacher.picturePath;
 
     this.teacher = {
       firstName: formValues.firstName,
@@ -91,44 +89,37 @@ export class TeacherEditComponent implements OnInit {
       description: formValues.description,
       dateOfBirth: formValues.dateOfBirth,
       groupId: formValues.group,
-      picture: btoa(pictureString)
+      picturePath: newPicture
     };
-    console.log(this.id)
-    if (this.id) this._teacherService.update(this.id, this.teacher).subscribe(data => console.log(data + "plm"))
+
+    if (this.id) this._teacherService.update(this.id, this.teacher).subscribe(data => console.log(data))
     else this._teacherService.add(this.teacher).subscribe(data => console.log(data));
   }
 
   onImageSelected($event: any) {
-    const file = $event.target.files[0];
-    this.readImage(file);
+    this.selectedFiles = $event.target.files;
+    this.upload();
   }
 
-  readImage(file: File): void {
-    console.log(file)
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.imageUrl = reader.result as string;
-      this.selectedFile = this.convertDataURIToBinary(reader.result);
-      let pictureString = '';
-      for (let i = 0; i < this.selectedFile!.length; i++) {
-        pictureString += String.fromCharCode(this.selectedFile![i]);
+  upload(): void {
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
+      this.selectedFiles = undefined;
+
+      if (file) {
+        this.currentFileUpload = new FileUpload(file);
+
+        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'teachers').subscribe(
+          (downloadURL: string) => {
+            this.teacher.picturePath = downloadURL;
+            console.log('File is accessible:', downloadURL);
+            // Perform further operations with the file
+          },
+          (error) => {
+            console.error('Error occurred during file upload:', error);
+          }
+        );
       }
-      this.teacher.picture = btoa(pictureString)
-    };
-  }
-
-  convertDataURIToBinary(dataURI: any) {
-    var base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
-    var base64 = dataURI.substring(base64Index);
-    var raw = window.atob(base64);
-    var rawLength = raw.length;
-    var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-    for (let i = 0; i < rawLength; i++) {
-      array[i] = raw.charCodeAt(i);
     }
-
-    return array;
   }
 }

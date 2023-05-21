@@ -1,4 +1,4 @@
-<div class="bg-light container mb-5 mt-5">
+<div class="container mb-5 mt-5">
   <div class="row h-100 container">
     <div class="col-12">
       <div class="card shadow-lg " style="border-radius: 1rem;">
@@ -10,14 +10,12 @@
         </div>
         <div class="card-body px-3 px-sm-4 p-4 text-dark" *ngIf="!isLoading">
 
-          <h3 class="mb-4 text-dark">Editare anunt</h3>
+          <h2 class="mb-4 text-dark">Editare anunt</h2>
 
           <form class="text-start row" [formGroup]="announcementForm" (ngSubmit)="handleSubmitAnnouncement()">
             <div
               class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline col-12 col-md-3">
-<!--              <img class="card-img-top" *ngIf="!id" [src]="imageUrl" alt="...">-->
-              <img class="card-img-top" *ngIf="!id" [src]="imageUrl" alt="...">
-<!--              <img class="card-img-top" *ngIf="id" [src]="'data:image/jpeg;base64,' + announcement.picture" alt="...">-->
+              <img class="card-img-top" [src]="announcement.picturePath" alt="...">
               <label class="form-label input-group-text" for="profilePicture">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                      class="bi bi-plus-circle" viewBox="0 0 16 16">

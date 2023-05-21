@@ -1,0 +1,37 @@
+legend {
+  margin-top: -1.5rem;
+  background: white;
+}
+
+.card-img-top {
+  height: 100px;
+  width: 100px;
+  border-radius: 50%;
+}
+
+.pictureInput {
+  display: none;
+}
+
+.input-group-text {
+  display: block;
+  background: none;
+  border: none;
+  width: 16px;
+  height: 16px;
+  position: relative;
+}
+
+.documentsFieldset{
+  button {
+    background: transparent;
+    cursor: pointer;
+  }
+  button:hover,  button:focus, button.active{
+    font-weight: 600; /* Change the font weight to semibold */
+  }
+  label {
+    cursor: pointer;
+  }
+
+}

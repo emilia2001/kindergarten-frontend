@@ -1,3 +1,10 @@
-
+.bi-download {
+  position: absolute;
+  left: 60%;
+  bottom: 10px;
+}
+.bi-download:hover {
+  cursor: pointer;
+}
 
 /*# sourceMappingURL=new-request.component.css.map */

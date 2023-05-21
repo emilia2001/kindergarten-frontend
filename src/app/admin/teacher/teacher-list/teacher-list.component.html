@@ -1,6 +1,6 @@
-<section class="mt-4 container">
+<section class="mt-4 pb-3 container">
   <div class="row justify-content-center">
-    <h1 class="heading-section">Lista educatoare</h1>
+    <h2 class="heading-section text-light">Lista educatoare</h2>
   </div>
   <div class="row justify-content-end mb-4 ">
     <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
@@ -24,7 +24,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let teacher of teacherList" class="alert" role="alert">
-            <td><img class="img" [src]="'data:image/jpeg;base64,' + teacher.picture" alt="Teacher Picture"></td>
+            <td><img class="img" [src]="teacher.picturePath" alt="Teacher Picture"></td>
             <td class="">
               {{teacher.firstName + ' ' + teacher.lastName}}
             </td>

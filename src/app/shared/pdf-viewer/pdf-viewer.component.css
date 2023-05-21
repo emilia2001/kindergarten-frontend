@@ -1,0 +1,16 @@
+:host {
+  display: block;
+}
+
+pdf-viewer {
+  width: 100%;
+  height: 400px;
+}
+
+@media only screen and (min-width: 576px) {
+  pdf-viewer {
+    height: 800px;
+  }
+}
+
+/*# sourceMappingURL=pdf-viewer.component.css.map */

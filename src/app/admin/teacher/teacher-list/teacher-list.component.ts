@@ -1,7 +1,6 @@
 import {Component} from '@angular/core';
 
 import {TeacherService} from "../../../services/teacher/teacher.service";
-// @ts-ignore
 import {ITeacher} from "../../../shared/models/ITeacher";
 
 @Component({

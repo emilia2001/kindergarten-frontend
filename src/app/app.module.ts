@@ -1,9 +1,24 @@
 import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
+import {HttpClientModule, HTTP_INTERCEPTORS, HttpClientJsonpModule} from '@angular/common/http';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import {CurrencyPipe} from "@angular/common";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import { AngularFireModule } from '@angular/fire/compat';
+
+import {PdfViewerModule } from 'ng2-pdf-viewer';
+import {NgbAccordionDirective, NgbCollapse, NgbModule} from "@ng-bootstrap/ng-bootstrap";
+import {AccordionModule} from "ngx-bootstrap/accordion";
+import {CollapseModule} from "ngx-bootstrap/collapse";
+import {BsDropdownModule} from "ngx-bootstrap/dropdown";
+import {ModalModule} from "ngx-bootstrap/modal";
+import {NgxCurrencyModule} from "ngx-currency";
 
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
-import {HttpClientModule, HTTP_INTERCEPTORS} from '@angular/common/http';
 import {BasicAuthInterceptor} from "./interceptors/basic-auth.interceptor";
 import {ParentComponent} from './parent/parent.component';
 import {AdminModule} from "./admin/admin.module";
@@ -11,10 +26,12 @@ import {SharedModule} from "./shared/shared.module";
 import { SubmittedRequestsListComponent } from './parent/request/submitted-requests-list/submitted-requests-list.component';
 import { NewRequestComponent } from './parent/request/new-request/new-request.component';
 import { ParentPaymentListComponent } from './parent/payment/parent-payment-list/parent-payment-list.component';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import { CancelPaymentComponent } from './parent/payment/cancel-payment/cancel-payment.component';
-import { SuccessPaymentComponent } from './parent/payment/success-payment/success-payment.component';
-import {FormsModule} from "@angular/forms";
+import { environment } from '../environments/environment';
+import { RegistrationRequestComponent } from './parent/request/registration-request/registration-request.component';
+import { ExtensionRequestComponent } from './parent/request/extension-request/extension-request.component';
+import { EditRequestComponent } from './parent/request/edit-request/edit-request.component';
+import { PaymentModalComponent } from './parent/payment/payment-modal/payment-modal.component';
+import { RegisterComponent } from './parent/register/register.component';
 
 @NgModule({
   declarations: [
@@ -23,24 +40,44 @@ import {FormsModule} from "@angular/forms";
     SubmittedRequestsListComponent,
     NewRequestComponent,
     ParentPaymentListComponent,
-    CancelPaymentComponent,
-    SuccessPaymentComponent,
+    RegistrationRequestComponent,
+    ExtensionRequestComponent,
+    EditRequestComponent,
+    PaymentModalComponent,
+    RegisterComponent,
   ],
-    imports: [
-        BrowserModule,
-        BrowserAnimationsModule,
-        HttpClientModule,
-        AppRoutingModule,
-        AdminModule,
-        SharedModule,
-        FormsModule,
-    ],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
+    AppRoutingModule,
+    AdminModule,
+    SharedModule,
+    FormsModule,
+    HttpClientModule,
+    HttpClientJsonpModule,
+    AngularFireModule.initializeApp(environment.firebaseConfig),
+    AngularFireDatabaseModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    PdfViewerModule,
+    ReactiveFormsModule,
+    NgbAccordionDirective,
+    NgbCollapse,
+    AccordionModule.forRoot(),
+    ModalModule.forRoot(),
+    CollapseModule,
+    BsDropdownModule,
+    NgbModule,
+    NgxCurrencyModule,
+  ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: BasicAuthInterceptor,
       multi: true,
     },
+    CurrencyPipe
   ],
   bootstrap: [AppComponent]
 })

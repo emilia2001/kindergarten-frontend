@@ -1,10 +1,10 @@
 <section class="mt-4 container">
   <div class="row justify-content-center">
-    <h1 class="heading-section">Lista copii inscrisi</h1>
+    <h2 class="heading-section text-light">Lista copii inscrisi</h2>
   </div>
   <div class="row justify-content-end mb-4 ">
     <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
-      <a class="btn btn-primary text-light text-center" routerLink="/admin/children/add" (click)="addChild()">
+      <a class="btn btn-primary text-light text-center" routerLink="/admin/children/add">
         Adaugare copil
       </a>
     </div>
@@ -32,7 +32,7 @@
           </thead>
           <tbody>
           <tr *ngFor="let child of childrenList | filterChildren:searchForm.get('search')!.value!">
-            <td><img class="img" [src]="'data:image/jpeg;base64,' + child.picture" alt="Child Picture"></td>
+            <td><img class="img" [src]="child.picturePath" alt="Child Picture"></td>
             <td>{{child.cnp}}</td>
             <td>{{child.firstName + ' ' +  child.lastName}}</td>
             <td>{{child.dateOfBirth | date | uppercase}}</td>

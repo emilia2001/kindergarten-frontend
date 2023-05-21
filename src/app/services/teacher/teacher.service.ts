@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {HttpClient} from "@angular/common/http";
 
 import {map, Observable} from "rxjs";
 
@@ -24,11 +24,7 @@ export class TeacherService {
   }
 
   update(id: number, teacherDto: ITeacherAdd): Observable<any> {
-    // var headers: HttpHeaders = new HttpHeaders({
-    //   "Content-Type": "application/json",
-    //   "Accept": "application/json"
-    // });
-    return this._httpClient.put<any>(`${api}${teacher}${update}/${id}`, teacherDto);
+    return this._httpClient.put<any>(`${api}${teacher}${update}`, teacherDto);
   }
 
   getOneById(id: number): Observable<ITeacherAdd> {
@@ -40,7 +36,7 @@ export class TeacherService {
           description: teacher.description,
           dateOfBirth: teacher.dateOfBirth,
           groupId: teacher.groupDto.id!,
-          picture: teacher.picture
+          picturePath: teacher.picturePath
         };
       }));
   }

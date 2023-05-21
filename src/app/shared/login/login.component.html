@@ -1,4 +1,4 @@
-<div class="bg-light container mb-5 pt-lg-6">
+<div class="container mb-5 pt-lg-6">
   <div class="row d-flex justify-content-center align-items-center h-100">
     <div class="col-12 col-md-8 col-lg-5 col-xl-4 ">
       <div class="card shadow-lg" style="border-radius: 1rem;">
@@ -28,7 +28,7 @@
                   </svg>
 
                   <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                                         class="bi bi-eye-slash" viewBox="0 0 16 16" *ngIf="!hidePassword">
+                       class="bi bi-eye-slash" viewBox="0 0 16 16" *ngIf="!hidePassword">
                     <path
                       d="M13.359 11.238C15.06 9.72 16 8 16 8s-3-5.5-8-5.5a7.028 7.028 0 0 0-2.79.588l.77.771A5.944 5.944 0 0 1 8 3.5c2.12 0 3.879 1.168 5.168 2.457A13.134 13.134 0 0 1 14.828 8c-.058.087-.122.183-.195.288-.335.48-.83 1.12-1.465 1.755-.165.165-.337.328-.517.486l.708.709z"/>
                     <path
@@ -46,6 +46,10 @@
               <button type="submit" class="btn btn-primary btn-lg btn-block w-75 text-light" type="submit"
                       [disabled]="isLoading">Logare
               </button>
+            </div>
+
+            <div class="d-flex justify-content-center strong mt-4" *ngIf="role.toString() == 'PARENT'" [routerLink]="">
+              <a class="registerLink" [routerLink]="['/register']">Nu ai inca un cont? Creaza unul acum!</a>
             </div>
 
             <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">

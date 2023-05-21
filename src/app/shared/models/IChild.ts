@@ -6,7 +6,8 @@ export interface IChild {
   firstName: string;
   lastName: string;
   dateOfBirth: Date;
-  picture: string
+  picturePath: string
   group: IGroupDto;
   parent?: IParentDto;
+  parentId?: number;
 }

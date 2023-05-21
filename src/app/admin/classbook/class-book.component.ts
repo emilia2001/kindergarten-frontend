@@ -72,6 +72,7 @@ export class ClassBookComponent {
   getAttendanceListForMonth(month: string) {
     this.totalAttendanceChild.next(new Map<string, number>());
     this._attendanceService.getAllForMonth(month).subscribe(data => {
+      console.log(data)
       this.attendanceList.next(data);
       this.attendanceList.getValue().forEach(attendance => {
         const cnp = attendance.childCnp;
@@ -108,7 +109,10 @@ export class ClassBookComponent {
     if (event.target.checked) {
       this.currentAttendances.push(attendance);
       const oldAttendances = this.totalAttendanceChild.getValue().get(childCnp)!;
-      this.totalAttendanceChild.getValue().set(childCnp, oldAttendances + 1);
+      if(oldAttendances)
+        this.totalAttendanceChild.getValue().set(childCnp, oldAttendances + 1);
+      else
+        this.totalAttendanceChild.getValue().set(childCnp, 1);
     } else {
       const oldAttendances = this.totalAttendanceChild.getValue().get(childCnp)!;
       this.totalAttendanceChild.getValue().set(childCnp, oldAttendances - 1);

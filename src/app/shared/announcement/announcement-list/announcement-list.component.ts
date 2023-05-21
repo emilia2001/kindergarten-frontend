@@ -1,6 +1,8 @@
 import {Component} from '@angular/core';
-import {AccountService} from "../../../services/account/account.service";
+
 import {BehaviorSubject} from "rxjs";
+
+import {AccountService} from "../../../services/account/account.service";
 import {IAnnouncement} from "../../models/IAnnouncement";
 import {AnnouncementService} from "../../../services/announcement/announcement.service";
 

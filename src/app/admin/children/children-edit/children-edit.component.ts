@@ -1,15 +1,15 @@
 import {Component} from '@angular/core';
+import {ActivatedRoute, Router} from "@angular/router";
 
 import {finalize, take} from "rxjs";
-import { GoogleAuth } from 'google-auth-library';
-// import { gapi } from 'gapi-client';
 
 import {IChild} from "../../../shared/models/IChild";
 import {ChildrenService} from "../../../services/children/children.service";
-import {ActivatedRoute, Router} from "@angular/router";
 import {IGroup} from "../../../shared/models/IGroup";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {GroupService} from "../../../services/group/group.service";
+import {FileUpload} from "../../../shared/models/FileUpload";
+import {FirebaseService} from "../../../services/firebase/firebase.service";
 
 @Component({
   selector: 'app-children-edit',
@@ -17,48 +17,27 @@ import {GroupService} from "../../../services/group/group.service";
   styleUrls: ['./children-edit.component.scss']
 })
 export class ChildrenEditComponent {
-  id: string = '';
-  isLoading: boolean = false;
-  errors: string = '';
   childForm!: FormGroup;
-  imageUrl: string = '';
-  selectedFile!: Uint8Array | null;
+  isLoading: boolean = false;
+  id: string = '';
+  child!: IChild;
+  errors: string = '';
   groupList: IGroup[] = [];
-  child: IChild = {
-    cnp: "",
-    dateOfBirth: new Date(),
-    firstName: "", group: {
-      id: 0,
-      name: ""
-    },
-    lastName: "",
-    parent: {
-      firstName: "",
-      lastName: "",
-      phoneNumber: ""
-    },
-    picture: this.imageUrl
-
-  };
-
-  CLIENT_ID = 'your-client-id';
-  API_KEY = 'your-api-key';
-  DISCOVERY_DOCS = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest'];
-  SCOPES = 'https://www.googleapis.com/auth/drive.file';
+  selectedFiles?: FileList;
+  currentFileUpload?: FileUpload;
 
   constructor(
+    private _route: ActivatedRoute,
+    private _router: Router,
+    private _formBuilder: FormBuilder,
     private _groupService: GroupService,
     private _childrenService: ChildrenService,
-    private _formBuilder: FormBuilder,
-    private _route: ActivatedRoute,
-    private _router: Router
+    private _firebaseService: FirebaseService
   ) {
   }
 
   ngOnInit() {
     this.getGroupList();
-    this.id = this._route.snapshot.params['id'];
-    this.imageUrl = "./assets/images/default_picture.png";
     this.childForm = this._formBuilder.group({
       cnp: ["", Validators.required],
       firstName: ["", Validators.required],
@@ -86,15 +65,23 @@ export class ChildrenEditComponent {
         },
         error: errors => this.errors = errors
       });
+    } else {
+      this.child  = {
+        cnp: "",
+        dateOfBirth: new Date(),
+        firstName: "", group: {
+          id: 0,
+          name: ""
+        },
+        lastName: "",
+        parent: {
+          firstName: "",
+          lastName: "",
+          phoneNumber: ""
+        },
+        picturePath: './assets/images/default_picture.png'
+      };
     }
-    // gapi.load('client:auth2', () => {
-    //   gapi.client.init({
-    //     apiKey: this.API_KEY,
-    //     clientId: this.CLIENT_ID,
-    //     discoveryDocs: this.DISCOVERY_DOCS,
-    //     scope: this.SCOPES,
-    //   });
-    // });
   }
 
   getGroupList() {
@@ -107,12 +94,7 @@ export class ChildrenEditComponent {
 
   handleSubmitChild() {
     const formValues = this.childForm.value;
-    let pictureString = '';
-    if (this.childForm.controls['profilePicture'].dirty) {
-      for (let i = 0; i < this.selectedFile!.length; i++) {
-        pictureString += String.fromCharCode(this.selectedFile![i]);
-      }
-    } else pictureString = this.child.picture
+    let newPicture = this.child.picturePath;
 
     this.child = {
       parent: {
@@ -128,44 +110,36 @@ export class ChildrenEditComponent {
         id: formValues.group,
         name: formValues.group.selected
       },
-      picture: btoa(pictureString)
+      picturePath: newPicture
     };
-    console.log(this.child)
+
     if (this.id) this._childrenService.update(this.id, this.child).subscribe(data => console.log(data + "plm"))
     else this._childrenService.add(this.child).subscribe(data => console.log(data));
   }
 
   onImageSelected($event: any) {
-    const file = $event.target.files[0];
-    this.readImage(file);
+    this.selectedFiles = $event.target.files;
+    this.upload();
   }
 
-  readImage(file: File): void {
-    console.log(file)
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      this.imageUrl = reader.result as string;
-      this.selectedFile = this.convertDataURIToBinary(reader.result);
-      let pictureString = '';
-      for (let i = 0; i < this.selectedFile!.length; i++) {
-        pictureString += String.fromCharCode(this.selectedFile![i]);
+  upload(): void {
+    if (this.selectedFiles) {
+      const file: File | null = this.selectedFiles.item(0);
+      this.selectedFiles = undefined;
+
+      if (file) {
+        this.currentFileUpload = new FileUpload(file);
+
+        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'children').subscribe(
+          (downloadURL: string) => {
+            this.child.picturePath = downloadURL;
+            console.log('File is accessible:', downloadURL);
+          },
+          (error) => {
+            console.error('Error occurred during file upload:', error);
+          }
+        );
       }
-      this.child.picture = btoa(pictureString)
-    };
-  }
-
-  convertDataURIToBinary(dataURI: any) {
-    var base64Index = dataURI.indexOf(';base64,') + ';base64,'.length;
-    var base64 = dataURI.substring(base64Index);
-    var raw = window.atob(base64);
-    var rawLength = raw.length;
-    var array = new Uint8Array(new ArrayBuffer(rawLength));
-
-    for (let i = 0; i < rawLength; i++) {
-      array[i] = raw.charCodeAt(i);
     }
-
-    return array;
   }
 }

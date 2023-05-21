@@ -6,7 +6,7 @@ export interface ITeacher {
   firstName: string;
   lastName: string;
   description: string;
-  picture: string;
+  picturePath: string;
   groupDto: IGroupDto;
 }
 
@@ -17,5 +17,5 @@ export interface ITeacherAdd {
   description: string;
   dateOfBirth: Date;
   groupId: number;
-  picture: string;
+  picturePath: string;
 }

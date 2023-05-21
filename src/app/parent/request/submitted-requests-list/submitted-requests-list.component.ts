@@ -1,6 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {loadStripe} from "@stripe/stripe-js";
-import {PaymentService} from "../../../services/payment/payment.service";
+
+import jwt_decode from "jwt-decode";
+
+import {RegistrationRequestService} from "../../../services/registration-request/registration-request.service";
+import {ExtensionRequestService} from "../../../services/extension-request/extension-request.service";
+import {IExtensionRequest, IRegistrationRequest} from "../../../shared/models/IRequest";
+import {AccountService} from "../../../services/account/account.service";
+
+
 
 @Component({
   selector: 'app-submitted-requests-list',
@@ -8,67 +15,23 @@ import {PaymentService} from "../../../services/payment/payment.service";
   styleUrls: ['./submitted-requests-list.component.scss']
 })
 export class SubmittedRequestsListComponent implements OnInit {
-  paymentHandler: any = null;
-  stripeAPIKey: any = 'pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA';
-  stripe: any;
-  private cardElement: any;
+  registrationRequestList!: IRegistrationRequest[];
+  extensionRequestList!: IExtensionRequest[];
+  id!: number;
+  private secretKey: string = 'rU3x5y7A9dG!KkP*';
+
 
   constructor(
-    private _paymentService: PaymentService) {
-
+    private _registrationRequestService: RegistrationRequestService,
+    private _extensionRequestService: ExtensionRequestService,
+    private _accountService: AccountService
+  ) {
   }
 
-  async ngOnInit() {
-    const style = {
-      base: {
-        // Add your base input styles here. For example:
-        fontSize: '16px',
-        color: '#32325d',
-      },
-    };
-    const stripe = await loadStripe('pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA');
+  ngOnInit(): void {
     // @ts-ignore
-    const elements = stripe.elements();
-    const cardElement = elements.create('card');
-    cardElement.mount('#card-element');
-    this.stripe = stripe;
-    this.cardElement = cardElement;
+    this.id = jwt_decode(this._accountService.getAuthenticatedToken())['id'];
+    this._registrationRequestService.getAllForParent(this.id).subscribe(data => this.registrationRequestList = data);
+    this._extensionRequestService.getAllForParent(this.id).subscribe(data => this.extensionRequestList = data);
   }
-
-  async handleSubmit() {
-
-    const {token, error} = await this.stripe.createToken(this.cardElement);
-
-
-    if (error) {
-      // Inform the customer that there was an error.
-      const errorElement = document.getElementById('card-errors');
-      errorElement!.textContent = error.message;
-    } else {
-      // Send the token to your server.
-      this.stripeTokenHandler(token);
-    }
-  }
-
-  stripeTokenHandler (token: any) {
-    // Insert the token ID into the form so it gets submitted to the server
-    // const form = document.getElementById('payment-form');
-    // const hiddenInput = document.createElement('input');
-    // hiddenInput.setAttribute('type', 'hidden');
-    // hiddenInput.setAttribute('name', 'stripeToken');
-    // hiddenInput.setAttribute('value', token.id);
-    // form!.appendChild(hiddenInput);
-
-    // Submit the form
-    // this.handleSubmit();
-
-    console.log(token);
-    this._paymentService.charge(20, token.id, 1).subscribe({
-      next: data => {
-        console.log(data)
-      },
-      error: errors => console.log(errors.error)
-    });
-  }
-
 }

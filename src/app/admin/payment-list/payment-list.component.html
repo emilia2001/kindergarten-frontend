@@ -1,19 +1,16 @@
 <app-confirmation-modal id="paymentConfirmationModal"
-                        title=">A custom modal popup"
+                        title="A custom modal popup"
                         text="Home page text: "
                         cancelText="Cancel"
                         confirmText="Ok">
-<!--  <h1>A custom modal popup</h1>-->
-<!--  <p>Home page text: <input type="text" [(ngModel)]="bodyText" /></p>-->
-<!--  <button (click)="modalService.close();">Close</button>-->
 </app-confirmation-modal>
 
 
-<div class="container">
+<div class="container pb-3">
   <div class="row justify-content-center">
-    <h1 class="heading-section mt-4">Lista plati</h1>
+    <h2 class="heading-section mt-4 text-light">Lista plati</h2>
   </div>
-  <section class="mt-4 text-start row mx-1">
+  <section class="mt-4 text-start text-light row mx-1">
     <div class="col-6 mb-3  d-flex justify-content-between">
       <div class="form-group mb-3">
         <label for="group" class="form-label ms-2">Grupa</label>
@@ -24,7 +21,8 @@
       </div>
       <div class="form-group mb-3">
         <label for="currentMonth" class="form-label ms-2">Luna</label>
-        <input id="currentMonth" type="month" class="form-control" name="currentMonth" required="required" [value]="currentMonth | async" (change)="handleMonthChange($event)" [(ngModel)]="searchText">
+        <input id="currentMonth" type="month" class="form-control" name="currentMonth" required="required"
+               [value]="currentMonth | async" (change)="handleMonthChange($event)">
       </div>
     </div>
 
@@ -59,8 +57,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let payment of paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId" class="alert" role="alert">
-              <td><img class="img" [src]="'data:image/jpeg;base64,' + payment.child.picture" alt="Child Picture"></td>
+            <tr
+              *ngFor="let payment of paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId"
+              class="alert" role="alert">
+              <td><img class="img" [src]="payment.child.picturePath" alt="Child Picture"></td>
               <td class="">
                 {{payment.child.firstName + ' ' + payment.child.lastName}}
               </td>
@@ -68,30 +68,17 @@
               <td>{{payment.currentAmount}}</td>
               <td>{{payment.totalAmount}}</td>
               <td class="">
-<!--                <span [ngClass]="payment.status.toLowerCase()">{{payment.status | paymentStatus}}</span>-->
-<!--                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked>-->
-<!--                <div class="onoffswitch">-->
-<!--                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked [disabled]="payment.status.valueOf() === 'PAID'">-->
-<!--                  <label class="onoffswitch-label" for="myonoffswitch" >-->
-<!--                    <span class="onoffswitch-inner" [ngClass]="payment.status.toLowerCase()"></span>-->
-<!--                    <span class="onoffswitch-switch"></span>-->
-<!--&lt;!&ndash;                    <span [ngClass]="payment.status.toLowerCase()">{{payment.status | paymentStatus}}</span>&ndash;&gt;-->
-<!--                  </label>-->
-<!--                </div>-->
                 <div class="onoffswitch" [ngClass]="payment.status.toLowerCase()">
-                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" [id]="'myonoffswitch' + payment.id" [checked]="payment.status.valueOf() === 'PAID'" [disabled]="payment.status.valueOf() === 'PAID'" (click)="handleStatusChange(payment)">
-                  <label class="onoffswitch-label" [for]="'myonoffswitch' + payment.id" >
+                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
+                         [id]="'myonoffswitch' + payment.id" [checked]="payment.status.valueOf() === 'PAID'"
+                         [disabled]="payment.status.valueOf() === 'PAID'" (click)="handleStatusChange(payment)">
+                  <label class="onoffswitch-label" [for]="'myonoffswitch' + payment.id">
                     <span class="onoffswitch-inner" [ngClass]="payment.status.toLowerCase()"></span>
                     <span class="onoffswitch-switch"></span>
                   </label>
                 </div>
               </td>
               <td>
-<!--                <label  class="checkbox-wrap checkbox-primary">-->
-<!--                  <input type="checkbox">-->
-<!--                  <span class="checkmark"></span>-->
-<!--                </label>-->
-
             </tr>
             </tbody>
           </table>

@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+
 import {Observable} from "rxjs";
-import {all, api, announcement, deleteEnd, add, update} from "../../shared/utils/endpoints";
+
+import {all, api, announcement, deleteEnd, add, update, get} from "../../shared/utils/endpoints";
 import {IAnnouncement} from "../../shared/models/IAnnouncement";
 
 @Injectable({
@@ -27,5 +29,9 @@ export class AnnouncementService {
 
   update(announcementDto: IAnnouncement) {
     return this._httpClient.put(`${api}${announcement}${update}`, announcementDto);
+  }
+
+  getOneById(id: number) : Observable<IAnnouncement> {
+    return this._httpClient.get<IAnnouncement>(`${api}${announcement}${get}/${id}`)
   }
 }

@@ -1,6 +1,6 @@
 <div class="container mb-4">
 
-  <section class="mt-4 text-start row mx-1">
+  <section class="mt-4 text-start text-light row mx-1">
     <div class="col-6 mb-3  d-flex justify-content-between">
       <div class="form-group mb-3">
         <label for="group" class="form-label ms-2">Grupa</label>
@@ -16,7 +16,7 @@
     </div>
   </section>
 
-  <section class="mt-4">
+  <section class="mt-2">
     <div class="itemsContainer text-dark row">
       <div class="col-md-12">
         <div class="table-wrap">
@@ -32,23 +32,24 @@
             </thead>
             <tbody>
             <tr *ngFor="let child of childrenList.getValue()" class="alert" role="alert">
-              <td><img class="img" [src]="'data:image/jpeg;base64,' + child.picture" alt="Child Picture"></td>
+              <td><img class="img" [src]="child.picturePath" alt="Child Picture"></td>
 <!--              <td>{{child.firstName}}{{child.lastName}}</td>-->
               <td>{{child.firstName}}<br>{{child.lastName}}</td>
               <td *ngFor="let day of daysInMonth.getValue()" [ngClass]="{'current-day': currentDate.getDate() === day && (currentDate | date: 'yyyy-MM') === currentMonthValue}">
                 <!--      <div class="attendance-cell" [class.present]="child.attendance[day]"></div>-->
-                <input type="checkbox" [disabled]="weekendDays.getValue().indexOf(day)!=-1 || day !== currentDate.getDate() || (currentDate | date: 'yyyy-MM') !== currentMonthValue"
+                <input type="checkbox" class="attendanceCheck" [disabled]="weekendDays.getValue().indexOf(day)!=-1 || day !== currentDate.getDate() || (currentDate | date: 'yyyy-MM') !== currentMonthValue"
                        [checked]="getAttendanceForChildAndDate(child.cnp, day)"
                        (change)="handleAttendanceCheckboxChange($event, child.cnp, day)">
               </td>
-              <td>{{totalAttendanceChild.getValue().get(child.cnp)}}</td>
+              <td *ngIf="totalAttendanceChild.getValue().get(child.cnp)">{{totalAttendanceChild.getValue().get(child.cnp)}}</td>
+              <td *ngIf="!totalAttendanceChild.getValue().get(child.cnp)">0</td>
             </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-    <div class="row justify-content-end my-4 ">
+    <div class="row justify-content-end mt-2 pb-4">
       <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
         <button class="btn btn-primary text-light text-center" (click)="handleSaveAttendances()">
           Salvare prezente

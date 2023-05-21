@@ -12,13 +12,28 @@ html, body {
 }
 
 body {
-  background-color: #f9f6f1 !important;
+  background: rgb(47, 49, 92);
+}
+
+app-root {
+  background: rgb(47, 49, 92);
+  background: linear-gradient(180deg, rgb(47, 49, 92) 0%, rgb(196, 197, 213) 50%, rgb(47, 49, 92) 100%);
 }
 
 app-admin {
   display: block;
   height: fit-content;
   min-height: calc(100% - 112px);
+  background: rgb(47, 49, 92);
+  background: linear-gradient(180deg, rgb(47, 49, 92) 0%, rgb(196, 197, 213) 50%, rgb(47, 49, 92) 100%);
+}
+
+app-parent {
+  display: block;
+  height: fit-content;
+  min-height: calc(100% - 112px);
+  background: rgb(47, 49, 92);
+  background: linear-gradient(180deg, rgb(47, 49, 92) 0%, rgb(196, 197, 213) 50%, rgb(47, 49, 92) 100%);
 }
 
 @media only screen and (min-width: 1200px) {
@@ -64,9 +79,9 @@ html {
   --bs-btn-active-color: #e6840b;
   --bs-btn-active-bg: #e6840b;
   --bs-btn-active-border-color: #e6840b;
-  --bs-btn-disabled-color: #f5ba74;
-  --bs-btn-disabled-bg: #f5ba74;
-  --bs-btn-disabled-border-color: #f5ba74;
+  --bs-btn-disabled-color: #f2a74c;
+  --bs-btn-disabled-bg: #f2a74c;
+  --bs-btn-disabled-border-color: #f2a74c;
 }
 
 .btn-accept {
@@ -79,9 +94,9 @@ html {
   --bs-btn-active-color: #e6840b;
   --bs-btn-active-bg: #e6840b;
   --bs-btn-active-border-color: #e6840b;
-  --bs-btn-disabled-color: #f5ba74;
-  --bs-btn-disabled-bg: #f5ba74;
-  --bs-btn-disabled-border-color: #f5ba74;
+  --bs-btn-disabled-color: #f2a74c;
+  --bs-btn-disabled-bg: #f2a74c;
+  --bs-btn-disabled-border-color: #f2a74c;
 }
 
 .btn-cancel {

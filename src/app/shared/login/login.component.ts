@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   isLoading: boolean = false;
   errors: string = '';
   hidePassword = true;
+  role!: Role;
 
   constructor(private _formBuilder: FormBuilder,
               private _router: Router,
@@ -28,22 +29,17 @@ export class LoginComponent implements OnInit {
       username: ["", Validators.required],
       password: ["", Validators.required],
     });
+    this.role = window.location.pathname.includes('admin') ? Role.ADMIN : Role.PARENT;
   }
 
   handleLogin() {
     const formValues = this.loginAdminForm.value;
-    // const loginData: ILoginData = {
-    //   username: formValues.username!,
-    //   password: formValues.password!,
-    //   role
-    // }
     if (!this.loginAdminForm.invalid) {
       this.isLoading = true;
-      const role: Role = window.location.pathname.includes('admin') ? Role.ADMIN : Role.PARENT;
       this._accountService.login$(
         formValues.username!,
         formValues.password!,
-        role
+        this.role,
       )
         .pipe(
           take(1),

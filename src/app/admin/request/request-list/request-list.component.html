@@ -1,1 +1,71 @@
-<p>request-list works!</p>
+<div class="container pb-3">
+  <div class="row justify-content-center">
+    <h2 class="text-light heading-section mt-4">Lista cereri</h2>
+  </div>
+  <section class="mt-4 text-start text-light row mx-1">
+    <div class="col-6 mb-3  d-flex justify-content-between">
+      <div class="form-group mb-3">
+        <label for="group" class="form-label ms-2">Grupa</label>
+        <select id="group" class="form-control" (change)="handleGroupChange($event)">
+          <option selected disabled hidden>Alege grupa</option>
+          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>
+          <option value="-1">Toate</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label for="type" class="form-label ms-2">Alege tipul cererii</label>
+        <select id="type" class="form-control" (change)="handleTypeChange($event)">
+          <option value="registration">Inregistrare</option>
+          <option value="extension">Prelungire</option>
+          <option selected value="all">Toate</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section class="container mb-4">
+    <div class="itemsContainer text-dark row">
+      <div class="col-md-12">
+        <div class="table-wrap">
+          <table class=" table table-responsive-xl">
+            <thead>
+            <tr>
+              <th></th>
+              <th>Nume copil</th>
+              <th>Grupa</th>
+              <th>Tipul cererii</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let request of registrationRequestList.getValue()" class="alert" role="alert">
+              <td><img class="img" [src]="request.child.picturePath" alt="Child Picture"></td>
+              <td class="">
+                {{request.child.firstName + ' ' + request.child.lastName}}
+              </td>
+              <td>{{request.child.group.name}}</td>
+              <td>Inregistrare</td>
+              <td>{{request.status}}</td>
+              <td><a class="text-dark"
+                     [routerLink]="['/admin/requests', request.id, {type: 'registration'}]">Editare</a></td>
+            </tr>
+            <tr *ngFor="let request of extensionRequestList.getValue()" class="alert" role="alert">
+              <td><img class="img" [src]="request.child.picturePath" alt="Child Picture"></td>
+              <td class="">
+                {{request.child.firstName + ' ' + request.child.lastName}}
+              </td>
+              <td>{{request.child.group.name}}</td>
+              <td>Prelungire</td>
+              <td>{{request.status}}</td>
+              <td><a class="text-dark" [routerLink]="['/admin/requests', request.id, {type:'extension'}]">Editare</a>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>

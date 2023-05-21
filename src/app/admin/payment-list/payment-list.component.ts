@@ -1,4 +1,5 @@
 import {Component, ViewChild} from '@angular/core';
+import {FormControl, FormGroup} from "@angular/forms";
 
 import {BehaviorSubject} from "rxjs";
 
@@ -6,9 +7,7 @@ import {IGroup} from "../../shared/models/IGroup";
 import {GroupService} from "../../services/group/group.service";
 import {PaymentService} from "../../services/payment/payment.service";
 import {EPaymentStatus, IPayment} from "../../shared/models/IPayment";
-import {FormControl, FormGroup} from "@angular/forms";
 import {ConfirmationModalComponent} from "../../shared/modals/confirmation-modal/confirmation-modal.component";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
 import {ModalService} from "../../services/modal/modal.service";
 
 

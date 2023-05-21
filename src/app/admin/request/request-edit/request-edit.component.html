@@ -1,1 +1,110 @@
-<p>request-edit works!</p>
+<div class="container mb-5 mt-5 pb-5">
+  <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+  <div class="row h-100" *ngIf="!isLoading">
+    <div class="col-12 col-lg-12 ">
+      <div class="card shadow-lg " style="border-radius: 1rem;">
+        <div class="card-body px-3 px-sm-4 p-4 text-dark row">
+
+          <div class="mb-4">
+            <div class="row">
+              <div class="col-lg-8">
+                <h2 class="text-center text-lg-end text-dark">Vizualizare cerere</h2>
+              </div>
+              <div class="col-lg-4 d-flex justify-content-lg-end justify-content-center">
+                <button class="btn btn-success me-3" (click)="approveRequest()" [disabled]="isClosed">Aproba
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                       class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path
+                      d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                  </svg>
+                </button>
+                <button class="btn btn-danger" (click)="rejectRequest()" [disabled]="isClosed">Respinge
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" fill="currentColor" class="bi bi-x-lg"
+                       viewBox="0 0 16 16">
+                    <path
+                      d="M2.146 2.854a.5.5 0 1 1 .708-.708L8 7.293l5.146-5.147a.5.5 0 0 1 .708.708L8.707 8l5.147 5.146a.5.5 0 0 1-.708.708L8 8.707l-5.146 5.147a.5.5 0 0 1-.708-.708L7.293 8 2.146 2.854Z"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group mb-3 text-start row">
+            <label class="form-label ms-2 fw-bold">Status grupa</label>
+            <br>
+            <div class="col-md-6">
+              <div class="d-flex">
+                <div class="infoPair">
+                  <p class="infoKey">Nume:</p>
+                  <p class="infoValue" *ngIf="requestType==='registration'">{{registrationRequest.child.group.name}}</p>
+                  <p class="infoValue" *ngIf="requestType==='extension'">{{extensionRequest.child.group.name}}</p>
+                </div>
+
+                <div class="infoPair">
+                  <p class="infoKey">Tip:</p>
+                  <p class="infoValue"
+                     *ngIf="requestType==='registration'">{{registrationRequest.child.group.groupType}}</p>
+                  <p class="infoValue" *ngIf="requestType==='extension'">{{extensionRequest.child.group.groupType}}</p>
+                </div>
+
+                <div class="infoPair">
+                  <p class="infoKey">Capacitate totala:</p>
+                  <p class="infoValue">{{groupSpots.availableCount}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="d-flex">
+                <div class="infoPair">
+                  <p class="infoKey">Locuri ocupate:</p>
+                  <p class="infoValue">{{groupSpots.unavailableCount}}</p>
+                </div>
+
+                <div class="infoPair">
+                  <p class="infoKey">Locuri in asteptare:</p>
+                  <p class="infoValue">{{groupSpots.pendingCount}}</p>
+                </div>
+
+                <div class="infoPair">
+                  <p class="infoKey">Locuri libere:</p>
+                  <p
+                    class="infoValue">{{groupSpots.availableCount - (groupSpots.unavailableCount + groupSpots.pendingCount)}}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="form-group mb-3 text-start fw-bold" *ngIf="requestType==='registration'">
+            <label class="form-label ms-2" for="commentsRegistration">Comentarii</label>
+            <textarea class="form-control" id="commentsRegistration" rows="5"
+                      [(ngModel)]="registrationRequest.comments" [disabled]="isClosed"></textarea>
+          </div>
+          <div class="form-group mb-3 text-start fw-bold" *ngIf="requestType==='extension'">
+            <label class="form-label ms-2" for="commentsExtension">Comentarii</label>
+            <textarea class="form-control" id="commentsExtension" rows="5"
+                      [(ngModel)]="extensionRequest.comments" [disabled]="isClosed"></textarea>
+          </div>
+          <button class="ms-3 btn btn-primary text-light col-6 col-sm-3 col-lg-2" (click)="addComment()"
+                  [disabled]="isClosed">Adauga
+            comentariu
+          </button>
+          <hr class="mt-3">
+          <app-admin-registration-request *ngIf="requestType==='registration'" [request]="registrationRequest"
+                                          [isLoading]="isLoading"></app-admin-registration-request>
+          <app-admin-extension-request *ngIf="requestType==='extension'" [request]="extensionRequest"
+                                       [isLoading]="isLoading"></app-admin-extension-request>
+        </div>
+      </div>
+    </div>
+    <!--        <div class="col-12 col-lg-12 ">-->
+    <!--          <h3>Cerere tip</h3>-->
+    <!--          <app-pdf-viewer [pdfSrc]="currentApplicationPdf" ></app-pdf-viewer>-->
+    <!--        </div>-->
+  </div>
+</div>

@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+
 import {Observable} from "rxjs";
+
 import {all, api, update, payment} from "../../shared/utils/endpoints";
 import {IPayment} from "../../shared/models/IPayment";
-import {IChild} from "../../shared/models/IChild";
 
 @Injectable({
   providedIn: 'root'
@@ -34,13 +35,6 @@ export class PaymentService {
   }
 
   charge(amount: number, token: string, paymentId: number): Observable<any> {
-    console.log("service")
-    console.log(`${api}${payment}/charge`);
-    console.log({
-      amount, token
-    })
-    // return this._httpClient.get<IPayment[]>(`${api}${payment}${all}`);
-
     return this._httpClient.post(`${api}${payment}/charge`, {
       amount, token, paymentId
     });

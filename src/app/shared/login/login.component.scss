@@ -1,12 +1,8 @@
 @import "../../../_variables.scss";
 
 :host {
-  //height: 100%;
-  background-color: $white !important;
   display: block;
   height: 100%;
-  //height: fit-content;
-  //min-height: calc(100% - 96px);
 }
 
 .container {
@@ -37,3 +33,11 @@
     box-shadow: -0.1rem 0 0 $purple-light, 0 -0.1rem 0 $purple-light, 0 0.1rem 0 $purple-light;
 }}
 
+.registerLink {
+  color: $purple-secondary;
+  &:hover {
+    cursor: pointer;
+    color: $purple-dark;
+    font-weight: 500;
+  }
+}

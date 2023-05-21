@@ -1,129 +1,136 @@
-import {Component, OnInit} from '@angular/core';
-import {IPayment} from "../../../shared/models/IPayment";
-import {async, BehaviorSubject} from "rxjs";
-import {PaymentService} from "../../../services/payment/payment.service";
-import { Stripe } from 'stripe';
-import jwt_decode from "jwt-decode";
-import {AccountService} from "../../../services/account/account.service";
-import {payment} from "../../../shared/utils/endpoints";
-import {loadStripe} from "@stripe/stripe-js";
-import {NgbModal} from "@ng-bootstrap/ng-bootstrap";
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {CurrencyPipe} from "@angular/common";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
+import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
+import jwt_decode from 'jwt-decode';
+import {loadStripe} from '@stripe/stripe-js';
+import {BehaviorSubject} from 'rxjs';
+
+import {IPayment} from '../../../shared/models/IPayment';
+import {PaymentService} from '../../../services/payment/payment.service';
+import {AccountService} from '../../../services/account/account.service';
 
 @Component({
   selector: 'app-parent-payment-list',
   templateUrl: './parent-payment-list.component.html',
   styleUrls: ['./parent-payment-list.component.scss']
 })
-export class ParentPaymentListComponent {
+export class ParentPaymentListComponent implements OnInit {
   paymentList: BehaviorSubject<IPayment[]> = new BehaviorSubject<IPayment[]>([]);
   stripe: any;
   cardElement: any;
-
-  showModal = false;
-  modalData: any;
-  paymentHandler: any;
-
   token: any;
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
+  modalRef: NgbModalRef | undefined;
+  isLoading: boolean = false;
+  amount: string | undefined;
+  paymentForm!: FormGroup;
+  paymentId: number | undefined;
+  isPaymentLoading: boolean = false;
+  status: string | undefined;
+  errors: string | undefined;
 
   constructor(
     private _paymentService: PaymentService,
     private _accountService: AccountService,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private _currencyPipe: CurrencyPipe,
+    private _formBuilder: FormBuilder
   ) {
     // @ts-ignore
     var id = jwt_decode(_accountService.getAuthenticatedToken())['id'];
-    console.log(id)
     _paymentService.getAllForParent(id).subscribe(data => {
       this.paymentList.next(data)
       console.log(data);
     });
-    this.invokeStripe();
   }
 
-  // makePayment(amount: number) {
-  //   const paymentHandler = (<any>window).StripeCheckout.configure({
-  //     key: 'pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA',
-  //     locale: 'auto',
-  //     token: function (stripeToken: any) {
-  //       console.log(stripeToken);
-  //       alert('Stripe token generated!');
-  //     },
-  //   });
-  //   paymentHandler.open({
-  //     name: '',
-  //     description: '',
-  //     amount: amount * 100,
-  //   });
-  // }
-
-  // async ngOnInit() {
-  //   const stripe = await loadStripe('pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA');
-  //   // @ts-ignore
-  //   const elements = stripe.elements();
-  //   const cardElement = elements.create('card');
-  //   cardElement.mount('#card-element');
-  //   this.stripe = stripe;
-  //   this.cardElement = cardElement;
-  // }
-
-  makePayment(amount: number) {
-    const paymentHandler = (<any>window).StripeCheckout.configure({
-      key: 'pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA',
-      locale: 'auto',
-      token: this.setToken(() => function (stripeToken: any) {
-        return stripeToken;
-        console.log(stripeToken);
-      })
-    });
-    paymentHandler.open({
-      name: '',
-      description: '',
-      amount: amount * 100,
-    });
-  }
-
-  setToken(token: any) {
-    console.log(token);
-  }
-
-  invokeStripe() {
-    if (!window.document.getElementById('stripe-script')) {
-      const script = window.document.createElement('script');
-      script.id = 'stripe-script';
-      script.type = 'text/javascript';
-      script.src = 'https://checkout.stripe.com/checkout.js';
-      script.onload = () => {
-        this.paymentHandler = (<any>window).StripeCheckout.configure({
-          key: 'pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA',
-          locale: 'auto',
-          token: function (stripeToken: any) {
-            console.log(stripeToken);
-            // alert('Payment has been successfull!');
-          }
-        });
-      };
-
-      window.document.body.appendChild(script);
+  async ngOnInit() {
+    try {
+      const stripe = await loadStripe('pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA');
+      this.stripe = stripe;
+      console.log(this.stripe);
+    } catch (error) {
+      console.error('Failed to load Stripe:', error);
     }
+
+    this.paymentForm = this._formBuilder.group({
+        amountInput: ["", Validators.required]
+      }
+    )
+
+    this.paymentForm.valueChanges.subscribe((form) => {
+      const amountInput = form.amountInput;
+      if (typeof amountInput === 'string') {
+        const cleanedInput = amountInput.replace(/\D/g, '').replace(/^0+/, '');
+        const formattedValue = this._currencyPipe.transform(cleanedInput, ' RON ', 'symbol', '1.0-0');
+
+        setTimeout(() => {
+          this.paymentForm.patchValue({amountInput: formattedValue}, {emitEvent: false});
+        });
+      }
+    });
   }
 
   charge(amount: number, token: string) {
     this._paymentService.charge(amount, token, 1);
   }
 
-  // async handleSubmit() {
-  //   const { token, error } = await this.stripe.createToken(this.cardElement);
-  //   if (error) {
-  //     console.error(error);
-  //     return;
-  //   }
-  //   console.log(token);
-  //   // Use token.id to submit the payment to your server
-  // }
-  //
-  // openModal(content: any) {
-  //   this.modalService.open(content);
-  // }
+  openModal(template: TemplateRef<any>, totalAmount: number, id: number | undefined) {
+    this.amount = totalAmount.toString();
+    this.paymentId = id;
+
+    if (this.myModal) {
+      this.modalRef = this.modalService.open(this.myModal);
+
+      this.modalRef.result.then(
+        () => {
+          console.log('Modal closed');
+        },
+        () => {
+          console.log('Modal dismissed');
+        }
+      );
+      // this.isLoading = true;
+      setTimeout(async () => {
+        if (this.stripe) {
+          // this.isLoading = false;
+          const elements = this.stripe.elements();
+          this.cardElement = elements.create('card');
+          this.cardElement.mount('#card-element');
+        }
+      }, 0);
+    }
+  }
+
+  async handleSubmit() {
+    this.isPaymentLoading = true;
+    const {token, error} = await this.stripe.createToken(this.cardElement);
+    if (error) {
+      // Inform the customer that there was an error.
+      const errorElement = document.getElementById('card-errors');
+      errorElement!.textContent = error.message;
+    } else {
+      // Send the token to your server.
+      console.log(this.amount?.split(' ')[1])
+      console.log(token)
+      this._paymentService.charge(parseInt(this.amount?.split(' ')[1]!), token.id, this.paymentId!).subscribe({
+        next: data => {
+          const newList = this.paymentList.value.map(request => {
+            if (request.id === this.paymentId) {
+              return data.payment;
+            }
+            return request;
+          });
+          console.log(newList);
+          this.paymentList.next(newList);
+          this.isPaymentLoading = false;
+          this.status = 'success';
+        },
+        error: errors => this.errors = errors
+      });
+    }
+  }
 
 }

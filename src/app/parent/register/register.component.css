@@ -1,0 +1,33 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.container {
+  padding-top: 40px;
+}
+
+#password, #passwordRepeat {
+  border-right: 0;
+}
+#password:focus, #passwordRepeat:focus {
+  outline: 0;
+}
+
+.input-group-text {
+  background-color: white;
+}
+.input-group-text:hover {
+  cursor: pointer;
+}
+.input-group-text.focus {
+  box-shadow: 0.1rem 0 0 #c4c5d5, 0 -0.1rem 0 #c4c5d5, 0 0.1rem 0 #c4c5d5;
+}
+
+.form-control:focus#password, .form-control:focus#passwordRepeat {
+  border-right: 0;
+  outline: 0;
+  box-shadow: -0.1rem 0 0 #c4c5d5, 0 -0.1rem 0 #c4c5d5, 0 0.1rem 0 #c4c5d5;
+}
+
+/*# sourceMappingURL=register.component.css.map */

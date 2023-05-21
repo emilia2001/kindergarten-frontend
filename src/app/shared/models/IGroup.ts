@@ -2,7 +2,7 @@ export interface IGroup {
   id?: number;
   name: string;
   capacity: string;
-  type: EGroupType;
+  groupType: EGroupType;
 }
 
 export enum EGroupType {
@@ -14,5 +14,11 @@ export enum EGroupType {
 export interface IGroupDto {
   id?: number;
   name: string;
-  type?: EGroupType
+  groupType?: EGroupType
+}
+
+export interface IGroupSpotsDto {
+  availableCount: number;
+  unavailableCount: number;
+  pendingCount: number;
 }

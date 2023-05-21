@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+
 import {IChild} from "../models/IChild";
 
 @Pipe({
@@ -17,7 +18,6 @@ export class FilterChildrenPipe implements PipeTransform {
     return children.filter(child => {
       return child.firstName.toLowerCase().includes(searchText) ||
         child.lastName.toLowerCase().includes(searchText)
-        // child.group.toString().includes(searchText);
     });
   }
 }

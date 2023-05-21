@@ -1,7 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from "@angular/common/http";
+
 import {map, Observable} from "rxjs";
-import {attendance, all, api, children, add} from "../../shared/utils/endpoints";
+
+import {attendance, all, api, add} from "../../shared/utils/endpoints";
 import {IAttendance} from "../../shared/models/IAttendance";
 
 @Injectable({
