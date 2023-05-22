@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  endpoins: {
+  endpoints: {
     api: 'http://localhost:8080',
     login: '/login',
     register: '/register',
@@ -21,7 +21,11 @@ export const environment = {
     update: '/update',
     delete: '/delete',
     all: '/all',
-    spots: '/spots'
+    spots: '/spots',
+    charge: '/charge',
+    chargeByAdmin: '/charge-by-admin',
+    paymentConfirmation: '/payment-confirmation',
+    nextId: '/next-id'
   },
   web: {
     client_id: "820913190664-fbfch7ja0c8v88pqv0utku5p7gm3qabn.apps.googleusercontent.com",

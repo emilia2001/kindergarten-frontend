@@ -14,3 +14,16 @@
   }
 }
 
+.itemsContainer .table tbody th, .itemsContainer .table tbody td {
+  padding: 20px;
+}
+
+.confirmationLink {
+  margin-bottom: 5px;
+  display: block;
+  &:hover {
+    cursor: pointer;
+    color: $purple-dark !important;
+    font-weight: 500;
+  }
+}

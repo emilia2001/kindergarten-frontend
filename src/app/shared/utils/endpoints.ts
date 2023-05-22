@@ -1,6 +1,6 @@
 import {environment} from "../../../environments/environment";
 
-export const endpoints = environment.endpoins;
+export const endpoints = environment.endpoints;
 export const api = endpoints.api;
 export const login = endpoints.login;
 export const register = endpoints.register;
@@ -18,3 +18,7 @@ export const update = endpoints.update;
 export const deleteEnd = endpoints.delete;
 export const all = endpoints.all;
 export const spots = endpoints.spots;
+export const charge = endpoints.charge;
+export const chargeByAdmin = endpoints.chargeByAdmin;
+export const paymentConfirmation = endpoints.paymentConfirmation;
+export const nextId = endpoints.nextId;

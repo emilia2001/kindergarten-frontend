@@ -5,6 +5,7 @@ export interface IPayment {
   child: IChild;
   outstandingAmount: number,
   currentAmount: number,
+  totalUnpaidAmount: number,
   totalAmount: number,
   month: string,
   status: EPaymentStatus

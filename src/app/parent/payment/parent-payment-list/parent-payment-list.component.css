@@ -11,4 +11,18 @@
   box-shadow: 0 0 0 0.1rem #c4c5d5;
 }
 
+.itemsContainer .table tbody th, .itemsContainer .table tbody td {
+  padding: 20px;
+}
+
+.confirmationLink {
+  margin-bottom: 5px;
+  display: block;
+}
+.confirmationLink:hover {
+  cursor: pointer;
+  color: #2f315c !important;
+  font-weight: 500;
+}
+
 /*# sourceMappingURL=parent-payment-list.component.css.map */

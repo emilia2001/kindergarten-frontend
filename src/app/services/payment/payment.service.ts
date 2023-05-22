@@ -3,7 +3,7 @@ import {HttpClient} from "@angular/common/http";
 
 import {Observable} from "rxjs";
 
-import {all, api, update, payment} from "../../shared/utils/endpoints";
+import {all, api, update, payment, charge, chargeByAdmin} from "../../shared/utils/endpoints";
 import {IPayment} from "../../shared/models/IPayment";
 
 @Injectable({
@@ -29,13 +29,13 @@ export class PaymentService {
   }
 
   charge(amount: number, token: string, paymentId: number): Observable<any> {
-    return this._httpClient.post(`${api}${payment}/charge`, {
+    return this._httpClient.post(`${api}${payment}${charge}`, {
       amount, token, paymentId
     });
   }
 
   chargeByAdmin(amount: number, paymentId: number): Observable<any> {
-    return this._httpClient.put(`${api}${payment}/charge-by-admin`, {
+    return this._httpClient.put(`${api}${payment}${chargeByAdmin}`, {
       amount, paymentId
     });
   }

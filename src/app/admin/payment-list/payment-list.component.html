@@ -92,7 +92,7 @@
               </td>
               <td>{{payment.outstandingAmount}}</td>
               <td>{{payment.currentAmount}}</td>
-              <td>{{payment.totalAmount}}</td>
+              <td>{{payment.totalUnpaidAmount}}</td>
               <td class="">
                 <div class="onoffswitch" [ngClass]="payment.status.toLowerCase()">
                   <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
@@ -105,7 +105,7 @@
                 </div>
               </td>
               <td><a class="text-dark" *ngIf="payment.status.valueOf() === 'UNPAID' && (currentDate | date: 'yyyy-MM') === currentMonthValue"
-                     (click)="openModal(myModal, payment.totalAmount, payment.id)">Efectuare plata</a></td>
+                     (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id)">Efectuare plata</a></td>
             </tr>
             </tbody>
           </table>

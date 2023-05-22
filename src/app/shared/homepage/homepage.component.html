@@ -28,7 +28,7 @@
                             (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
           <div ngxSlickItem class="col-md-6 col-lg-4 item" *ngFor="let teacher of teacherList">
             <div class="box"><img class="rounded-circle" [src]="teacher.picturePath">
-              <h3 class="name">{{teacher.firstName}} {{teacher.lastName}}</h3>
+              <h3 class="name">{{teacher.firstName}}<br>{{teacher.lastName}}</h3>
               <p class="title">{{teacher.groupDto.name}}</p>
               <p class="description">{{teacher.description}}</p>
             </div>

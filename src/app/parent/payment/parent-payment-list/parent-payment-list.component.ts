@@ -6,10 +6,18 @@ import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import jwt_decode from 'jwt-decode';
 import {loadStripe} from '@stripe/stripe-js';
 import {BehaviorSubject} from 'rxjs';
+import {TDocumentDefinitions} from "pdfmake/interfaces";
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 
 import {IPayment} from '../../../shared/models/IPayment';
 import {PaymentService} from '../../../services/payment/payment.service';
 import {AccountService} from '../../../services/account/account.service';
+import {PaymentConfirmationService} from "../../../services/payment-confirmation/payment-confirmation.service";
+import {IChild} from "../../../shared/models/IChild";
+import {FirebaseService} from "../../../services/firebase/firebase.service";
+import {FileUpload} from "../../../shared/models/FileUpload";
+import {IPaymentConfirmation} from "../../../shared/models/IPaymentConfirmation";
 
 @Component({
   selector: 'app-parent-payment-list',
@@ -18,6 +26,7 @@ import {AccountService} from '../../../services/account/account.service';
 })
 export class ParentPaymentListComponent implements OnInit {
   paymentList: BehaviorSubject<IPayment[]> = new BehaviorSubject<IPayment[]>([]);
+  paymentConfirmationList: BehaviorSubject<IPaymentConfirmation[]> = new BehaviorSubject<IPaymentConfirmation[]>([]);
   stripe: any;
   cardElement: any;
   token: any;
@@ -31,13 +40,16 @@ export class ParentPaymentListComponent implements OnInit {
   status: string | undefined;
   errors: string | undefined;
   currentMonthValue!: string;
+  currentChild: IChild | undefined;
 
   constructor(
     private _paymentService: PaymentService,
     private _accountService: AccountService,
     private modalService: NgbModal,
     private _currencyPipe: CurrencyPipe,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private _paymentConfirmationService : PaymentConfirmationService,
+    private _firebaseService: FirebaseService
   ) {
     // @ts-ignore
     var id = jwt_decode(_accountService.getAuthenticatedToken())['id'];
@@ -49,13 +61,13 @@ export class ParentPaymentListComponent implements OnInit {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     this.currentMonthValue = `${year}-${(month + 1).toString().padStart(2, '0')}`;
+    (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
   }
 
   async ngOnInit() {
     try {
       const stripe = await loadStripe('pk_test_51N2F4DBquZgmE3312AAertRvkn91xBCUN6Jg2Nha5wsunOT2CET679CcW2aATgsIrn48FcNF65fC9Ya1djITVNHz00CYrgENaA');
       this.stripe = stripe;
-      console.log(this.stripe);
     } catch (error) {
       console.error('Failed to load Stripe:', error);
     }
@@ -76,13 +88,21 @@ export class ParentPaymentListComponent implements OnInit {
         });
       }
     });
+
+    // @ts-ignore
+    var id = jwt_decode(this._accountService.getAuthenticatedToken())['id'];
+    this._paymentConfirmationService.getAllForParent(id).subscribe(data => {
+      this.paymentConfirmationList.next(data);
+      console.log(data);
+    });
   }
 
   charge(amount: number, token: string) {
     this._paymentService.charge(amount, token, 1);
   }
 
-  openModal(template: TemplateRef<any>, totalAmount: number, id: number | undefined) {
+  openModal(template: TemplateRef<any>, totalAmount: number, id: number | undefined, child: IChild) {
+    this.currentChild = child;
     this.amount = totalAmount.toString();
     this.paymentId = id;
 
@@ -91,9 +111,11 @@ export class ParentPaymentListComponent implements OnInit {
 
       this.modalRef.result.then(
         () => {
+          this.status =''
           console.log('Modal closed');
         },
         () => {
+          this.status =''
           console.log('Modal dismissed');
         }
       );
@@ -112,14 +134,14 @@ export class ParentPaymentListComponent implements OnInit {
   async handleSubmit() {
     this.isPaymentLoading = true;
     const {token, error} = await this.stripe.createToken(this.cardElement);
+    this.errors = ''
+    const errorElement = document.getElementById('card-errors');
+    errorElement!.textContent = "";
     if (error) {
-      // Inform the customer that there was an error.
       const errorElement = document.getElementById('card-errors');
       errorElement!.textContent = error.message;
+      this.isPaymentLoading = false
     } else {
-      // Send the token to your server.
-      console.log(this.amount?.split(' ')[1])
-      console.log(token)
       this._paymentService.charge(parseInt(this.amount?.split(' ')[1]!), token.id, this.paymentId!).subscribe({
         next: data => {
           const newList = this.paymentList.value.map(request => {
@@ -128,14 +150,182 @@ export class ParentPaymentListComponent implements OnInit {
             }
             return request;
           });
-          console.log(newList);
           this.paymentList.next(newList);
           this.isPaymentLoading = false;
           this.status = 'success';
+          this.generatePDF();
         },
-        error: errors => this.errors = errors
+        error: errors => {
+          console.log(errors)
+          this.isPaymentLoading = false;
+          this.errors = errors.error.status
+        }
       });
     }
   }
 
+  generatePDF() {
+    let id: number;
+    this._paymentConfirmationService.getNextId().subscribe(data => {
+      id = data.id;
+      // @ts-ignore
+      var firstName = jwt_decode(this._accountService.getAuthenticatedToken())['firstName'];
+      // @ts-ignore
+      var lastName = jwt_decode(this._accountService.getAuthenticatedToken())['lastName'];
+      console.log(firstName, lastName)
+
+      const tableData = [
+        [{ text: 'Unitate', bold: true }, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
+        [{ text: 'Cod fiscal (C.I.F)', bold: true }, '18260453'],
+        [{ text: 'Sediul', bold: true }, 'str. Tarancutei, nr. 19, Falticeni'],
+        [{ text: 'Judetul', bold: true }, 'Suceava'],
+      ];
+
+      // const documentDefinition: TDocumentDefinitions = {
+      //   content: [
+      //     { text: 'Chitanta', style: 'title' },
+      //     {
+      //       table: {
+      //         headerRows: 1,
+      //         widths: ['auto', '*'],
+      //         body: tableData,
+      //       },
+      //       layout: {
+      //         defaultBorder: false,
+      //       },
+      //     },
+      //     {
+      //       columns: [
+      //         { text: 'Data: ', bold: true },
+      //         { text: new Date().toLocaleDateString() },
+      //       ],
+      //       alignment: 'left',
+      //       marginTop: 10,
+      //       marginBottom: 10,
+      //     },
+      //     { text: 'Data: ' + new Date().toLocaleDateString(), alignment: 'left', marginTop: 10, marginBottom: 10},
+      //     { text: 'Numar chitanta: ' +  id, alignment: 'left', marginBottom: 20},
+      //     { text: 'Am primit de la ' + lastName + " " + firstName + " suma de " + parseInt(this.amount?.split(' ')[1]!) + " RON reprezentand contravaloare prezenta gradinita pentru " + this.currentChild?.firstName + " " + this.currentChild?.lastName},
+      //   ],
+      //   styles: {
+      //     title: {
+      //       fontSize: 18,
+      //       bold: true,
+      //       marginBottom: 10,
+      //     },
+      //   },
+      // };
+
+      const widths = ['auto', '*'];
+
+      const documentDefinition: TDocumentDefinitions = {
+        content: [
+          { text: 'Chitanta', style: 'title' },
+          {
+            table: {
+              headerRows: 1,
+              widths: ['auto', '*'],
+              body: tableData,
+            },
+            layout: {
+              defaultBorder: false,
+            },
+          },
+          {
+            table: {
+              widths: ['auto', '*'],
+              body: [
+                [
+                  { text: 'Data: ', bold: true, style: 'columnHeader' },
+                  { text: new Date().toLocaleDateString(), style: 'columnContent' },
+                ],
+                [
+                  { text: 'Numar chitanta: ', bold: true, style: 'columnHeader' },
+                  { text: id.toString(), style: 'columnContent' },
+                ],
+              ],
+            },
+            layout: {
+              defaultBorder: false,
+            },
+            alignment: 'left',
+            marginTop: 10,
+            marginBottom: 10,
+          },
+          {
+            text:
+              'Am primit de la ' +
+              lastName +
+              ' ' +
+              firstName +
+              ' suma de ' +
+              parseInt(this.amount?.split(' ')[1]!) +
+              ' RON reprezentand contravaloare prezenta gradinita pentru ' +
+              this.currentChild?.firstName +
+              ' ' +
+              this.currentChild?.lastName,
+          },
+          { text: 'Plata efectuata cu cardul ', bold: true, marginTop: 10 }
+        ],
+        styles: {
+          title: {
+            fontSize: 18,
+            bold: true,
+            marginBottom: 10,
+          },
+          columnHeader: {
+            bold: true,
+            fillColor: '#fff',
+          },
+          columnContent: {
+            fillColor: '#fff',
+          },
+        },
+      };
+
+
+
+
+      const pdfDocGenerator = pdfMake.createPdf(documentDefinition)
+      pdfDocGenerator.getBlob((blob: Blob) => {
+        const file = new File([blob], `confirmation${id}.pdf`, { type: 'application/pdf' });
+        this.upload(file, id)
+      });
+
+    });
+
+  }
+
+  upload(file: File, id: number): void {
+      if (file) {
+        const currentFileUpload = new FileUpload(file);
+
+        this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
+          (downloadURL: string) => {
+            console.log('File is accessible:', downloadURL);
+            const paymentConfirmation: IPaymentConfirmation= {
+              id: id, path: downloadURL, paymentId: this.paymentId!
+            }
+            this._paymentConfirmationService.add(paymentConfirmation).subscribe({
+              next: data => {
+                const newList = this.paymentConfirmationList.getValue();
+                newList.push(paymentConfirmation);
+                this.paymentConfirmationList.next(newList);
+              }, error: err => {
+                console.log(err);
+                }
+              }
+
+            );
+          },
+          (error) => {
+            console.error('Error occurred during file upload:', error);
+          }
+        );
+    }
+  }
+
+  getConfirmationForPayment(id: number) {
+    return this.paymentConfirmationList.getValue().filter(confirmation => confirmation.paymentId == id);
+  }
 }

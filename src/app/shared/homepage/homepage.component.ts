@@ -123,7 +123,17 @@ export class HomepageComponent implements OnInit {
     };
 
     // Generate the PDF
-    pdfMake.createPdf(documentDefinition).open();
+    // pdfMake.createPdf(documentDefinition).open();
+    const pdfDocGenerator = pdfMake.createPdf(documentDefinition)
+    pdfDocGenerator.getBlob((blob: Blob) => {
+      // Create a File object from the Blob
+      const file = new File([blob], 'filename.pdf', { type: 'application/pdf' });
+
+      // Save the file
+      console.log(file);
+    });
+
+
   }
 
 }

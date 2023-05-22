@@ -34,7 +34,7 @@
             d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
         </svg>
       </div>
-      <div *ngIf="errors">
+      <div *ngIf="errors" class="text-danger">
         {{errors}}
       </div>
     </form>
@@ -59,6 +59,7 @@
               <th>Suma restanta</th>
               <th>Suma actuala</th>
               <th>Total suma</th>
+              <th>Ramas de plata</th>
               <th>Luna</th>
               <th>Status</th>
               <th></th>
@@ -70,16 +71,17 @@
               <td class="">
                 {{payment.child.firstName + ' ' + payment.child.lastName}}
               </td>
-              <td>{{payment.outstandingAmount}}</td>
-              <td>{{payment.currentAmount}}</td>
-              <td>{{payment.totalAmount}}</td>
-              <td>{{payment.month}}</td>
+              <td>{{payment.outstandingAmount}} RON</td>
+              <td>{{payment.currentAmount}} RON</td>
+              <td>{{payment.totalAmount}} RON</td>
+              <td>{{payment.totalUnpaidAmount}} RON</td>
+              <td>{{payment.month | previousMonth}}</td>
               <td>
 
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month == currentMonthValue">
-                  <button (click)="openModal(myModal, payment.totalAmount, payment.id)"
+                  <button (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)"
                           class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'">Plateste
-                    <br>{{payment.totalAmount}} RON
+                    <br>{{payment.totalUnpaidAmount}} RON
                   </button>
                 </div>
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'"
@@ -92,11 +94,11 @@
                   </svg>
                 </div>
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
-                     class="fw-normal fs-5">
+                     class="fw-normal fs-6">
                   <span class="text-dark">Restanta in luna urmatoare</span>
                 </div>
               </td>
-              <td>
+              <td><a class="text-dark confirmationLink" *ngFor="let confirmation of getConfirmationForPayment(payment.id!)" href="{{confirmation.path}}" target="_blank">Chitanta{{confirmation.id}}<br></a></td>
             </tr>
             </tbody>
           </table>
