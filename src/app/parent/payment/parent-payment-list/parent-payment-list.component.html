@@ -1,6 +1,6 @@
 <ng-template #myModal let-modalRef="modalRef">
   <div class="modal-header">
-    <h4 class="modal-title">Efectuare plata</h4>
+    <h4 class="modal-title text-dark">Efectuare plata</h4>
   </div>
   <div class="modal-body">
     <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
@@ -18,8 +18,8 @@
         <div id="card-element" *ngIf="stripe"></div>
       </div>
       <div id="card-errors" role="alert"></div>
-      <button type="submit" class="btn btn-primary text-light mt-3" *ngIf="!isPaymentLoading && status == 'success'">
-        Submit Payment
+      <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
+        Efectueaza plata
       </button>
       <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
         <div class="spinner-border" role="status">
@@ -76,7 +76,7 @@
               <td>{{payment.month}}</td>
               <td>
 
-                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID'">
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month == currentMonthValue">
                   <button (click)="openModal(myModal, payment.totalAmount, payment.id)"
                           class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'">Plateste
                     <br>{{payment.totalAmount}} RON
@@ -84,13 +84,16 @@
                 </div>
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'"
                      class="fw-semibold fs-5">
-                  <!--                  <button (click)="makePayment(payment.totalAmount)" class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'" >Plateste {{payment.totalAmount}}</button>-->
                   <span class="text-success">Platita</span>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold
                        class="bi bi-check-lg" viewBox="0 0 16 16">
                     <path
                       d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
                   </svg>
+                </div>
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
+                     class="fw-normal fs-5">
+                  <span class="text-dark">Restanta in luna urmatoare</span>
                 </div>
               </td>
               <td>
@@ -102,59 +105,3 @@
     </div>
   </section>
 </div>
-
-
-<!--<form action='/charge' method='POST' id='checkout-form'>-->
-<!--  <input type='hidden' value='${amount}' name='amount' />-->
-<!--  <label>Price:<span text='${amount/100}' ></span></label>-->
-<!--  &lt;!&ndash; NOTE: data-key/data-amount/data-currency will be rendered by Thymeleaf &ndash;&gt;-->
-<!--  <script-->
-<!--    src='https://checkout.stripe.com/checkout.js'-->
-<!--    class='stripe-button'-->
-<!--    attr='data-key=${stripePublicKey},-->
-<!--         data-amount=${amount},-->
-<!--         data-currency=${currency}'-->
-<!--    data-name='Baeldung'-->
-<!--    data-description='Spring course checkout'-->
-<!--    data-image-->
-<!--      ='https://www.baeldung.com/wp-content/themes/baeldung/favicon/android-chrome-192x192.png'-->
-<!--    data-locale='auto'-->
-<!--    data-zip-code='false'>-->
-<!--  </script>-->
-<!--</form>-->
-
-
-<!--to be done-->
-<!--<form>-->
-<!--  <div>-->
-<!--    <label for="name">Name</label>-->
-<!--    <input type="text" id="name" name="name" required>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    <label for="email">Email</label>-->
-<!--    <input type="email" id="email" name="email" required>-->
-<!--  </div>-->
-<!--  <div>-->
-<!--    <label for="card-element">Credit or debit card</label>-->
-<!--    <div id="card-element">&lt;!&ndash; Stripe Elements Placeholder &ndash;&gt;</div>-->
-<!--  </div>-->
-<!--  <button type="submit" (click)="handleSubmit()">Pay</button>-->
-<!--</form>-->
-
-
-<!--<button class="btn btn-primary text-light" (click)="openModal(content)">Open</button>-->
-<!--<ng-template #content let-modal>-->
-<!--  <div class="modal-header">-->
-<!--    <h4 class="modal-title">Modal Title</h4>-->
-<!--    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">-->
-<!--      <span aria-hidden="true">&times;</span>-->
-<!--    </button>-->
-<!--  </div>-->
-<!--  <div class="modal-body">-->
-<!--    Modal Content-->
-<!--  </div>-->
-<!--  <div class="modal-footer">-->
-<!--    <button type="button" class="btn btn-secondary" (click)="modal.dismiss('Cancel click')">Close</button>-->
-<!--    <button type="button" class="btn btn-primary" (click)="modal.close('Save click')">Save changes</button>-->
-<!--  </div>-->
-<!--</ng-template>-->

@@ -1,10 +1,36 @@
-<app-confirmation-modal id="paymentConfirmationModal"
-                        title="A custom modal popup"
-                        text="Home page text: "
-                        cancelText="Cancel"
-                        confirmText="Ok">
-</app-confirmation-modal>
-
+<ng-template #myModal let-modalRef="modalRef">
+  <div class="modal-header">
+    <h4 class="modal-title">Efectuare plata</h4>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="paymentForm" (submit)="handleSubmit()">
+      <div class="form-outline mb-3 text-start">
+        <label class="form-label ms-2" for="amount">Suma</label>
+        <input type="text" id="amount" formControlName="amountInput" class="form-control" [(ngModel)]="amount"/>
+      </div>
+      <div id="card-errors" role="alert"></div>
+      <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
+        Efectueaza plata
+      </button>
+      <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Se incarca...</span>
+        </div>
+      </div>
+      <div class="success" *ngIf="status == 'success'">
+        <span class="fw-semibold text-success">Plata s-a efectuat cu succes</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold class="bi bi-check-lg"
+             viewBox="0 0 16 16">
+          <path
+            d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+        </svg>
+      </div>
+      <div *ngIf="errors">
+        {{errors}}
+      </div>
+    </form>
+  </div>
+</ng-template>
 
 <div class="container pb-3">
   <div class="row justify-content-center">
@@ -71,14 +97,15 @@
                 <div class="onoffswitch" [ngClass]="payment.status.toLowerCase()">
                   <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
                          [id]="'myonoffswitch' + payment.id" [checked]="payment.status.valueOf() === 'PAID'"
-                         [disabled]="payment.status.valueOf() === 'PAID'" (click)="handleStatusChange(payment)">
+                         [disabled]="true">
                   <label class="onoffswitch-label" [for]="'myonoffswitch' + payment.id">
                     <span class="onoffswitch-inner" [ngClass]="payment.status.toLowerCase()"></span>
                     <span class="onoffswitch-switch"></span>
                   </label>
                 </div>
               </td>
-              <td>
+              <td><a class="text-dark" *ngIf="payment.status.valueOf() === 'UNPAID' && (currentDate | date: 'yyyy-MM') === currentMonthValue"
+                     (click)="openModal(myModal, payment.totalAmount, payment.id)">Efectuare plata</a></td>
             </tr>
             </tbody>
           </table>

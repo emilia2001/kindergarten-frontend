@@ -30,6 +30,7 @@ export class ParentPaymentListComponent implements OnInit {
   isPaymentLoading: boolean = false;
   status: string | undefined;
   errors: string | undefined;
+  currentMonthValue!: string;
 
   constructor(
     private _paymentService: PaymentService,
@@ -44,6 +45,10 @@ export class ParentPaymentListComponent implements OnInit {
       this.paymentList.next(data)
       console.log(data);
     });
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth();
+    this.currentMonthValue = `${year}-${(month + 1).toString().padStart(2, '0')}`;
   }
 
   async ngOnInit() {

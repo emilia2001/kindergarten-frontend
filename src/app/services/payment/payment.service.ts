@@ -28,15 +28,15 @@ export class PaymentService {
     return this._httpClient.put(`${api}${payment}${update}/${id}`, paymentDto);
   }
 
-  charge2() {
-    console.log("pl")
-    return this._httpClient.get<IPayment[]>(`${api}${payment}${all}`);
-
-  }
-
   charge(amount: number, token: string, paymentId: number): Observable<any> {
     return this._httpClient.post(`${api}${payment}/charge`, {
       amount, token, paymentId
+    });
+  }
+
+  chargeByAdmin(amount: number, paymentId: number): Observable<any> {
+    return this._httpClient.put(`${api}${payment}/charge-by-admin`, {
+      amount, paymentId
     });
   }
 }

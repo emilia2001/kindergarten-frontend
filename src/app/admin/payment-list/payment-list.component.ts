@@ -1,14 +1,15 @@
-import {Component, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from "@angular/forms";
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {CurrencyPipe} from "@angular/common";
 
 import {BehaviorSubject} from "rxjs";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 import {IGroup} from "../../shared/models/IGroup";
 import {GroupService} from "../../services/group/group.service";
 import {PaymentService} from "../../services/payment/payment.service";
 import {EPaymentStatus, IPayment} from "../../shared/models/IPayment";
 import {ConfirmationModalComponent} from "../../shared/modals/confirmation-modal/confirmation-modal.component";
-import {ModalService} from "../../services/modal/modal.service";
 
 
 @Component({
@@ -16,7 +17,7 @@ import {ModalService} from "../../services/modal/modal.service";
   templateUrl: './payment-list.component.html',
   styleUrls: ['./payment-list.component.scss']
 })
-export class PaymentListComponent {
+export class PaymentListComponent implements OnInit {
   currentMonth: BehaviorSubject<string> = new BehaviorSubject<string>('');
   currentMonthValue!: string;
   groupList: IGroup[] = [];
@@ -26,19 +27,25 @@ export class PaymentListComponent {
   });
   searchText: string = '';
   selectedGroupId: number = 0;
-  modalId = 'confirmationModal';
-  bodyText = 'This text can be updated in modal 1';
-
-
-  @ViewChild(ConfirmationModalComponent) confirmationModal!: ConfirmationModalComponent;
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
+  modalRef: NgbModalRef | undefined;
+  isPaymentLoading: boolean = false;
+  status: string | undefined;
+  errors: string | undefined;
+  amount: string | undefined;
+  paymentId: number | undefined;
+  paymentForm!: FormGroup;
+  currentDate: Date;
 
 
 
   constructor(
     private _groupService: GroupService,
     private _paymentService: PaymentService,
-    public modalService: ModalService,
-    private _confirmationModal: ConfirmationModalComponent
+    public modalService: NgbModal,
+    private _confirmationModal: ConfirmationModalComponent,
+    private _formBuilder: FormBuilder,
+    private _currencyPipe: CurrencyPipe,
   ) {
     const currentDate = new Date();
     this.currentMonth.subscribe(month => this.currentMonthValue = month)
@@ -48,7 +55,27 @@ export class PaymentListComponent {
     this.currentMonth.subscribe(data => this.getPaymentListForMonth(data));
     _groupService.getAll().subscribe(data => this.groupList = data);
     this.getPaymentListForMonth(this.currentMonth.getValue());
+    this.currentDate = new Date();
   }
+
+  ngOnInit(): void {
+    this.paymentForm = this._formBuilder.group({
+        amountInput: ["", Validators.required]
+      }
+    )
+
+    this.paymentForm.valueChanges.subscribe((form) => {
+      const amountInput = form.amountInput;
+      if (typeof amountInput === 'string') {
+        const cleanedInput = amountInput.replace(/\D/g, '').replace(/^0+/, '');
+        const formattedValue = this._currencyPipe.transform(cleanedInput, ' RON ', 'symbol', '1.0-0');
+
+        setTimeout(() => {
+          this.paymentForm.patchValue({amountInput: formattedValue}, {emitEvent: false});
+        });
+      }
+    });
+    }
 
   handleMonthChange($event: any) {
     this.currentMonth.next($event.target.value)
@@ -63,56 +90,50 @@ export class PaymentListComponent {
     this._paymentService.getAllForMonth(month).subscribe(data => this.paymentList.next(data));
   }
 
-  handleStatusChange(payment: IPayment) {
-    // if (payment.status === EPaymentStatus.PAID) {
-    //   return;
-    // }
-    // payment.status = EPaymentStatus.PAID;
-    // const modalRef = this._modalService.open(ConfirmationModalComponent);
-    // modalRef.componentInstance.modalId = 'paymentStatusConfirm';
-    // modalRef.componentInstance.text = 'Are you sure you want to mark this payment as paid?';
-    // modalRef.result.then(result => {
-    //   if (result === 'yes') {
-    //     // Change payment status to 'PAID'
-    //     // this._paymentService.update(payment.id, PaymentStatus.PAID).subscribe(() => {
-    //       // Reload payment list
-    //       // this.loadPayments();
-    //     // });
-    //   }
-    // }).catch(() => {
-    //   // Modal dismissed
-    // });
-    // console.log(payment)
+  openModal(myModal: TemplateRef<any>, totalAmount: number, id: number | undefined) {
+    this.amount = totalAmount.toString();
+    this.paymentId = id;
 
-    //
-    // const confirmation = await this.confirmationModal.open();
-    // if (confirmation) {
-    //   payment.status = payment.status === PaymentStatus.PAID ? PaymentStatus.UNPAID : PaymentStatus.PAID;
-    //   this.paymentService.updatePayment(payment)
-    //     .subscribe(
-    //       () => console.log('Payment updated successfully'),
-    //       (error) => console.log('Error updating payment', error)
-    //     );
-    // }
+    if (this.myModal) {
+      this.modalRef = this.modalService.open(this.myModal);
 
-    payment.status = EPaymentStatus.PAID;
-    console.log(payment)
+      this.modalRef.result.then(
+        () => {
+          console.log('Modal closed');
+        },
+        () => {
+          console.log('Modal dismissed');
+        }
+      );
+      // this.isLoading = true;
+      // setTimeout(async () => {
+      //   if (this.stripe) {
+      //     // this.isLoading = false;
+      //     const elements = this.stripe.elements();
+      //     this.cardElement = elements.create('card');
+      //     this.cardElement.mount('#card-element');
+      //   }
+      // }, 0);
+    }
+  }
 
-    // const modalRef = this._modalService.open(ConfirmationModalComponent, { backdrop: 'static', keyboard: false });;
-    // modalRef.result.then((result) => {
-    //   if (result === 'yes') {
-    //     console.log("yes");
-    //     // payment.status = payment.status === 'paid' ? 'unpaid' : 'paid';
-    //   }
-    // }).catch((error) => {
-    //   console.log('Modal dismissed with error: ', error);
-    // });
-
-    this.modalService.open('paymentConfirmationModal');
-    // this._confirmationModal.open();
-
-    // this._paymentService.update(payment.id, payment).subscribe(data => console.log(data));
-    // console.log(this.paymentList);
+  handleSubmit() {
+    this.isPaymentLoading = true;
+    this._paymentService.chargeByAdmin(parseInt(this.amount?.split(' ')[1]!), this.paymentId!).subscribe({
+      next: data => {
+        const newList = this.paymentList.value.map(request => {
+          if (request.id === this.paymentId) {
+            return data.payment;
+          }
+          return request;
+        });
+        console.log(newList);
+        this.paymentList.next(newList);
+        this.isPaymentLoading = false;
+        this.status = 'success';
+      },
+      error: errors => this.errors = errors
+    });
   }
 }
 
