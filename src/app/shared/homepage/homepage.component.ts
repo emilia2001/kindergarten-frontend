@@ -2,9 +2,6 @@ import {Component, OnInit} from '@angular/core';
 
 import {TeacherService} from "../../services/teacher/teacher.service";
 import {ITeacher} from "../models/ITeacher";
-import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
-import {StyleDictionary, TDocumentDefinitions} from "pdfmake/interfaces";
 
 @Component({
   selector: 'app-homepage',
@@ -83,57 +80,6 @@ export class HomepageComponent implements OnInit {
 
   ngOnInit(): void {
     this._teacherService.getAll().subscribe(data => this.teacherList = data);
-    (pdfMake as any).vfs = pdfFonts.pdfMake.vfs;
-
-  }
-
-  generatePDF() {
-    // Define your table data
-    const tableData = [
-      [{ text: 'Unitate', bold: true }, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
-      [{ text: 'Cod fiscal (C.I.F)', bold: true }, '18260453'],
-      [{ text: 'Sediul', bold: true }, 'str. Tarancutei, nr. 19, Falticeni'],
-      [{ text: 'Judetul', bold: true }, 'Suceava'],
-    ];
-
-    // Create the document definition
-    const documentDefinition: TDocumentDefinitions = {
-      content: [
-        { text: 'Chitanta', style: 'title' }, // Add the title
-        {
-          table: {
-            headerRows: 1,
-            widths: ['auto', '*'], // Set column width for the first column as auto to fit the content
-            body: tableData,
-          },
-          layout: {
-            defaultBorder: false, // Set the default border to false
-          },
-        },
-        { text: 'Data: ' + new Date().toLocaleDateString(), alignment: 'left', marginTop: 10, marginBottom: 10},
-        { text: 'Am primit de la : ' + "Boamba Emilia" + "suma de " + 100 + " RON reprezentand" + "19 zile plata pentru" + "Boamba Emilia"},
-      ],
-      styles: {
-        title: {
-          fontSize: 18,
-          bold: true,
-          marginBottom: 10,
-        },
-      },
-    };
-
-    // Generate the PDF
-    // pdfMake.createPdf(documentDefinition).open();
-    const pdfDocGenerator = pdfMake.createPdf(documentDefinition)
-    pdfDocGenerator.getBlob((blob: Blob) => {
-      // Create a File object from the Blob
-      const file = new File([blob], 'filename.pdf', { type: 'application/pdf' });
-
-      // Save the file
-      console.log(file);
-    });
-
-
   }
 
 }

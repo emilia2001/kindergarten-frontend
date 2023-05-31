@@ -1,11 +1,11 @@
 <div class="container pb-3">
   <div class="row justify-content-center">
-    <h2 class="text-light heading-section mt-4">Lista cereri</h2>
+    <h2 class="text-light heading-section mt-4">Listă cereri</h2>
   </div>
   <section class="mt-4 text-start text-light row mx-1">
     <div class="col-6 mb-3  d-flex justify-content-between">
       <div class="form-group mb-3">
-        <label for="group" class="form-label ms-2">Grupa</label>
+        <label for="group" class="form-label ms-2">Grupă</label>
         <select id="group" class="form-control" (change)="handleGroupChange($event)">
           <option selected disabled hidden>Alege grupa</option>
           <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>
@@ -15,8 +15,18 @@
       <div class="form-group mb-3">
         <label for="type" class="form-label ms-2">Alege tipul cererii</label>
         <select id="type" class="form-control" (change)="handleTypeChange($event)">
-          <option value="registration">Inregistrare</option>
+          <option value="registration">Înregistrare</option>
           <option value="extension">Prelungire</option>
+          <option selected value="all">Toate</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label for="status" class="form-label ms-2">Alege statusul cererii</label>
+        <select id="status" class="form-control" (change)="handleStatusChange($event)">
+          <option value="PENDING">Neprocesată</option>
+          <option value="ONGOING">În procesare</option>
+          <option value="APPROVED">Aprobată</option>
+          <option value="REJECTED">Respinsă</option>
           <option selected value="all">Toate</option>
         </select>
       </div>
@@ -32,7 +42,7 @@
             <tr>
               <th></th>
               <th>Nume copil</th>
-              <th>Grupa</th>
+              <th>Grupă</th>
               <th>Tipul cererii</th>
               <th>Status</th>
               <th></th>
@@ -45,8 +55,8 @@
                 {{request.child.firstName + ' ' + request.child.lastName}}
               </td>
               <td>{{request.child.group.name}}</td>
-              <td>Inregistrare</td>
-              <td>{{request.status}}</td>
+              <td>Înregistrare</td>
+              <td>{{request.status | requestStatus}}</td>
               <td><a class="text-dark"
                      [routerLink]="['/admin/requests', request.id, {type: 'registration'}]">Editare</a></td>
             </tr>
@@ -57,7 +67,7 @@
               </td>
               <td>{{request.child.group.name}}</td>
               <td>Prelungire</td>
-              <td>{{request.status}}</td>
+              <td>{{request.status | requestStatus}}</td>
               <td><a class="text-dark" [routerLink]="['/admin/requests', request.id, {type:'extension'}]">Editare</a>
               </td>
             </tr>

@@ -4,6 +4,7 @@ import {Router} from "@angular/router";
 
 import {AccountService} from "../../services/account/account.service";
 import {IParentDto} from "../../shared/models/IParent";
+import {finalize, take} from "rxjs";
 
 @Component({
   selector: 'app-register',
@@ -11,7 +12,7 @@ import {IParentDto} from "../../shared/models/IParent";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
-  errors!: boolean;
+  errors!: string;
   isLoading!: Boolean;
   registerForm: any;
   hidePassword!: any;
@@ -46,26 +47,21 @@ export class RegisterComponent implements OnInit {
     }
     if (!this.registerForm.invalid) {
       this.isLoading = true;
-      this._accountService.register(parent);
-      this.isLoading = false;
-      //   .pipe(
-      //     take(1),
-      //     finalize(() => this.isLoading = false)
-      //   ).subscribe({
-      //     next: data => {
-      //       // @ts-ignore
-      //       var role = jwt_decode(data['token'])['role'];
-      //       if (role == Role.ADMIN) this._router.navigate(['admin']);
-      //       else this._router.navigate([''])
-      //
-      //       this.errors = '';
-      //     },
-      //     error: _ => {
-      //       this.loginAdminForm.reset();
-      //       this.errors = 'Credentiale incorecte';
-      //     }
-      //   }
-      // )
+      this._accountService.register(parent)
+        .pipe(
+          take(1),
+          finalize(() => this.isLoading = false)
+        ).subscribe({
+          next: data => {
+            this.errors = '';
+            this._router.navigate([''])
+          },
+          error: err => {
+            this.errors = 'Date invalide';
+            // this.registerForm.reset();
+          }
+        }
+      )
     }
   }
 

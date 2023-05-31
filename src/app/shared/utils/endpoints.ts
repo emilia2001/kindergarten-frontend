@@ -22,3 +22,4 @@ export const charge = endpoints.charge;
 export const chargeByAdmin = endpoints.chargeByAdmin;
 export const paymentConfirmation = endpoints.paymentConfirmation;
 export const nextId = endpoints.nextId;
+export const admin = endpoints.admin;

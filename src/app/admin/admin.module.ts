@@ -18,6 +18,7 @@ import {SharedModule} from "../shared/shared.module";
 import {ConfirmationModalComponent} from "../shared/modals/confirmation-modal/confirmation-modal.component";
 import {AdminExtensionRequestComponent} from './request/admin-extension-request/admin-extension-request.component';
 import {AdminRegistrationRequestComponent} from "./request/admin-registration-request/admin-registration-request.component";
+import { AddAccountComponent } from './add-account/add-account.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import {AdminRegistrationRequestComponent} from "./request/admin-registration-re
     TeacherEditComponent,
     AdminRegistrationRequestComponent,
     AdminExtensionRequestComponent,
+    AddAccountComponent,
   ],
   imports: [
     CommonModule,

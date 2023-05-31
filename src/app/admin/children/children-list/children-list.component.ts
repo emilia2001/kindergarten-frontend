@@ -34,14 +34,14 @@ export class ChildrenListComponent implements OnInit {
     )
   }
 
-  deleteChild(id?: number) {
-    this._childrenService.deleteChild( id).subscribe(
-      response => {
-        this.message = `Delete of Child ${id} Successful!`;
-        this.refreshChildrenList();
-      }
-    )
-  }
+  // deleteChild(id?: number) {
+  //   this._childrenService.deleteChild( id).subscribe(
+  //     response => {
+  //       this.message = `Delete of Child ${id} Successful!`;
+  //       this.refreshChildrenList();
+  //     }
+  //   )
+  // }
 
   updateChild(id?: number) {
     this._router.navigate(['admin/children', id])

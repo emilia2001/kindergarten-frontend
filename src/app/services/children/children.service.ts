@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {Observable} from "rxjs";
 
 import {IChild} from "../../shared/models/IChild";
-import {all, api, children, get, update, add} from "../../shared/utils/endpoints";
+import {all, api, children, get, update, add, deleteEnd} from "../../shared/utils/endpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -19,8 +19,8 @@ export class ChildrenService {
     return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
   }
 
-  deleteChild(id?: number) {
-    return this._httpClient.delete(`http://localhost:8080/admin/children/${id}`);
+  deleteChild(id: string): Observable<any> {
+    return this._httpClient.delete(`${api}${children}${deleteEnd}/${id}`);
   }
 
   getOneById(id: string): Observable<IChild> {

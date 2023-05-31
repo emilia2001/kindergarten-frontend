@@ -1,3 +1,25 @@
+<ng-template #myModal let-modalRef="modalRef">
+  <div class="modal-header">
+    <h4 class="modal-title text-dark">Efectuare plata</h4>
+  </div>
+  <div class="modal-body">
+    <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Se incarca...</span>
+      </div>
+    </div>
+    <div *ngIf="!isLoading" >
+      <p>Ești sigur că dorești să ștergi copilul din sistem?</p>
+    </div>
+    <div class="d-flex justify-content-between strong mt-4">
+      <button class="btn btn-success btn-lg btn-block text-light" (click)="deleteChild()">Da
+      </button>
+      <button class="btn btn-danger btn-lg btn-block text-light" (click)="closeModal()">Nu
+      </button>
+    </div>
+  </div>
+</ng-template>
+
 <div class="container mb-5 mt-5 pb-5">
   <div class="row h-100">
     <div class="col-12 col-md-8 col-lg-10 col-xl-8 ">
@@ -10,26 +32,31 @@
         </div>
         <div class="card-body px-3 px-sm-4 p-4 text-dark row " *ngIf="!isLoading">
 
-          <h3 class="mb-4 text-dark">Inregistrare copil</h3>
+          <h3 *ngIf="!id" class="mb-4 text-dark">Înregistrare copil</h3>
+          <h3 *ngIf="id" class="mb-4 text-dark">Editare informații copil</h3>
 
-          <form class="text-start" [formGroup]="childForm" (ngSubmit)="handleSubmitChild()">
-            <div class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline" >
-              <img class="card-img-top" [src]="child.picturePath" alt="..." >
+          <form class="text-start" [formGroup]="childForm">
+            <div class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline">
+              <img class="card-img-top" [src]="child.picturePath" alt="...">
               <label class="form-label input-group-text" for="profilePicture">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-plus-circle" viewBox="0 0 16 16">
                   <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                  <path
+                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
                 </svg>
               </label>
-              <input type="file" id="profilePicture" class="form-control" formControlName="profilePicture" (change)="onImageSelected($event)" accept="image/*">
+              <input type="file" id="profilePicture" class="form-control" formControlName="profilePicture"
+                     (change)="onImageSelected($event)" accept="image/*">
             </div>
             <div class="form-outline mb-3">
               <label class="form-label ms-2" for="cnp">CNP</label>
-              <input type="text" id="cnp" formControlName="cnp" class="form-control" [(ngModel)]="child.cnp" />
+              <input type="text" id="cnp" formControlName="cnp" class="form-control" [(ngModel)]="child.cnp"/>
             </div>
             <div class="form-outline mb-3">
               <label class="form-label ms-2" for="lastName">Nume de familie</label>
-              <input type="text" id="lastName" formControlName="lastName" class="form-control" [(ngModel)]="child.lastName" />
+              <input type="text" id="lastName" formControlName="lastName" class="form-control"
+                     [(ngModel)]="child.lastName"/>
             </div>
 
             <div class="form-outline mb-3">
@@ -37,51 +64,56 @@
               <input id="firstName" formControlName="firstName"
                      type="text"
                      class="form-control"
-                     [(ngModel)]="child.firstName" />
+                     [(ngModel)]="child.firstName"/>
             </div>
 
             <div class="form-group mb-3">
-              <label for="dateOfBirth" class="form-label ms-2">Zi de nastere</label>
-              <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" name="dateOfBirth" required="required" [(ngModel)]="child.dateOfBirth" >
+              <label for="dateOfBirth" class="form-label ms-2">Zi de naștere</label>
+              <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
+                     required="required" [(ngModel)]="child.dateOfBirth">
             </div>
 
             <div class="form-group mb-3">
-              <label class="form-label ms-2" for="group">Grupa</label>
-              <select id="group" class="form-control" formControlName="group" [(ngModel)]="child.group.id" >
+              <label class="form-label ms-2" for="group">Grupă</label>
+              <select id="group" class="form-control" formControlName="group" [(ngModel)]="child.group.id">
                 <option selected disabled hidden>Alege grupa</option>
                 <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>
               </select>
             </div>
             <fieldset class="border p-2 mt-4">
-              <legend class="border-0 px-2 w-auto">Persoana de contact</legend>
-            <div class="form-outline mb-3">
-              <label class="form-label ms-2" for="contactFirstName">Prenume</label>
-              <input id="contactFirstName" formControlName="contactFirstName"
-                     type="text"
-                     class="form-control"
-                     [(ngModel)]="child.parent!.firstName" />
-            </div>
-            <div class="form-outline mb-3">
-              <label class="form-label ms-2" for="contactLastName">Nume de familie</label>
-              <input id="contactLastName" formControlName="contactLastName"
-                     type="text"
-                     class="form-control"
-                     [(ngModel)]="child.parent!.lastName" />
-            </div>
+              <legend class="border-0 px-2 w-auto">Persoană de contact</legend>
+              <div class="form-outline mb-3">
+                <label class="form-label ms-2" for="contactFirstName">Prenume</label>
+                <input id="contactFirstName" formControlName="contactFirstName"
+                       type="text"
+                       class="form-control"
+                       [(ngModel)]="child.parent!.firstName"/>
+              </div>
+              <div class="form-outline mb-3">
+                <label class="form-label ms-2" for="contactLastName">Nume de familie</label>
+                <input id="contactLastName" formControlName="contactLastName"
+                       type="text"
+                       class="form-control"
+                       [(ngModel)]="child.parent!.lastName"/>
+              </div>
 
-            <div class="form-outline mb-3">
-              <label class="form-label ms-2" for="contactPhoneNumber">Telefon</label>
-              <input id="contactPhoneNumber" formControlName="contactPhoneNumber"
-                     type="text"
-                     class="form-control"
-                     [(ngModel)]="child.parent!.phoneNumber" />
-            </div>
+              <div class="form-outline mb-3">
+                <label class="form-label ms-2" for="contactPhoneNumber">Telefon</label>
+                <input id="contactPhoneNumber" formControlName="contactPhoneNumber"
+                       type="text"
+                       class="form-control"
+                       [(ngModel)]="child.parent!.phoneNumber"/>
+              </div>
             </fieldset>
 
             <div class="text-danger fw-semibold" *ngIf='errors && !isLoading'>{{errors}}</div>
 
             <div class="d-flex justify-content-center strong mt-4">
-              <button type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light">Salvare
+              <button (click)="handleSubmitChild()" type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light">Salvare
+              </button>
+            </div>
+            <div class="d-flex justify-content-center strong mt-4" *ngIf="id">
+              <button class="btn btn-danger btn-lg btn-block w-md-25 text-light" (click)="openModal(myModal)">Ștergere
               </button>
             </div>
 

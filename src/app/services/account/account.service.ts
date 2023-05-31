@@ -6,7 +6,7 @@ import {CookieService} from "ngx-cookie-service";
 import jwt_decode from "jwt-decode";
 
 import {Role} from "../../shared/models/IAdminLoginData";
-import {api, login} from "../../shared/utils/endpoints";
+import {api, login, register} from "../../shared/utils/endpoints";
 import {IParentDto} from "../../shared/models/IParent";
 
 
@@ -33,8 +33,15 @@ export class AccountService {
       );
   }
 
-  register(parent: IParentDto) {
-    console.log(parent);
+  register(parent: IParentDto):Observable<any> {
+    return this._httpClient.post<any>(`${api}${register}`, parent).pipe(
+      map(
+        data => {
+          this._cookieService.set('Token', data.token)
+          return data;
+        }
+      )
+    );
   }
 
   getAuthenticatedToken(): string {

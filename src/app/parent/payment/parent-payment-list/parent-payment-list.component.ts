@@ -55,7 +55,6 @@ export class ParentPaymentListComponent implements OnInit {
     var id = jwt_decode(_accountService.getAuthenticatedToken())['id'];
     _paymentService.getAllForParent(id).subscribe(data => {
       this.paymentList.next(data)
-      console.log(data);
     });
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -93,7 +92,6 @@ export class ParentPaymentListComponent implements OnInit {
     var id = jwt_decode(this._accountService.getAuthenticatedToken())['id'];
     this._paymentConfirmationService.getAllForParent(id).subscribe(data => {
       this.paymentConfirmationList.next(data);
-      console.log(data);
     });
   }
 
@@ -180,43 +178,6 @@ export class ParentPaymentListComponent implements OnInit {
         [{ text: 'Sediul', bold: true }, 'str. Tarancutei, nr. 19, Falticeni'],
         [{ text: 'Judetul', bold: true }, 'Suceava'],
       ];
-
-      // const documentDefinition: TDocumentDefinitions = {
-      //   content: [
-      //     { text: 'Chitanta', style: 'title' },
-      //     {
-      //       table: {
-      //         headerRows: 1,
-      //         widths: ['auto', '*'],
-      //         body: tableData,
-      //       },
-      //       layout: {
-      //         defaultBorder: false,
-      //       },
-      //     },
-      //     {
-      //       columns: [
-      //         { text: 'Data: ', bold: true },
-      //         { text: new Date().toLocaleDateString() },
-      //       ],
-      //       alignment: 'left',
-      //       marginTop: 10,
-      //       marginBottom: 10,
-      //     },
-      //     { text: 'Data: ' + new Date().toLocaleDateString(), alignment: 'left', marginTop: 10, marginBottom: 10},
-      //     { text: 'Numar chitanta: ' +  id, alignment: 'left', marginBottom: 20},
-      //     { text: 'Am primit de la ' + lastName + " " + firstName + " suma de " + parseInt(this.amount?.split(' ')[1]!) + " RON reprezentand contravaloare prezenta gradinita pentru " + this.currentChild?.firstName + " " + this.currentChild?.lastName},
-      //   ],
-      //   styles: {
-      //     title: {
-      //       fontSize: 18,
-      //       bold: true,
-      //       marginBottom: 10,
-      //     },
-      //   },
-      // };
-
-      const widths = ['auto', '*'];
 
       const documentDefinition: TDocumentDefinitions = {
         content: [

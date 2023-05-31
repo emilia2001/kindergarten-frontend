@@ -8,9 +8,18 @@
         <label class="form-label ms-2" for="amount">Suma</label>
         <input type="text" id="amount" formControlName="amountInput" class="form-control" [(ngModel)]="amount"/>
       </div>
+      <div class="form-outline mb-3 text-start">
+        <label class="form-label ms-2" for="lastName">Nume de familie</label>
+        <input type="text" id="lastName" formControlName="lastName" class="form-control"/>
+      </div>
+      <div class="form-outline mb-3 text-start">
+        <label class="form-label ms-2" for="firstName">Prenume</label>
+        <input type="text" id="firstName" formControlName="firstName" class="form-control"/>
+      </div>
       <div id="card-errors" role="alert"></div>
-      <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
-        Efectueaza plata
+      <button type="submit" class="btn btn-primary text-light mt-3"
+              [disabled]="status == 'success' || isPaymentLoading">
+        Inregistreaza plata
       </button>
       <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
         <div class="spinner-border" role="status">
@@ -18,14 +27,14 @@
         </div>
       </div>
       <div class="success" *ngIf="status == 'success'">
-        <span class="fw-semibold text-success">Plata s-a efectuat cu succes</span>
+        <span class="fw-semibold text-success">Plata s-a inregistrat cu succes</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold class="bi bi-check-lg"
              viewBox="0 0 16 16">
           <path
             d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
         </svg>
       </div>
-      <div *ngIf="errors">
+      <div *ngIf="errors" class="text-danger">
         {{errors}}
       </div>
     </form>
@@ -34,19 +43,19 @@
 
 <div class="container pb-3">
   <div class="row justify-content-center">
-    <h2 class="heading-section mt-4 text-light">Lista plati</h2>
+    <h2 class="heading-section mt-4 text-light">Listă plăți</h2>
   </div>
   <section class="mt-4 text-start text-light row mx-1">
     <div class="col-6 mb-3  d-flex justify-content-between">
       <div class="form-group mb-3">
-        <label for="group" class="form-label ms-2">Grupa</label>
+        <label for="group" class="form-label ms-2">Grupă</label>
         <select id="group" class="form-control" (change)="handleGroupChange($event)">
           <option selected disabled hidden>Alege grupa</option>
-          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>
+          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}} ({{group.groupType | groupType}})</option>
         </select>
       </div>
       <div class="form-group mb-3">
-        <label for="currentMonth" class="form-label ms-2">Luna</label>
+        <label for="currentMonth" class="form-label ms-2">Lună</label>
         <input id="currentMonth" type="month" class="form-control" name="currentMonth" required="required"
                [value]="currentMonth | async" (change)="handleMonthChange($event)">
       </div>
@@ -55,7 +64,7 @@
     <div class="col-6 my-4">
       <div class="addButtonContainer d-flex justify-content-end">
         <button class="btn btn-primary text-light text-center">
-          Trimitere mail plati
+          Trimitere mail plăți
         </button>
       </div>
     </div>
@@ -67,17 +76,19 @@
         <div class="table-wrap">
           <form [formGroup]="searchForm">
             <div class="form-outline mb-3">
-              <input type="text" formControlName="search" placeholder="Cauta..." class="form-control"/>
+              <input type="text" formControlName="search" placeholder="Caută..." class="form-control"/>
             </div>
           </form>
           <table class=" table table-responsive-xl">
             <thead>
             <tr>
               <th></th>
-              <th>Nume copil</th>
-              <th>Suma restanta</th>
-              <th>Suma actuala</th>
+              <th>Plată pentru</th>
+              <th>Suma restantă</th>
+              <th>Suma actuală</th>
               <th>Total suma</th>
+              <th>Rămas de plată</th>
+              <th>Lună</th>
               <th>Status</th>
               <th></th>
             </tr>
@@ -90,22 +101,53 @@
               <td class="">
                 {{payment.child.firstName + ' ' + payment.child.lastName}}
               </td>
-              <td>{{payment.outstandingAmount}}</td>
-              <td>{{payment.currentAmount}}</td>
-              <td>{{payment.totalUnpaidAmount}}</td>
-              <td class="">
-                <div class="onoffswitch" [ngClass]="payment.status.toLowerCase()">
-                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"
-                         [id]="'myonoffswitch' + payment.id" [checked]="payment.status.valueOf() === 'PAID'"
-                         [disabled]="true">
-                  <label class="onoffswitch-label" [for]="'myonoffswitch' + payment.id">
-                    <span class="onoffswitch-inner" [ngClass]="payment.status.toLowerCase()"></span>
-                    <span class="onoffswitch-switch"></span>
-                  </label>
+              <td>{{payment.outstandingAmount}} RON</td>
+              <td>{{payment.currentAmount}} RON</td>
+              <td>{{payment.totalAmount}} RON</td>
+              <td>{{payment.totalUnpaidAmount}} RON</td>
+              <td>{{payment.month | previousMonth}}</td>
+              <!--              <td class="">-->
+              <!--                <div class="onoffswitch" [ngClass]="payment.status.toLowerCase()">-->
+              <!--                  <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox"-->
+              <!--                         [id]="'myonoffswitch' + payment.id" [checked]="payment.status.valueOf() === 'PAID'"-->
+              <!--                         [disabled]="true">-->
+              <!--                  <label class="onoffswitch-label" [for]="'myonoffswitch' + payment.id">-->
+              <!--                    <span class="onoffswitch-inner" [ngClass]="payment.status.toLowerCase()"></span>-->
+              <!--                    <span class="onoffswitch-switch"></span>-->
+              <!--                  </label>-->
+              <!--                </div>-->
+              <!--              </td>-->
+              <td>
+
+                <div [ngClass]="payment.status.toLowerCase()"
+                     *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month == currentMonthValue">
+                  <button class="text-light btn btn-primary"
+                     *ngIf="payment.status.valueOf() === 'UNPAID'"
+                     [disabled]="(currentDate | date: 'yyyy-MM') !== currentMonthValue"
+                     (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)">
+                    Efectuare plată
+                  </button>
+                </div>
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'"
+                     class="fw-semibold fs-5">
+                  <span class="text-success">Platită</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold
+                       class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path
+                      d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                  </svg>
+                </div>
+                <div [ngClass]="payment.status.toLowerCase()"
+                     *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
+                     class="fw-normal fs-6">
+                  <span class="text-dark">Restantă în luna următoare</span>
                 </div>
               </td>
-              <td><a class="text-dark" *ngIf="payment.status.valueOf() === 'UNPAID' && (currentDate | date: 'yyyy-MM') === currentMonthValue"
-                     (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id)">Efectuare plata</a></td>
+              <!--              <td *ngIf="payment.status.valueOf() === 'UNPAID' && (currentDate | date: 'yyyy-MM') === currentMonthValue"><a class="text-dark" *ngIf="payment.status.valueOf() === 'UNPAID' && (currentDate | date: 'yyyy-MM') === currentMonthValue"-->
+              <!--                     (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)">Efectuare plata</a></td>-->
+              <td><a class="text-dark confirmationLink"
+                     *ngFor="let confirmation of getConfirmationForPayment(payment.id!)" href="{{confirmation.path}}"
+                     target="_blank">Chitanța{{confirmation.id}}<br></a></td>
             </tr>
             </tbody>
           </table>

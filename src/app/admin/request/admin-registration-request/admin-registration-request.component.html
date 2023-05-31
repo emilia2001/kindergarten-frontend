@@ -6,7 +6,7 @@
 <form class="text-start row" *ngIf="!isLoading">
   <div class="col-12 col-sm-5">
     <fieldset class="border p-2 mt-4">
-      <legend class="border-0 px-2 w-auto">Informatii copil</legend>
+      <legend class="border-0 px-2 w-auto">Informații copil</legend>
       <div class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline">
         <img class="card-img-top" [src]="request.child.picturePath" alt="...">
       </div>
@@ -29,13 +29,13 @@
       </div>
 
       <div class="form-group mb-3">
-        <label for="dateOfBirth" class="form-label ms-2">Zi de nastere</label>
+        <label for="dateOfBirth" class="form-label ms-2">Zi de naștere</label>
         <input id="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
                required="required" [value]="request.child.dateOfBirth" [disabled]="true">
       </div>
 
       <div class="form-group mb-3">
-        <label class="form-label ms-2" for="group">Grupa</label>
+        <label class="form-label ms-2" for="group">Grupă</label>
         <input id="group"
                type="text"
                class="form-control"
@@ -67,7 +67,7 @@
                 d="m9.77 12.11 4.012-2.953a.647.647 0 0 0 0-1.114L9.771 5.09a.644.644 0 0 0-.971.557V6.65H2v3.9h6.8v1.003c0 .505.545.808.97.557z"/>
             </svg>
         </span>
-        <label class="ms-1 text-dark ">Copie carte identitate parinte</label>
+        <label class="ms-1 text-dark ">Copie carte identitate părinte</label>
       </button>
 
       <button class="mb-3 w-100 text-start" (click)="currentPdf = request.childBirthCertificate"
@@ -79,7 +79,7 @@
                 d="m9.77 12.11 4.012-2.953a.647.647 0 0 0 0-1.114L9.771 5.09a.644.644 0 0 0-.971.557V6.65H2v3.9h6.8v1.003c0 .505.545.808.97.557z"/>
             </svg>
         </span>
-        <label class="ms-1 text-dark ">Copie carte nastere copil</label>
+        <label class="ms-1 text-dark ">Copie certificat de naștere copil</label>
       </button>
 
       <button class="mb-3 w-100 text-start" (click)="currentPdf = request.parentsEmployeeCertificates"
@@ -91,7 +91,7 @@
                 d="m9.77 12.11 4.012-2.953a.647.647 0 0 0 0-1.114L9.771 5.09a.644.644 0 0 0-.971.557V6.65H2v3.9h6.8v1.003c0 .505.545.808.97.557z"/>
             </svg>
         </span>
-        <label class="ms-1 text-dark">Copie certificate angajat ambii parintii</label>
+        <label class="ms-1 text-dark">Copie certificat angajat ambii părinți</label>
       </button>
 
       <button class="mb-3 w-100 text-start" *ngIf="request.extraDocuments" (click)="currentPdf = request.extraDocuments"

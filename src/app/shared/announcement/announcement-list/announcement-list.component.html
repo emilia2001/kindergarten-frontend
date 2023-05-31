@@ -1,16 +1,16 @@
 <section class="light container">
   <div class="container pb-2">
-    <h2 class="text-light heading-section my-4" id="pageHeaderTitle">Anunturi</h2>
+    <h2 class="text-light heading-section my-4" id="pageHeaderTitle">Anunțuri</h2>
 
     <div class="row justify-content-end mb-4 " *ngIf="isAdminLoggedIn">
       <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
         <a class="btn btn-primary text-light text-center" routerLink="/admin/announcements/add">
-          Adaugare anunt
+          Adăugare anunț
         </a>
       </div>
     </div>
 
-    <h4 class="mt-5" *ngIf="announcementList.getValue().length === 0">Nu exista niciun anunt momentan</h4>
+    <h4 class="mt-5" *ngIf="announcementList.getValue().length === 0">Nu există niciun anunț momentan</h4>
 
     <article class="postcard" *ngFor="let announcement of announcementList | async">
       <a class="postcard_img_link">
@@ -37,7 +37,7 @@
               <path
                 d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5Zm-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5ZM4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06Zm6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528ZM8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5Z"/>
             </svg>
-            Stergere
+            Ștergere
           </li>
         </ul>
       </div>

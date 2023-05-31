@@ -22,6 +22,7 @@ import {NewRequestComponent} from "./parent/request/new-request/new-request.comp
 import {EditRequestComponent} from "./parent/request/edit-request/edit-request.component";
 import {RequestEditComponent} from "./admin/request/request-edit/request-edit.component";
 import {RegisterComponent} from "./parent/register/register.component";
+import {AddAccountComponent} from "./admin/add-account/add-account.component";
 
 const routes: Routes = [
   {
@@ -33,6 +34,11 @@ const routes: Routes = [
         path: 'login',
         component: LoginComponent,
         canActivate: [LoginGuard],
+      },
+      {
+        path: 'add-account',
+        component: AddAccountComponent,
+        canActivate: [AuthGuard],
       },
       {
         path: 'children',

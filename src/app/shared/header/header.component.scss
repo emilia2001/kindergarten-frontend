@@ -1,7 +1,21 @@
 a {
   &.active-link {
-    text-decoration: underline;
+    //text-decoration: underline;
     color: white;
     font-weight: 500;
+    //border-radius: 10px;
+    border-bottom: 1px solid #fff;
   }
+
+  &:hover {
+    font-weight: 500;
+  }
+}
+
+.logoTitle {
+  height: 80px;
+}
+
+.logoImage {
+  height: 80px;
 }

@@ -26,6 +26,7 @@ export class ClassBookComponent {
   currentAttendances: IAttendance[] = [];
   totalAttendanceChild: BehaviorSubject<Map<string, number>> = new BehaviorSubject<Map<string, number>>(new Map<string, number>());
   currentMonthValue!: string;
+  showSuccessAlert: any;
 
   constructor(
     private _childrenService: ChildrenService,
@@ -47,6 +48,7 @@ export class ClassBookComponent {
     this.getAttendanceListForMonth(this.currentMonth.getValue());
 
     this.initializeDays(year, month);
+    this.showSuccessAlert = false;
   }
 
   initializeDays(year: number, month: number) {
@@ -121,7 +123,13 @@ export class ClassBookComponent {
   }
 
   handleSaveAttendances() {
-    this._attendanceService.saveAll(this.currentAttendances).subscribe(data => console.log(data))
+    this._attendanceService.saveAll(this.currentAttendances).subscribe(data => {
+      console.log(data);
+      this.showSuccessAlert = true
+      setTimeout( () => {
+        this.showSuccessAlert = false
+      }, 1000);
+    })
   }
 
   handleMonthChange($event: any) {

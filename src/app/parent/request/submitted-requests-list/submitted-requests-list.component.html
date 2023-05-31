@@ -17,7 +17,7 @@
                   [ngClass]="request.isCollapsed ? 'collapsedTrue' : 'extended'"
                   [attr.data-target]="'#collapse' + i" aria-expanded="false"
                   [attr.aria-controls]="'collapse' + i" (click)="request.isCollapsed = !request.isCollapsed">
-            Prelungire - {{ request.child.firstName }} {{request.child.lastName}} ({{request.status}})
+            Prelungire - {{ request.child.firstName }} {{request.child.lastName}} ({{request.status | requestStatus}})
             <svg *ngIf="request.status.toString() == 'APPROVED'" xmlns="http://www.w3.org/2000/svg" width="25"
                  height="25" fill="green" fw-bold class="bi bi-check-lg" viewBox="0 0 16 16">
               <path
@@ -63,7 +63,7 @@
                   [ngClass]="request.isCollapsed ? 'collapsedTrue' : 'extended'"
                   [attr.data-target]="'#collapse' + i" aria-expanded="false"
                   [attr.aria-controls]="'collapse' + i" (click)="request.isCollapsed = !request.isCollapsed">
-            Inregistrare - {{ request.child.firstName }} {{request.child.lastName}} ({{request.status}})
+            Înregistrare - {{ request.child.firstName }} {{request.child.lastName}} ({{request.status | requestStatus}})
             <svg *ngIf="request.status.toString() == 'APPROVED'" xmlns="http://www.w3.org/2000/svg" width="25"
                  height="25" fill="green" fw-bold class="bi bi-check-lg" viewBox="0 0 16 16">
               <path

@@ -1,16 +1,20 @@
+<div *ngIf="showSuccessAlert" class="alert alert-success fw-semibold mt-2" role="alert">
+  Prezența a fost salvată cu succes
+</div>
+
 <div class="container mb-4">
 
   <section class="mt-4 text-start text-light row mx-1">
     <div class="col-6 mb-3  d-flex justify-content-between">
       <div class="form-group mb-3">
-        <label for="group" class="form-label ms-2">Grupa</label>
+        <label for="group" class="form-label ms-2">Grupă</label>
         <select id="group" class="form-control" (change)="handleGroupChange($event)">
           <option selected disabled hidden>Alege grupa</option>
           <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>
         </select>
       </div>
       <div class="form-group mb-3">
-        <label for="currentMonth" class="form-label ms-2">Luna</label>
+        <label for="currentMonth" class="form-label ms-2">Lună</label>
         <input id="currentMonth" type="month" class="form-control" name="currentMonth" required="required" [value]="currentMonth | async" (change)="handleMonthChange($event)" >
       </div>
     </div>
@@ -52,7 +56,7 @@
     <div class="row justify-content-end mt-2 pb-4">
       <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
         <button class="btn btn-primary text-light text-center" (click)="handleSaveAttendances()">
-          Salvare prezente
+          Salvare prezențe
         </button>
       </div>
     </div>

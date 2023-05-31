@@ -1,7 +1,18 @@
 a.active-link {
-  text-decoration: underline;
   color: white;
   font-weight: 500;
+  border-bottom: 1px solid #fff;
+}
+a:hover {
+  font-weight: 500;
+}
+
+.logoTitle {
+  height: 80px;
+}
+
+.logoImage {
+  height: 80px;
 }
 
 /*# sourceMappingURL=header.component.css.map */

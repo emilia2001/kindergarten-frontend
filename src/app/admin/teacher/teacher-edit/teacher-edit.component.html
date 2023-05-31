@@ -10,7 +10,8 @@
         </div>
         <div class="card-body px-3 px-sm-4 p-4 text-dark row" *ngIf="!isLoading">
 
-          <h2 class="mb-4 text-dark">Inregistrare educatoare</h2>
+          <h3 *ngIf="!id" class="mb-4 text-dark">Înregistrare educatoare</h3>
+          <h3 *ngIf="id" class="mb-4 text-dark">Editare informații educatoare</h3>
 
           <form [formGroup]="teacherForm" (ngSubmit)="handleSubmitTeacher()">
             <div class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline">
@@ -47,13 +48,13 @@
             </div>
 
             <div class="form-group mb-3">
-              <label for="dateOfBirth" class="form-label ms-2">Zi de nastere</label>
+              <label for="dateOfBirth" class="form-label ms-2">Zi de naștere</label>
               <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
                      required="required" [(ngModel)]="teacher.dateOfBirth">
             </div>
 
             <div class="form-group mb-3">
-              <label class="form-label ms-2" for="group">Grupa</label>
+              <label class="form-label ms-2" for="group">Grupă</label>
               <select id="group" class="form-control" formControlName="group" [(ngModel)]="teacher.groupId">
                 <option selected disabled hidden>Alege grupa</option>
                 <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>

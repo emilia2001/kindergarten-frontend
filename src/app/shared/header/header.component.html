@@ -1,7 +1,11 @@
 <header>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark px-4 py-3">
-    <div><a [routerLink]="isAdminPage() ? '/admin' : '/'" class="navbar-brand fw-semibold">
-      Dumbrava Minunata</a></div>
+    <div [routerLink]="isAdminPage() ? '/admin' : '/'" class="navbar-brand fw-semibold">
+      <img src="assets/images/logoImage.png" class="logoImage">
+      <img src="assets/images/logoTitle.png" class="logoTitle">
+<!--      <a [routerLink]="isAdminPage() ? '/admin' : '/'" class="navbar-brand fw-semibold">-->
+<!--        Dumbrava Minunata</a>-->
+    </div>
 
     <ul class="navbar-nav" *ngIf=accountService.getIsAdminLoggedIn()>
       <li><a routerLink="/admin/children" class="nav-link" routerLinkActive="active-link"
@@ -13,26 +17,35 @@
       <li><a routerLink="/admin/teachers" class="nav-link" routerLinkActive="active-link"
              [routerLinkActiveOptions]="{exact:true}">Educatoare</a></li>
       <li><a routerLink="/admin/payments" class="nav-link" routerLinkActive="active-link"
-             [routerLinkActiveOptions]="{exact:true}">Plati</a></li>
+             [routerLinkActiveOptions]="{exact:true}">Plăți</a></li>
       <li><a routerLink="/admin/announcements" class="nav-link" routerLinkActive="active-link"
-             [routerLinkActiveOptions]="{exact:true}">Anunturi</a></li>
+             [routerLinkActiveOptions]="{exact:true}">Anunțuri</a></li>
     </ul>
 
     <ul class="navbar-nav" *ngIf=!accountService.getIsAdminLoggedIn()>
       <li><a [routerLink]="isAdminPage() ? '/admin' : '/'" class="nav-link" routerLinkActive="active-link"
-             [routerLinkActiveOptions]="{exact:true}">Acasa</a></li>
-      <li><a *ngIf=accountService.getIsParentLoggedIn() routerLink="/requests" class="nav-link" routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{exact:true}">Acasă</a></li>
+      <li><a *ngIf=accountService.getIsParentLoggedIn() routerLink="/requests" class="nav-link"
+             routerLinkActive="active-link"
              [routerLinkActiveOptions]="{exact:true}">Cererile mele</a></li>
-      <li><a *ngIf=accountService.getIsParentLoggedIn() routerLink="/payments" class="nav-link" routerLinkActive="active-link"
-             [routerLinkActiveOptions]="{exact:true}">Plati</a></li>
-      <li><a [routerLink]="isAdminPage() ? '/admin/announcements' : '/announcements'" class="nav-link" routerLinkActive="active-link"
-             [routerLinkActiveOptions]="{exact:true}">Anunturi</a></li>
+      <li><a *ngIf=accountService.getIsParentLoggedIn() routerLink="/payments" class="nav-link"
+             routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{exact:true}">Plăți</a></li>
+      <li><a [routerLink]="isAdminPage() ? '/admin/announcements' : '/announcements'" class="nav-link"
+             routerLinkActive="active-link"
+             [routerLinkActiveOptions]="{exact:true}">Anunțuri</a></li>
     </ul>
 
 
     <ul class="navbar-nav navbar-collapse justify-content-end">
-      <li><a *ngIf="!accountService.getIsAdminLoggedIn() && !accountService.getIsParentLoggedIn()" [routerLink]="isAdminPage() ? '/admin/login' : '/login'" class="nav-link" routerLinkActive="active-link">Logare</a></li>
-      <li><a *ngIf="accountService.getIsAdminLoggedIn() || accountService.getIsParentLoggedIn()" routerLink="/admin" (click)="handleLogout()" class="nav-link">Delogare</a>
+      <li><a *ngIf=accountService.getIsAdminLoggedIn() routerLink="admin/add-account" class="nav-link"
+             routerLinkActive="active-link"
+      >Adăugare cont</a></li>
+      <li><a *ngIf="!accountService.getIsAdminLoggedIn() && !accountService.getIsParentLoggedIn()"
+             [routerLink]="isAdminPage() ? '/admin/login' : '/login'" class="nav-link" routerLinkActive="active-link">Logare</a>
+      </li>
+      <li><a *ngIf="accountService.getIsAdminLoggedIn() || accountService.getIsParentLoggedIn()" routerLink="/admin"
+             (click)="handleLogout()" class="nav-link">Delogare</a>
       </li>
     </ul>
   </nav>

@@ -15,7 +15,7 @@
                 <h2 class="text-center text-lg-end text-dark">Vizualizare cerere</h2>
               </div>
               <div class="col-lg-4 d-flex justify-content-lg-end justify-content-center">
-                <button class="btn btn-success me-3" (click)="approveRequest()" [disabled]="isClosed">Aproba
+                <button class="btn btn-success me-3" (click)="approveRequest()" [disabled]="isClosed">Aprobă
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
                        class="bi bi-check-lg" viewBox="0 0 16 16">
                     <path
@@ -35,7 +35,7 @@
 
 
           <div class="form-group mb-3 text-start row">
-            <label class="form-label ms-2 fw-bold">Status grupa</label>
+            <label class="form-label ms-2 fw-bold">Status grupă</label>
             <br>
             <div class="col-md-6">
               <div class="d-flex">
@@ -48,12 +48,12 @@
                 <div class="infoPair">
                   <p class="infoKey">Tip:</p>
                   <p class="infoValue"
-                     *ngIf="requestType==='registration'">{{registrationRequest.child.group.groupType}}</p>
-                  <p class="infoValue" *ngIf="requestType==='extension'">{{extensionRequest.child.group.groupType}}</p>
+                     *ngIf="requestType==='registration'">{{registrationRequest.child.group.groupType | groupType}}</p>
+                  <p class="infoValue" *ngIf="requestType==='extension'">{{extensionRequest.child.group.groupType  | groupType}}</p>
                 </div>
 
                 <div class="infoPair">
-                  <p class="infoKey">Capacitate totala:</p>
+                  <p class="infoKey">Capacitate totală:</p>
                   <p class="infoValue">{{groupSpots.availableCount}}</p>
                 </div>
               </div>
@@ -66,7 +66,7 @@
                 </div>
 
                 <div class="infoPair">
-                  <p class="infoKey">Locuri in asteptare:</p>
+                  <p class="infoKey">Locuri în așteptare:</p>
                   <p class="infoValue">{{groupSpots.pendingCount}}</p>
                 </div>
 
@@ -91,8 +91,7 @@
                       [(ngModel)]="extensionRequest.comments" [disabled]="isClosed"></textarea>
           </div>
           <button class="ms-3 btn btn-primary text-light col-6 col-sm-3 col-lg-2" (click)="addComment()"
-                  [disabled]="isClosed">Adauga
-            comentariu
+                  [disabled]="isClosed">Adaugă
           </button>
           <hr class="mt-3">
           <app-admin-registration-request *ngIf="requestType==='registration'" [request]="registrationRequest"

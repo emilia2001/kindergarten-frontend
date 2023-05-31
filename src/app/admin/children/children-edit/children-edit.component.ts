@@ -1,7 +1,8 @@
-import {Component} from '@angular/core';
+import {Component, TemplateRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 
 import {finalize, take} from "rxjs";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 import {IChild} from "../../../shared/models/IChild";
 import {ChildrenService} from "../../../services/children/children.service";
@@ -25,6 +26,8 @@ export class ChildrenEditComponent {
   groupList: IGroup[] = [];
   selectedFiles?: FileList;
   currentFileUpload?: FileUpload;
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
+  modalRef: NgbModalRef | undefined;
 
   constructor(
     private _route: ActivatedRoute,
@@ -32,6 +35,7 @@ export class ChildrenEditComponent {
     private _formBuilder: FormBuilder,
     private _groupService: GroupService,
     private _childrenService: ChildrenService,
+    public modalService: NgbModal,
     private _firebaseService: FirebaseService
   ) {
   }
@@ -140,6 +144,35 @@ export class ChildrenEditComponent {
           }
         );
       }
+    }
+  }
+
+  openModal(myModal: TemplateRef<any>) {
+    if (this.myModal) {
+      this.modalRef = this.modalService.open(this.myModal);
+
+      this.modalRef.result.then(
+        () => {
+          console.log('Modal closed');
+        },
+        () => {
+          console.log('Modal dismissed');
+        }
+      );
+    }
+  }
+
+  deleteChild() {
+    this._childrenService.deleteChild(this.child.cnp).subscribe(data => {
+      console.log(data);
+      this.modalRef?.close();
+      setTimeout(() => this._router.navigate(['/admin/children']), 1000);
+    });
+  }
+
+  closeModal() {
+    if (this.myModal) {
+      this.modalRef?.close()
     }
   }
 }

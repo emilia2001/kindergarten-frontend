@@ -10,7 +10,8 @@
         </div>
         <div class="card-body px-3 px-sm-4 p-4 text-dark" *ngIf="!isLoading">
 
-          <h2 class="mb-4 text-dark">Editare anunt</h2>
+          <h2 *ngIf="id" class="mb-4 text-dark">Editare informații anunț</h2>
+          <h2 *ngIf="!id" class="mb-4 text-dark">Adăugare anunț</h2>
 
           <form class="text-start row" [formGroup]="announcementForm" (ngSubmit)="handleSubmitAnnouncement()">
             <div

@@ -20,6 +20,10 @@ import {FilterPaymentsPipe} from './pipes/filter-payments.pipe';
 import {ConfirmationModalComponent} from './modals/confirmation-modal/confirmation-modal.component';
 import {PdfViewerComponent} from './pdf-viewer/pdf-viewer.component';
 import { PreviousMonthPipe } from './pipes/previous-month.pipe';
+import { ComputeAgePipe } from './pipes/compute-age.pipe';
+import { RequestTypePipe } from './pipes/request-type.pipe';
+import { RequestStatusPipe } from './pipes/request-status.pipe';
+import { GroupTypePipe } from './pipes/group-type.pipe';
 
 
 @NgModule({
@@ -36,6 +40,10 @@ import { PreviousMonthPipe } from './pipes/previous-month.pipe';
     ConfirmationModalComponent,
     PdfViewerComponent,
     PreviousMonthPipe,
+    ComputeAgePipe,
+    RequestTypePipe,
+    RequestStatusPipe,
+    GroupTypePipe,
   ],
   exports: [
     HeaderComponent,
@@ -45,7 +53,11 @@ import { PreviousMonthPipe } from './pipes/previous-month.pipe';
     FilterPaymentsPipe,
     ConfirmationModalComponent,
     PdfViewerComponent,
-    PreviousMonthPipe
+    PreviousMonthPipe,
+    ComputeAgePipe,
+    RequestTypePipe,
+    RequestStatusPipe,
+    GroupTypePipe
   ],
   imports: [
     CommonModule,

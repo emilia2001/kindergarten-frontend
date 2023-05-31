@@ -1,25 +1,25 @@
 <ng-template #myModal let-modalRef="modalRef">
   <div class="modal-header">
-    <h4 class="modal-title text-dark">Efectuare plata</h4>
+    <h4 class="modal-title text-dark">Efectuare plată</h4>
   </div>
   <div class="modal-body">
     <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
       <div class="spinner-border" role="status">
-        <span class="visually-hidden">Se incarca...</span>
+        <span class="visually-hidden">Se incarcă...</span>
       </div>
     </div>
     <form *ngIf="!isLoading" [formGroup]="paymentForm" (submit)="handleSubmit()">
       <div class="form-outline mb-3 text-start">
-        <label class="form-label ms-2" for="amount">Suma</label>
+        <label class="form-label ms-2" for="amount">Sumă</label>
         <input type="text" id="amount" formControlName="amountInput" class="form-control" [(ngModel)]="amount"/>
       </div>
       <div class="text-start">
-        <label class="ms-2 mb-2">Informatii card</label>
+        <label class="ms-2 mb-2">Informații card</label>
         <div id="card-element" *ngIf="stripe"></div>
       </div>
       <div id="card-errors" role="alert"></div>
       <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
-        Efectueaza plata
+        Efectuează plata
       </button>
       <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
         <div class="spinner-border" role="status">
@@ -44,7 +44,7 @@
 
 <div class="container pb-4">
   <div class="row justify-content-center">
-    <h2 class="text-light heading-section mt-4">Lista plati</h2>
+    <h2 class="text-light heading-section mt-4">Listă plăți</h2>
   </div>
 
   <section class="container my-4">
@@ -55,11 +55,11 @@
             <thead>
             <tr>
               <th></th>
-              <th>Plata pentru</th>
-              <th>Suma restanta</th>
-              <th>Suma actuala</th>
-              <th>Total suma</th>
-              <th>Ramas de plata</th>
+              <th>Plată pentru</th>
+              <th>Sumă restantă</th>
+              <th>Sumă actuală</th>
+              <th>Total sumă</th>
+              <th>Rămas de plată</th>
               <th>Luna</th>
               <th>Status</th>
               <th></th>
@@ -80,13 +80,13 @@
 
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month == currentMonthValue">
                   <button (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)"
-                          class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'">Plateste
+                          class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'">Plătește
                     <br>{{payment.totalUnpaidAmount}} RON
                   </button>
                 </div>
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'"
                      class="fw-semibold fs-5">
-                  <span class="text-success">Platita</span>
+                  <span class="text-success">Plătită</span>
                   <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold
                        class="bi bi-check-lg" viewBox="0 0 16 16">
                     <path
@@ -95,10 +95,10 @@
                 </div>
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
                      class="fw-normal fs-6">
-                  <span class="text-dark">Restanta in luna urmatoare</span>
+                  <span class="text-dark">Restantă în luna următoare</span>
                 </div>
               </td>
-              <td><a class="text-dark confirmationLink" *ngFor="let confirmation of getConfirmationForPayment(payment.id!)" href="{{confirmation.path}}" target="_blank">Chitanta{{confirmation.id}}<br></a></td>
+              <td><a class="text-dark confirmationLink" *ngFor="let confirmation of getConfirmationForPayment(payment.id!)" href="{{confirmation.path}}" target="_blank">Chitanța{{confirmation.id}}<br></a></td>
             </tr>
             </tbody>
           </table>

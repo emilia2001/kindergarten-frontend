@@ -4,16 +4,18 @@
       <div class="card shadow-lg" style="border-radius: 1rem;">
         <div class="card-body px-3 px-sm-4 p-4 text-dark">
 
-          <h3 class="mb-4 text-dark text-center">Logare</h3>
+<!--          <img src="assets/images/logoDark2.png" class="w-50">-->
+<!--          <img src="assets/images/logoTitleDark.png" class="w-100">-->
+          <h3 class="mb-4 mt-2 text-dark text-center">Logare</h3>
 
-          <form [formGroup]="loginAdminForm" (ngSubmit)="handleLogin()">
+          <form [formGroup]="loginAdminForm" (ngSubmit)="handleLogin()" class="text-start">
             <div class="form-outline mb-3">
               <label class="form-label" for="username">Nume utilizator</label>
               <input type="text" id="username" formControlName="username" class="form-control"/>
             </div>
 
             <div class="pass form-outline mb-2">
-              <label class="form-label" for="password">Parola</label>
+              <label class="form-label" for="password">Parolă</label>
               <div class="input-group mb-3">
                 <input [type]="hidePassword ? 'password' : 'text'" id="password" formControlName="password"
                        (focus)="visibility.classList.add('focus')"
@@ -49,7 +51,7 @@
             </div>
 
             <div class="d-flex justify-content-center strong mt-4" *ngIf="role.toString() == 'PARENT'" [routerLink]="">
-              <a class="registerLink" [routerLink]="['/register']">Nu ai inca un cont? Creaza unul acum!</a>
+              <a class="registerLink" [routerLink]="['/register']">Nu ai încă un cont? Crează unul acum!</a>
             </div>
 
             <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">

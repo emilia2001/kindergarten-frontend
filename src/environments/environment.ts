@@ -25,7 +25,8 @@ export const environment = {
     charge: '/charge',
     chargeByAdmin: '/charge-by-admin',
     paymentConfirmation: '/payment-confirmation',
-    nextId: '/next-id'
+    nextId: '/next-id',
+    admin: '/admin'
   },
   web: {
     client_id: "820913190664-fbfch7ja0c8v88pqv0utku5p7gm3qabn.apps.googleusercontent.com",

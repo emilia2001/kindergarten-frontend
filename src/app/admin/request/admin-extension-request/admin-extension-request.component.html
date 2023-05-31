@@ -6,7 +6,7 @@
 <form class="text-start row" *ngIf="!isLoading">
   <div class="col-12 col-sm-5">
     <fieldset class="border p-2 mt-4">
-      <legend class="border-0 px-2 w-auto">Informatii copil</legend>
+      <legend class="border-0 px-2 w-auto">Informații copil</legend>
       <div class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline">
         <img class="card-img-top" [src]="request.child.picturePath" alt="...">
       </div>
@@ -29,13 +29,13 @@
       </div>
 
       <div class="form-group mb-3">
-        <label for="dateOfBirth" class="form-label ms-2">Zi de nastere</label>
+        <label for="dateOfBirth" class="form-label ms-2">Zi de naștere</label>
         <input id="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
                required="required" [value]="request.child.dateOfBirth" [disabled]="true">
       </div>
 
       <div class="form-group mb-3">
-        <label class="form-label ms-2" for="group">Grupa</label>
+        <label class="form-label ms-2" for="group">Grupă</label>
         <input id="group"
                type="text"
                class="form-control"

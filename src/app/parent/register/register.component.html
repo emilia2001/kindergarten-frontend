@@ -4,7 +4,7 @@
       <div class="card shadow-lg" style="border-radius: 1rem;">
         <div class="card-body px-3 px-sm-4 p-4 text-dark">
 
-          <h3 class="mb-4 text-dark text-center">Inregistrare</h3>
+          <h3 class="mb-4 text-dark text-center">Înregistrare</h3>
 
           <form [formGroup]="registerForm" (ngSubmit)="handleRegister()" class="text-start">
             <div class="form-outline mb-3">
@@ -28,12 +28,12 @@
             </div>
 
             <div class="form-outline mb-3">
-              <label class="form-label" for="phoneNumber">Numar de telefon</label>
+              <label class="form-label" for="phoneNumber">Număr de telefon</label>
               <input type="phone" id="phoneNumber" formControlName="phoneNumber" class="form-control"/>
             </div>
 
             <div class="pass form-outline mb-2">
-              <label class="form-label" for="password">Parola</label>
+              <label class="form-label" for="password">Parolă</label>
               <div class="input-group mb-3">
                 <input [type]="hidePassword ? 'password' : 'text'" id="password" formControlName="password"
                        (focus)="visibility.classList.add('focus')"
@@ -88,11 +88,11 @@
 <!--              </div>-->
 <!--            </div>-->
 
-            <div class="text-danger fw-semibold" *ngIf='errors && !isLoading'>{{errors}}</div>
+            <div class="text-danger fw-semibold" *ngIf="errors && !isLoading">{{errors}}</div>
 
             <div class="d-flex justify-content-center strong mt-4">
               <button type="submit" class="btn btn-primary btn-lg btn-block w-75 text-light" type="submit"
-                      [disabled]="isLoading">Inregistrare
+                      [disabled]="isLoading">Înregistrare
               </button>
             </div>
 
