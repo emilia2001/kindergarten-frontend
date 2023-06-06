@@ -1,4 +1,4 @@
-<section class="mt-4 container">
+<section class="mt-4 pb-4 container">
   <div class="row justify-content-center">
     <h2 class="heading-section text-light">Listă copii înscriși</h2>
   </div>
@@ -11,35 +11,123 @@
   </div>
   <form [formGroup]="searchForm">
     <div class="form-outline mb-3">
-      <input type="text" formControlName="search" placeholder="Cauta..." class="form-control"/>
+      <input type="text" formControlName="search" placeholder="Caută..." class="form-control"/>
     </div>
   </form>
   <div class="itemsContainer text-dark row">
     <div class="col-md-12">
       <div class="table-wrap">
-        <table class=" table table-responsive-xl">
+        <h5 *ngIf="(childrenList | filterChildren:searchForm.get('search')!.value!).length == 0" class="text-light">Nu a
+          fost găsit niciun copil</h5>
+        <table *ngIf="(childrenList | filterChildren:searchForm.get('search')!.value!).length > 0"
+               class=" table table-responsive-xl fw-semibold">
           <thead>
           <tr>
             <th></th>
-            <th>CNP</th>
-            <th>Nume</th>
-            <th>Vârsta</th>
-            <th>Grupa</th>
-            <th>Persoană contact</th>
-            <th>Telefon contact</th>
+            <th (click)="sortKey = 'cnp'; sortAsc = !sortAsc">
+              CNP
+              <svg *ngIf="getSortingIcon('cnp') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+              <svg *ngIf="getSortingIcon('cnp') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+            </th>
+            <th (click)="sortKey = 'lastName'; sortAsc = !sortAsc">
+              Nume
+              <svg *ngIf="getSortingIcon('lastName') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+              <svg *ngIf="getSortingIcon('lastName') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                   fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+            </th>
+            <th (click)="sortKey = 'dateOfBirth'; sortAsc = !sortAsc">
+              Vârsta
+              <svg *ngIf="getSortingIcon('dateOfBirth') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+              <svg *ngIf="getSortingIcon('dateOfBirth') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16"
+                   fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+            </th>
+            <th (click)="sortKey = 'group.name'; sortAsc = !sortAsc">
+              Grupă
+              <svg *ngIf="getSortingIcon('group.name') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+              <svg *ngIf="getSortingIcon('group.name') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16"
+                   fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+            </th>
+            <th (click)="sortKey = 'parent.firstName'; sortAsc = !sortAsc">
+              Persoană contact
+              <svg *ngIf="getSortingIcon('parent.firstName') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+              <svg *ngIf="getSortingIcon('parent.firstName') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16"
+                   fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+            </th>
+            <th (click)="sortKey = 'parent.phoneNumber'; sortAsc = !sortAsc">
+              Telefon contact
+              <svg *ngIf="getSortingIcon('parent.phoneNumber') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+              <svg *ngIf="getSortingIcon('parent.phoneNumber') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
+                   height="16"
+                   fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                <path
+                  d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+              </svg>
+            </th>
             <th></th>
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let child of childrenList | filterChildren:searchForm.get('search')!.value!">
+          <tr
+            *ngFor="let child of childrenList | filterChildren:searchForm.get('search')!.value! | orderBy:sortKey:sortAsc">
             <td><img class="img" [src]="child.picturePath" alt="Child Picture"></td>
             <td>{{child.cnp}}</td>
-            <td>{{child.firstName + ' ' +  child.lastName}}</td>
+            <td>{{child.firstName + ' ' + child.lastName}}</td>
             <td>{{child.dateOfBirth | computeAge}} ani</td>
             <td>{{child.group.name}}</td>
             <td>{{child.parent!.firstName + ' ' + child.parent!.lastName}}</td>
             <td>{{child.parent!.phoneNumber}}</td>
-            <td><a class="text-dark" [routerLink]="['/admin/children', child.cnp]">Editare</a></td>
+            <td><a class="text-dark" [routerLink]="['/admin/children', child.cnp]" title="Editare">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                   class="bi bi-pencil-square" viewBox="0 0 16 16">
+                <path
+                  d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                <path fill-rule="evenodd"
+                      d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+              </svg>
+            </a></td>
           </tr>
           </tbody>
         </table>

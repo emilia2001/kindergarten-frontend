@@ -1,3 +1,7 @@
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
+
 legend {
   margin-top: -1.5rem;
   background: white;

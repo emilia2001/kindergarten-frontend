@@ -7,9 +7,8 @@
       <div class="form-group mb-3">
         <label for="group" class="form-label ms-2">Grupă</label>
         <select id="group" class="form-control" (change)="handleGroupChange($event)">
-          <option selected disabled hidden>Alege grupa</option>
-          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}}</option>
-          <option value="-1">Toate</option>
+          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}} ({{group.groupType | groupType}})</option>
+          <option value="-1" selected>Toate</option>
         </select>
       </div>
       <div class="form-group mb-3">
@@ -37,7 +36,9 @@
     <div class="itemsContainer text-dark row">
       <div class="col-md-12">
         <div class="table-wrap">
-          <table class=" table table-responsive-xl">
+          <h5 *ngIf="registrationRequestList.getValue().length == 0 && extensionRequestList.getValue().length == 0" class="text-light">
+            Nicio cerere disponibilă</h5>
+          <table class=" table table-responsive-xl" *ngIf="registrationRequestList.getValue().length > 0 || extensionRequestList.getValue().length > 0">
             <thead>
             <tr>
               <th></th>
@@ -49,27 +50,37 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let request of registrationRequestList.getValue()" class="alert" role="alert">
+            <tr *ngFor="let request of registrationRequestList.getValue()" class="alert fw-semibold" role="alert">
               <td><img class="img" [src]="request.child.picturePath" alt="Child Picture"></td>
               <td class="">
                 {{request.child.firstName + ' ' + request.child.lastName}}
               </td>
               <td>{{request.child.group.name}}</td>
               <td>Înregistrare</td>
-              <td>{{request.status | requestStatus}}</td>
+              <td><span class="badge rounded-pill text-bg-primary" [ngClass]="getClassForBadge(request.status)">{{request.status | requestStatus}}</span></td>
               <td><a class="text-dark"
-                     [routerLink]="['/admin/requests', request.id, {type: 'registration'}]">Editare</a></td>
+                     [routerLink]="['/admin/requests', request.id, {type: 'registration'}]" title="Editare">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+              </a></td>
             </tr>
-            <tr *ngFor="let request of extensionRequestList.getValue()" class="alert" role="alert">
+            <tr *ngFor="let request of extensionRequestList.getValue()" class="alert fw-semibold" role="alert">
               <td><img class="img" [src]="request.child.picturePath" alt="Child Picture"></td>
               <td class="">
                 {{request.child.firstName + ' ' + request.child.lastName}}
               </td>
               <td>{{request.child.group.name}}</td>
               <td>Prelungire</td>
-              <td>{{request.status | requestStatus}}</td>
-              <td><a class="text-dark" [routerLink]="['/admin/requests', request.id, {type:'extension'}]">Editare</a>
-              </td>
+              <td><span class="badge rounded-pill text-bg-primary" [ngClass]="getClassForBadge(request.status)">{{request.status | requestStatus}}</span></td>
+              <td><a class="text-dark"
+                     [routerLink]="['/admin/requests', request.id, {type: 'extension'}]" title="Editare">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+              </a></td>
             </tr>
             </tbody>
           </table>

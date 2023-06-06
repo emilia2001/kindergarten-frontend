@@ -274,5 +274,9 @@ export class PaymentListComponent implements OnInit {
   getConfirmationForPayment(id: number) {
     return this.paymentConfirmationList.getValue().filter(confirmation => confirmation.paymentId == id);
   }
+
+  sendPaymentsEmail() {
+    this._paymentService.sendEmail().subscribe(data => console.log(data))
+  }
 }
 

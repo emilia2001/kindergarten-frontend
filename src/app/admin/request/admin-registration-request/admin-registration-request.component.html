@@ -36,10 +36,10 @@
 
       <div class="form-group mb-3">
         <label class="form-label ms-2" for="group">Grupă</label>
-        <input id="group"
-               type="text"
-               class="form-control"
-               [value]="request.child.group.name + ' (' + request.child.group.groupType + ')'" [disabled]="true"/>
+      <input id="group"
+       type="text"
+       class="form-control"
+       [value]="request.child.group.name + ' (' + (request.child.group.groupType | groupType) + ' )'" [disabled]="true"/>
       </div>
     </fieldset>
 

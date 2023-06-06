@@ -69,7 +69,7 @@
             <tr *ngFor="let payment of paymentList | async " class="alert" role="alert">
               <td><img class="img" [src]="payment.child.picturePath" alt="Child Picture"></td>
               <td class="">
-                {{payment.child.firstName + ' ' + payment.child.lastName}}
+                {{payment.child.firstName}}<br>{{payment.child.lastName}}
               </td>
               <td>{{payment.outstandingAmount}} RON</td>
               <td>{{payment.currentAmount}} RON</td>

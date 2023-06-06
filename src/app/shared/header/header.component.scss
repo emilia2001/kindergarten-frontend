@@ -19,3 +19,9 @@ a {
 .logoImage {
   height: 80px;
 }
+
+.navbar-brand {
+  &:hover {
+    cursor: pointer;
+  }
+}

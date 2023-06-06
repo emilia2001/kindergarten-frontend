@@ -126,6 +126,11 @@ btn:focus, a:focus {
   box-shadow: 0 0 0 0.1rem #c4c5d5;
 }
 
+.btn-close:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus,
@@ -184,7 +189,7 @@ input:-webkit-autofill {
 }
 .itemsContainer .table thead th {
   border: none;
-  padding: 30px;
+  padding: 30px 15px;
   font-weight: 500;
   color: gray;
 }

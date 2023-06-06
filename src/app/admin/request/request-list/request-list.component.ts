@@ -128,4 +128,17 @@ export class RequestListComponent implements OnInit {
       }
     }
   }
+
+  getClassForBadge(status: string) {
+    if (status == "APPROVED")
+      return "text-bg-success";
+    if (status == "REJECTED")
+      return "text-bg-danger";
+    if (status == "PENDING")
+      return "text-bg-secondary";
+    if (status == "ONGOING")
+      return "text-bg-warning"
+    return ""
+
+  }
 }

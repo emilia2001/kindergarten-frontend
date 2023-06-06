@@ -3,8 +3,6 @@
     <div [routerLink]="isAdminPage() ? '/admin' : '/'" class="navbar-brand fw-semibold">
       <img src="assets/images/logoImage.png" class="logoImage">
       <img src="assets/images/logoTitle.png" class="logoTitle">
-<!--      <a [routerLink]="isAdminPage() ? '/admin' : '/'" class="navbar-brand fw-semibold">-->
-<!--        Dumbrava Minunata</a>-->
     </div>
 
     <ul class="navbar-nav" *ngIf=accountService.getIsAdminLoggedIn()>

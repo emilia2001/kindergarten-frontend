@@ -23,13 +23,22 @@ input[type=file] {
 
 svg {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: -20px;
+  top: -10px;
 }
 
 legend {
   margin-top: -1.5rem;
   background: white;
+}
+
+.btn-close {
+  outline: none !important;
+  border: none !important;
+}
+.btn-close:focus {
+  outline: none !important;
+  border: none !important;
 }
 
 /*# sourceMappingURL=children-edit.component.css.map */

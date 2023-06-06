@@ -24,6 +24,8 @@ import { ComputeAgePipe } from './pipes/compute-age.pipe';
 import { RequestTypePipe } from './pipes/request-type.pipe';
 import { RequestStatusPipe } from './pipes/request-status.pipe';
 import { GroupTypePipe } from './pipes/group-type.pipe';
+import { OrderByPipe } from './pipes/order-by.pipe';
+import { RomanianMonthPipe } from './pipes/romanian-month.pipe';
 
 
 @NgModule({
@@ -44,21 +46,25 @@ import { GroupTypePipe } from './pipes/group-type.pipe';
     RequestTypePipe,
     RequestStatusPipe,
     GroupTypePipe,
+    OrderByPipe,
+    RomanianMonthPipe,
   ],
-  exports: [
-    HeaderComponent,
-    FooterComponent,
-    FilterChildrenPipe,
-    PaymentStatusPipe,
-    FilterPaymentsPipe,
-    ConfirmationModalComponent,
-    PdfViewerComponent,
-    PreviousMonthPipe,
-    ComputeAgePipe,
-    RequestTypePipe,
-    RequestStatusPipe,
-    GroupTypePipe
-  ],
+    exports: [
+        HeaderComponent,
+        FooterComponent,
+        FilterChildrenPipe,
+        PaymentStatusPipe,
+        FilterPaymentsPipe,
+        ConfirmationModalComponent,
+        PdfViewerComponent,
+        PreviousMonthPipe,
+        ComputeAgePipe,
+        RequestTypePipe,
+        RequestStatusPipe,
+        GroupTypePipe,
+        OrderByPipe,
+        RomanianMonthPipe
+    ],
   imports: [
     CommonModule,
     AppRoutingModule,

@@ -19,7 +19,7 @@
       <div class="postcard_text t-dark">
         <h1 class="postcard_title blue mb-4">{{announcement.title}}</h1>
 
-        <div class="postcard_preview-txt">{{announcement.description}}</div>
+        <div class="postcard_preview-txt" style="white-space: pre-line">{{announcement.description}}</div>
         <ul class="postcard_tagbox text-light" *ngIf="isAdminLoggedIn">
           <li class="tag_item" [routerLink]="['/admin/announcements/', announcement.id]">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

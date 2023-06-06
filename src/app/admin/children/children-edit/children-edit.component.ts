@@ -1,4 +1,4 @@
-import {Component, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, TemplateRef, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 
 import {finalize, take} from "rxjs";
@@ -7,7 +7,7 @@ import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 import {IChild} from "../../../shared/models/IChild";
 import {ChildrenService} from "../../../services/children/children.service";
 import {IGroup} from "../../../shared/models/IGroup";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {GroupService} from "../../../services/group/group.service";
 import {FileUpload} from "../../../shared/models/FileUpload";
 import {FirebaseService} from "../../../services/firebase/firebase.service";
@@ -20,6 +20,12 @@ import {FirebaseService} from "../../../services/firebase/firebase.service";
 export class ChildrenEditComponent {
   childForm!: FormGroup;
   isLoading: boolean = false;
+  isLoadingDelete: boolean = false;
+  deleteMessage: string = '';
+  deleteError: string = '';
+  isLoadingUpdate: boolean = false;
+  updateMessage: string = '';
+  updateError: string = '';
   id: string = '';
   child!: IChild;
   errors: string = '';
@@ -28,6 +34,12 @@ export class ChildrenEditComponent {
   currentFileUpload?: FileUpload;
   @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
   modalRef: NgbModalRef | undefined;
+  minDate: any;
+  maxDate: any;
+  showSuccessAlert: any;
+  showErrorAlert: any;
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
@@ -40,19 +52,25 @@ export class ChildrenEditComponent {
   ) {
   }
 
+
   ngOnInit() {
     this.getGroupList();
     this.childForm = this._formBuilder.group({
-      cnp: ["", Validators.required],
-      firstName: ["", Validators.required],
-      lastName: ["", Validators.required],
-      dateOfBirth: ["", Validators.required],
-      group: ["", Validators.required],
-      profilePicture: ["", Validators.required],
-      contactPhoneNumber: ["", Validators.required],
-      contactFirstName: ["", Validators.required],
-      contactLastName: ["", Validators.required],
+      cnp: ['', [Validators.required, Validators.pattern(/^[0-9]{13}$/), this.cnpValidator]],
+      firstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z -ăĂîÎâÂșȘțȚ]+$/)]],
+      lastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ăĂîÎâÂșȘțȚ]+$/)]],
+      dateOfBirth: ['', Validators.required],
+      group: ['', Validators.required],
+      profilePicture: [''],
+      contactPhoneNumber: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+      contactFirstName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z -ăĂîÎâÂșȘțȚ]+$/)]],
+      contactLastName: ['', [Validators.required, Validators.pattern(/^[a-zA-Z ăĂîÎâÂșȘțȚ]+$/)]],
+      contactEmail: ['', [Validators.required, Validators.email]],
     });
+
+    const currentDate = new Date();
+    this.minDate = new Date(currentDate.getFullYear() - 6, 0, 2).toISOString().split('T')[0];
+    this.maxDate = new Date(currentDate.getFullYear() - 2, 0, 1).toISOString().split('T')[0];
 
     const idParam = this._route.snapshot.paramMap.get('id');
     if (idParam) {
@@ -81,11 +99,43 @@ export class ChildrenEditComponent {
         parent: {
           firstName: "",
           lastName: "",
-          phoneNumber: ""
+          phoneNumber: "",
+          email: ""
         },
         picturePath: './assets/images/default_picture.png'
       };
     }
+  }
+
+
+  cnpValidator(control: FormControl): { [key: string]: any } | null{
+    const value = control.value;
+    console.log(value)
+    // Check if the CNP is empty
+    if (!value) {
+      return null;
+    }
+
+    // Check CNP length
+    if (value.length !== 13) {
+      return { invalidCnpLength: true };
+    }
+
+    // Extract date components from CNP
+    const year = 2000 + Number(value.substr(1, 2));
+    const month = Number(value.substr(3, 2));
+    const day = Number(value.substr(5, 2));
+
+    // Validate date of birth
+    const dateOfBirth = new Date(year, month - 1, day);
+    const isValidDate = dateOfBirth.getFullYear() === year &&
+      dateOfBirth.getMonth() === month - 1 &&
+      dateOfBirth.getDate() === day;
+    if (!isValidDate) {
+      return { invalidDateOfBirth: true };
+    }
+
+    return null;
   }
 
   getGroupList() {
@@ -99,12 +149,17 @@ export class ChildrenEditComponent {
   handleSubmitChild() {
     const formValues = this.childForm.value;
     let newPicture = this.child.picturePath;
+    this.updateError = "";
+    this.updateMessage = "";
+    this.errors = "";
 
     this.child = {
       parent: {
         firstName: formValues.contactFirstName,
         lastName: formValues.contactLastName,
-        phoneNumber: formValues.contactPhoneNumber
+        phoneNumber: formValues.contactPhoneNumber,
+        email: formValues.contactEmail,
+        id: this.child.parent?.id
       },
       firstName: formValues.firstName,
       lastName: formValues.lastName,
@@ -116,9 +171,63 @@ export class ChildrenEditComponent {
       },
       picturePath: newPicture
     };
+    // if (this.childForm.touched && this.childForm.valid) {
+    //   if (this.id) this._childrenService.update(this.id, this.child).pipe(
+    //     take(1),
+    //     finalize(() => this.isLoadingUpdate = false)
+    //   ).subscribe({
+    //     next: _ => {
+    //       this.updateMessage = "Modificările s-au salvat cu succes";
+    //       this.showSuccessAlert = true;
+    //       this.scrollToSuccessAlert();
+    //     },
+    //     error: _ => {
+    //       this.showErrorAlert = true;
+    //       this.scrollToErrorAlert();
+    //     }
+    //   })
+    //   else this._childrenService.add(this.child).pipe(
+    //     take(1),
+    //     finalize(() => this.isLoadingUpdate = false)
+    //   ).subscribe({
+    //     next: _ => {
+    //       this.updateMessage = "Copilul a fost adăgat în sistem";
+    //       this.showSuccessAlert = true;
+    //       this.scrollToSuccessAlert();
+    //     },
+    //     error: _ => {
+    //       this.showErrorAlert = true;
+    //       this.scrollToErrorAlert();
+    //     }
+    //   })
+    // }
+    if (this.childForm.touched && this.childForm.valid) {
+      this.isLoadingUpdate = true; // Set loading state to true
 
-    if (this.id) this._childrenService.update(this.id, this.child).subscribe(data => console.log(data + "plm"))
-    else this._childrenService.add(this.child).subscribe(data => console.log(data));
+      const updateObservable = this.id
+        ? this._childrenService.update(this.id, this.child)
+        : this._childrenService.add(this.child);
+
+      updateObservable.pipe(
+        take(1),
+        finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
+      ).subscribe({
+        next: (_) => {
+          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Copilul a fost adăgat în sistem";
+          this.showSuccessAlert = true;
+          setTimeout(() => this.scrollToSuccessAlert(), 0);
+        },
+        error: (_) => {
+          this.showErrorAlert = true;
+          setTimeout(() => this.scrollToErrorAlert(), 0);
+        }
+      });
+    }
+
+    if (!this.childForm.valid) {
+      this.errors = "Date invalide"
+    }
+
   }
 
   onImageSelected($event: any) {
@@ -163,16 +272,54 @@ export class ChildrenEditComponent {
   }
 
   deleteChild() {
-    this._childrenService.deleteChild(this.child.cnp).subscribe(data => {
-      console.log(data);
-      this.modalRef?.close();
-      setTimeout(() => this._router.navigate(['/admin/children']), 1000);
+    this.isLoadingDelete = true;
+    this.deleteMessage = '';
+    this.deleteError = '';
+    // this._childrenService.deleteChild(this.child).subscribe(data => {
+    //   console.log(data);
+    //   this.modalRef?.close();
+    //   setTimeout(() => this._router.navigate(['/admin/children']), 1000);
+    // });
+    this._childrenService.deleteChild(this.child).pipe(
+      take(1),
+      finalize(() => this.isLoadingDelete = false)
+    ).subscribe({
+      next: data => {
+        this.deleteMessage = "Copilul a fost șters cu succes";
+      },
+      error: _ => {
+        this.deleteError = 'S-a produs o eroare';
+      }
     });
   }
 
+
   closeModal() {
     if (this.myModal) {
-      this.modalRef?.close()
+      this.modalRef?.close();
+    }
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+  }
+
+  closeErrorAlert() {
+    this.showErrorAlert = false;
+  }
+
+  scrollToSuccessAlert() {
+    console.log(this.successAlertRef)
+    if (this.successAlertRef && this.successAlertRef.nativeElement) {
+      this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      this.successAlertRef.nativeElement.focus();
+    }
+  }
+
+  scrollToErrorAlert() {
+    if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
+      this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

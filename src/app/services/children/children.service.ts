@@ -19,8 +19,8 @@ export class ChildrenService {
     return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
   }
 
-  deleteChild(id: string): Observable<any> {
-    return this._httpClient.delete(`${api}${children}${deleteEnd}/${id}`);
+  deleteChild(child: IChild): Observable<any> {
+    return this._httpClient.put(`${api}${children}${deleteEnd}`, child);
   }
 
   getOneById(id: string): Observable<IChild> {

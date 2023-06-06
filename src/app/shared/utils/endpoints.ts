@@ -23,3 +23,4 @@ export const chargeByAdmin = endpoints.chargeByAdmin;
 export const paymentConfirmation = endpoints.paymentConfirmation;
 export const nextId = endpoints.nextId;
 export const admin = endpoints.admin;
+export const sendEmail = endpoints.sendEmail;

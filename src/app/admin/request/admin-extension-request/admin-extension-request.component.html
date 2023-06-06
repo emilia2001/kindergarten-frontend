@@ -39,7 +39,7 @@
         <input id="group"
                type="text"
                class="form-control"
-               [value]="request.child.group.name + ' (' + request.child.group.groupType + ')'" [disabled]="true"/>
+               [value]="request.child.group.name + ' (' + (request.child.group.groupType | groupType) + ' )'" [disabled]="true"/>
       </div>
     </fieldset>
 

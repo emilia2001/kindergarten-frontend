@@ -15,4 +15,8 @@ a:hover {
   height: 80px;
 }
 
+.navbar-brand:hover {
+  cursor: pointer;
+}
+
 /*# sourceMappingURL=header.component.css.map */

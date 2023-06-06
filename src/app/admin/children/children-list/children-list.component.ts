@@ -16,6 +16,8 @@ export class ChildrenListComponent implements OnInit {
   searchForm = new FormGroup({
     search: new FormControl('')
   });
+  sortKey: string = '';
+  sortAsc: boolean = true;
 
    constructor(
     private _childrenService: ChildrenService,
@@ -49,5 +51,13 @@ export class ChildrenListComponent implements OnInit {
 
   handleViewChild(child: IChild) {
     this._router.navigate(['admin/children', child.cnp])
+  }
+
+  getSortingIcon(column: string): string {
+    if (this.sortKey === column) {
+      return this.sortAsc ? 'up' : 'down';
+    }
+
+    return 'up';
   }
 }

@@ -1,6 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 import {GroupService} from "../../../services/group/group.service";
 import {IGroup} from "../../../shared/models/IGroup";
@@ -9,6 +9,7 @@ import {ITeacherAdd} from "../../../shared/models/ITeacher";
 import {finalize, take} from "rxjs";
 import {FileUpload} from "../../../shared/models/FileUpload";
 import {FirebaseService} from "../../../services/firebase/firebase.service";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-teacher-edit',
@@ -24,13 +25,17 @@ export class TeacherEditComponent implements OnInit {
   currentFileUpload?: FileUpload;
   isLoading: boolean = false;
   errors: string = '';
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
+  modalRef: NgbModalRef | undefined;
 
   constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _groupService: GroupService,
     private _teacherService: TeacherService,
-    private _firebaseService: FirebaseService
+    private _firebaseService: FirebaseService,
+     public modalService: NgbModal,
+    private _router: Router,
   ) {
   }
 
@@ -120,6 +125,35 @@ export class TeacherEditComponent implements OnInit {
           }
         );
       }
+    }
+  }
+
+  openModal(myModal: TemplateRef<any>) {
+    if (this.myModal) {
+      this.modalRef = this.modalService.open(this.myModal);
+
+      this.modalRef.result.then(
+        () => {
+          console.log('Modal closed');
+        },
+        () => {
+          console.log('Modal dismissed');
+        }
+      );
+    }
+  }
+
+  deleteTeacher() {
+    this._teacherService.deleteTeacher(this.teacher.id!).subscribe(data => {
+      console.log(data);
+      this.modalRef?.close();
+      setTimeout(() => this._router.navigate(['/admin/teacher']), 1000);
+    });
+  }
+
+  closeModal() {
+    if (this.myModal) {
+      this.modalRef?.close()
     }
   }
 }

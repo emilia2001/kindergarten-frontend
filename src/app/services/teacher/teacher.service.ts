@@ -4,7 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 
 import {ITeacher, ITeacherAdd} from "../../shared/models/ITeacher";
-import {add, all, api, get, teacher, update} from "../../shared/utils/endpoints";
+import {add, all, api, deleteEnd, get, teacher, update} from "../../shared/utils/endpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +21,10 @@ export class TeacherService {
 
   add(teacherAddDto: ITeacherAdd): Observable<any> {
     return this._httpClient.post<any>(`${api}${teacher}${add}`, teacherAddDto);
+  }
+
+  deleteTeacher(id: number): Observable<any> {
+    return this._httpClient.delete(`${api}${teacher}${deleteEnd}/${id}`);
   }
 
   update(id: number, teacherDto: ITeacherAdd): Observable<any> {

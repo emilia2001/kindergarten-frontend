@@ -1,3 +1,6 @@
-
+.badge {
+  font-size: 13px !important;
+  min-width: 100px;
+}
 
 /*# sourceMappingURL=request-list.component.css.map */
