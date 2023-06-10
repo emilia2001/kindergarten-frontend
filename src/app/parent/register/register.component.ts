@@ -2,9 +2,10 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 
+import {finalize, take} from "rxjs";
+
 import {AccountService} from "../../services/account/account.service";
 import {IParentDto} from "../../shared/models/IParent";
-import {finalize, take} from "rxjs";
 
 @Component({
   selector: 'app-register',
@@ -52,13 +53,12 @@ export class RegisterComponent implements OnInit {
           take(1),
           finalize(() => this.isLoading = false)
         ).subscribe({
-          next: data => {
+          next: _ => {
             this.errors = '';
             this._router.navigate([''])
           },
-          error: err => {
+          error: _ => {
             this.errors = 'Date invalide';
-            // this.registerForm.reset();
           }
         }
       )

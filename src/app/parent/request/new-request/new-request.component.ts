@@ -10,21 +10,20 @@ import {AccountService} from "../../../services/account/account.service";
   styleUrls: ['./new-request.component.scss']
 })
 export class NewRequestComponent implements OnInit {
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
   isLoading: any;
   form: any;
   currentApplicationPdf!: string;
   requestType!: string;
   showSuccessAlert: any;
   showErrorAlert: any;
-  @ViewChild('successAlert') successAlertRef!: ElementRef;
-  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
   isLoadingUpdate: boolean = false;
   updateMessage: string = '';
 
   constructor(
     private _accountService: AccountService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     // @ts-ignore
@@ -73,7 +72,6 @@ export class NewRequestComponent implements OnInit {
   scrollToErrorAlert() {
     if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
       this.errorAlertRef.nativeElement.scrollIntoView({behavior: 'smooth'});
-      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 

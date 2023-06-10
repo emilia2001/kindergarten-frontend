@@ -11,8 +11,8 @@ import {AccountService} from "../../services/account/account.service";
 export class HeaderComponent {
   constructor(
     public accountService: AccountService,
-    public router: Router) {
-  }
+    public router: Router
+  ) {}
 
   handleLogout(){
     this.accountService.logout();

@@ -1,10 +1,10 @@
 .mainContainer {
   max-width: 850px;
+  margin: 0 auto;
+  background: rgba(249, 246, 241, .2);
   @media only screen and (min-width: 1400px) {
     max-width: 60%;
   }
-  margin: 0 auto;
-  background: rgba(249, 246, 241, .2);
 }
 
 ngb-carousel img {
@@ -53,7 +53,6 @@ ngb-carousel {
 .carousel-indicators {
   z-index: 20;
 }
-
 
 .team-boxed p {
   color:#7d8285;
@@ -126,7 +125,6 @@ ngb-carousel {
   width:100px;
   height: 100px;
   margin: 0 auto;
-
   @media (max-width:767px) {
     width:80px;
     height: 80px;
@@ -175,7 +173,6 @@ ngb-carousel {
 }
 
 .homepage-features h2 {
-  //font-size: 24px;
   font-weight: bold;
   margin-bottom: 10px;
 }
@@ -194,16 +191,6 @@ ngb-carousel {
   }
 }
 
-//.homepage-features li::before {
-//  content: "";
-//  position: absolute;
-//  top: 5px;
-//  left: 0;
-//  width: 8px;
-//  height: 8px;
-//  background-color: blue; /* Adjust the color as needed */
-//  border-radius: 50%;
-//}
 .icon-bold {
   font-weight: bold;
 }

@@ -7,6 +7,8 @@ import { GoogleMap, MapInfoWindow, MapMarker } from '@angular/google-maps';
   styleUrls: ['./footer.component.scss']
 })
 export class FooterComponent {
+  @ViewChild(MapInfoWindow, {static: false}) infoWindow!: MapInfoWindow;
+  @ViewChild(GoogleMap, {static: false}) map!: GoogleMap;
   kindergartenTitle: any;
   zoom = 16;
   display: any;
@@ -14,8 +16,6 @@ export class FooterComponent {
     lat: 47.45410,
     lng: 26.299420
   };
-  @ViewChild(MapInfoWindow, {static: false}) infoWindow!: MapInfoWindow;
-  @ViewChild(GoogleMap, {static: false}) map!: GoogleMap;
 
   constructor() {}
 

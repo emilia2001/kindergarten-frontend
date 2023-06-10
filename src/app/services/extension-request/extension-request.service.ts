@@ -10,7 +10,6 @@ import {
   api,
   extensionRequest,
   get,
-  update,
   updateByAdmin,
   updateByParent
 } from "../../shared/utils/endpoints";
@@ -25,7 +24,6 @@ export class ExtensionRequestService {
   ) { }
 
   addRequest(request: IExtensionRequest): Observable<any> {
-    console.log(request);
     return this._httpClient.post(`${api}${extensionRequest}${add}`, request);
   }
 

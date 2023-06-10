@@ -2,6 +2,7 @@
   {{updateMessage}}
   <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
 </div>
+
 <div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
   S-a produs o eroare, te rugăm încearcă mai târziu
   <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>

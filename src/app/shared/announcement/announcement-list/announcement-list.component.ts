@@ -1,11 +1,11 @@
 import {Component, TemplateRef, ViewChild} from '@angular/core';
 
 import {BehaviorSubject, finalize, take} from "rxjs";
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 import {AccountService} from "../../../services/account/account.service";
 import {IAnnouncement} from "../../models/IAnnouncement";
 import {AnnouncementService} from "../../../services/announcement/announcement.service";
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-announcement-list',
@@ -13,12 +13,12 @@ import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./announcement-list.component.scss']
 })
 export class AnnouncementListComponent {
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
   isAdminLoggedIn: boolean;
   announcementList: BehaviorSubject<IAnnouncement[]> = new BehaviorSubject<IAnnouncement[]>([]);
   isLoadingDelete: boolean = false;
   deleteMessage: string = '';
   deleteError: string = '';
-  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
   modalRef: NgbModalRef | undefined;
   deleteId:number = 0;
 

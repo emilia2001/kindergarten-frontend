@@ -17,16 +17,17 @@ import {FilterChildrenPipe} from "./pipes/filter-children.pipe";
 import {HomepageComponent} from './homepage/homepage.component';
 import {PaymentStatusPipe} from './pipes/payment-status.pipe';
 import {FilterPaymentsPipe} from './pipes/filter-payments.pipe';
-import {ConfirmationModalComponent} from './modals/confirmation-modal/confirmation-modal.component';
 import {PdfViewerComponent} from './pdf-viewer/pdf-viewer.component';
-import { PreviousMonthPipe } from './pipes/previous-month.pipe';
-import { ComputeAgePipe } from './pipes/compute-age.pipe';
-import { RequestTypePipe } from './pipes/request-type.pipe';
-import { RequestStatusPipe } from './pipes/request-status.pipe';
-import { GroupTypePipe } from './pipes/group-type.pipe';
-import { OrderByPipe } from './pipes/order-by.pipe';
-import { RomanianMonthPipe } from './pipes/romanian-month.pipe';
+import {PreviousMonthPipe} from './pipes/previous-month.pipe';
+import {ComputeAgePipe} from './pipes/compute-age.pipe';
+import {RequestTypePipe} from './pipes/request-type.pipe';
+import {RequestStatusPipe} from './pipes/request-status.pipe';
+import {GroupTypePipe} from './pipes/group-type.pipe';
+import {OrderByPipe} from './pipes/order-by.pipe';
+import {RomanianMonthPipe} from './pipes/romanian-month.pipe';
 import {GoogleMapsModule} from "@angular/google-maps";
+import {ExtensionRequestComponent} from "./request/extension-request/extension-request.component";
+import {RegistrationRequestComponent} from "./request/registration-request/registration-request.component";
 
 
 @NgModule({
@@ -40,7 +41,6 @@ import {GoogleMapsModule} from "@angular/google-maps";
     HomepageComponent,
     PaymentStatusPipe,
     FilterPaymentsPipe,
-    ConfirmationModalComponent,
     PdfViewerComponent,
     PreviousMonthPipe,
     ComputeAgePipe,
@@ -49,23 +49,26 @@ import {GoogleMapsModule} from "@angular/google-maps";
     GroupTypePipe,
     OrderByPipe,
     RomanianMonthPipe,
+    ExtensionRequestComponent,
+    RegistrationRequestComponent,
   ],
-    exports: [
-        HeaderComponent,
-        FooterComponent,
-        FilterChildrenPipe,
-        PaymentStatusPipe,
-        FilterPaymentsPipe,
-        ConfirmationModalComponent,
-        PdfViewerComponent,
-        PreviousMonthPipe,
-        ComputeAgePipe,
-        RequestTypePipe,
-        RequestStatusPipe,
-        GroupTypePipe,
-        OrderByPipe,
-        RomanianMonthPipe
-    ],
+  exports: [
+    HeaderComponent,
+    FooterComponent,
+    FilterChildrenPipe,
+    PaymentStatusPipe,
+    FilterPaymentsPipe,
+    PdfViewerComponent,
+    PreviousMonthPipe,
+    ComputeAgePipe,
+    RequestTypePipe,
+    RequestStatusPipe,
+    GroupTypePipe,
+    OrderByPipe,
+    RomanianMonthPipe,
+    RegistrationRequestComponent,
+    ExtensionRequestComponent
+  ],
   imports: [
     CommonModule,
     AppRoutingModule,

@@ -35,7 +35,7 @@
       </div>
     </div>
 
-    <h4 class="mt-5" *ngIf="announcementList.getValue().length === 0">Nu există niciun anunț momentan</h4>
+    <h4 class="mt-5 text-light" *ngIf="announcementList.getValue().length === 0">Nu există niciun anunț momentan</h4>
 
     <article class="postcard" *ngFor="let announcement of announcementList | async">
       <a class="postcard_img_link">

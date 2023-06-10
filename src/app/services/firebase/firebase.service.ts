@@ -31,8 +31,6 @@ export class FirebaseService {
 
 
   getFileFromStorage(): Observable<string | undefined> {
-
-    // const filePath = `${this.basePath}/${path}/${fileName}`;
     const filePath = `${this.basePath}/requests/extension/Cerere-inscriere-pe-perioada-vacantei-2.pdf`;
     const storageRef = this._firebaseStorage.ref(filePath);
 

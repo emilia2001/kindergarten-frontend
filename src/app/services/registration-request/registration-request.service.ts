@@ -10,7 +10,6 @@ import {
   api,
   get,
   registrationRequest,
-  update,
   updateByAdmin,
   updateByParent
 } from "../../shared/utils/endpoints";
@@ -25,7 +24,6 @@ export class RegistrationRequestService {
   ) { }
 
   addRequest(request: IRegistrationRequest): Observable<any> {
-    console.log(request);
     return this._httpClient.post(`${api}${registrationRequest}${add}`, request);
   }
 

@@ -1,0 +1,66 @@
+.t-p {
+  background: #c4c5d5;
+  border-radius: 0 0 10px 10px;
+}
+
+.accordion .item .item-header h5 button.btn.btn-link {
+  background: #3b3d73;
+  color: #f9f6f1;
+  text-decoration: none;
+  border-radius: 10px;
+}
+.accordion .item .item-header h5 button.btn.btn-link:hover, .accordion .item .item-header h5 button.btn.btn-link:active {
+  background: #2f315c;
+}
+.accordion .item .item-header h5 button.btn.btn-link.extended {
+  background: #2f315c;
+  border-radius: 10px 10px 0 0;
+}
+
+.accordion .item .item-header {
+  border-bottom: none;
+  background: transparent;
+  padding: 0px;
+}
+
+.accordion .item .item-header h5 button {
+  color: white;
+  font-size: 20px;
+  padding: 15px;
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+
+.accordion .item .item-header h5 i {
+  float: right;
+  font-size: 30px;
+  color: #f9f6f1;
+  background-color: transparent;
+  width: 60px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+button.btn.btn-link.collapsed i {
+  transform: rotate(0deg);
+  transition: 0.5s;
+}
+
+button.btn.btn-link i {
+  transform: rotate(180deg);
+  transition: 0.5s;
+}
+
+.collapse {
+  transition: height 0.3s ease;
+}
+
+.comments {
+  font-weight: 500;
+}
+
+/*# sourceMappingURL=parent-requests-list.component.css.map */

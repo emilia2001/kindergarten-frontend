@@ -1,0 +1,129 @@
+<ng-template #myModal let-modalRef="modalRef">
+  <div class="modal-header">
+    <h4 class="modal-title text-dark">Efectuare plată</h4>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Se incarcă...</span>
+      </div>
+    </div>
+
+    <form *ngIf="!isLoading" [formGroup]="paymentForm" (submit)="handleSubmit()">
+      <div class="form-outline mb-3 text-start">
+        <label class="form-label ms-2" for="amount">Sumă</label>
+        <input type="text" id="amount" formControlName="amountInput" class="form-control" [(ngModel)]="amount"/>
+      </div>
+      <div class="text-start">
+        <label class="ms-2 mb-2">Informații card</label>
+        <div id="card-element" *ngIf="stripe"></div>
+      </div>
+      <div id="card-errors" role="alert"></div>
+
+      <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Se incarca...</span>
+        </div>
+      </div>
+      <div class="success mt-2" *ngIf="status == 'success'">
+        <span class="fw-semibold text-success">Plata s-a efectuat cu succes</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold class="bi bi-check-lg"
+             viewBox="0 0 16 16">
+          <path
+            d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+        </svg>
+      </div>
+      <div *ngIf="errors" class="text-danger mt-2">
+        {{errors}}
+      </div>
+
+      <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
+        Efectuează plata
+      </button>
+
+    </form>
+  </div>
+</ng-template>
+
+
+<div class="container pb-4">
+  <div class="row justify-content-center">
+    <h2 class="text-light heading-section mt-4">Listă plăți</h2>
+  </div>
+
+  <section class="container my-4">
+    <div class="itemsContainer text-dark row">
+      <div class="col-md-12">
+        <div class="table-wrap">
+          <h5 *ngIf="paymentList.getValue().length == 0" class="text-light">
+            Nu aveți nimic de plată momentan</h5>
+          <table *ngIf="paymentList.getValue().length > 0" class=" table table-responsive-xl fw-semibold">
+            <thead>
+            <tr>
+              <th></th>
+              <th (click)="sortKey = 'child.firstName'; sortAsc = !sortAsc">Plată pentru
+                <svg *ngIf="getSortingIcon('child.firstName') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
+                  <path
+                    d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+                </svg>
+                <svg *ngIf="getSortingIcon('child.firstName') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
+                     height="16"
+                     fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
+                  <path
+                    d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
+                </svg>
+              </th>
+              <th>Sumă restantă</th>
+              <th>Sumă actuală</th>
+              <th>Total sumă</th>
+              <th>Rămas de plată</th>
+              <th>Luna</th>
+              <th>Status</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let payment of paymentList.getValue() | orderBy:sortKey:sortAsc " class="alert" role="alert">
+              <td><img class="img" [src]="payment.child.picturePath" alt="Child Picture"></td>
+              <td class="">
+                {{payment.child.firstName}}<br>{{payment.child.lastName}}
+              </td>
+              <td>{{payment.outstandingAmount}} RON</td>
+              <td>{{payment.currentAmount}} RON</td>
+              <td>{{payment.totalAmount}} RON</td>
+              <td>{{payment.totalUnpaidAmount}} RON</td>
+              <td>{{payment.month | previousMonth}}</td>
+              <td>
+
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month == currentMonthValue">
+                  <button (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)"
+                          class="btn btn-success btn-block" [disabled]="payment.status.valueOf() != 'UNPAID'">Plătește
+                    <br>{{payment.totalUnpaidAmount}} RON
+                  </button>
+                </div>
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() != 'UNPAID'"
+                     class="fw-semibold fs-5">
+                  <span class="text-success">Plătită</span>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold
+                       class="bi bi-check-lg" viewBox="0 0 16 16">
+                    <path
+                      d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
+                  </svg>
+                </div>
+                <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
+                     class="fs-6">
+                  <span class="text-dark">Restantă în luna următoare</span>
+                </div>
+              </td>
+              <td><a class="text-dark confirmationLink" *ngFor="let confirmation of getConfirmationForPayment(payment.id!)" href="{{confirmation.path}}" target="_blank">Chitanța{{confirmation.id}}<br></a></td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

@@ -13,6 +13,8 @@ import {AdminService} from "../../services/admin/admin.service";
   styleUrls: ['./add-account.component.scss']
 })
 export class AddAccountComponent {
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
   loginAdminForm!: FormGroup;
   isLoading: boolean = false;
   errors: string = '';
@@ -20,8 +22,6 @@ export class AddAccountComponent {
   role!: Role;
   showSuccessAlert: any;
   showErrorAlert: any;
-  @ViewChild('successAlert') successAlertRef!: ElementRef;
-  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(private _formBuilder: FormBuilder,
               private _router: Router,
@@ -42,17 +42,16 @@ export class AddAccountComponent {
       this._adminService.add( {
         username: formValues.username!,
         password: formValues.password!
-      }
-      )
+      })
         .pipe(
           take(1),
           finalize(() => this.isLoading = false)
         ).subscribe({
-          next: data => {
+          next: _ => {
             this.showSuccessAlert = true;
             setTimeout(() => this.scrollToSuccessAlert(), 0);
           },
-          error: err => {
+          error: _ => {
             this.loginAdminForm.reset();
             this.showErrorAlert = true;
             setTimeout(() => this.scrollToErrorAlert(), 0);
@@ -73,14 +72,12 @@ export class AddAccountComponent {
   scrollToSuccessAlert() {
     if (this.successAlertRef && this.successAlertRef.nativeElement) {
       this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      this.successAlertRef.nativeElement.focus();
     }
   }
 
   scrollToErrorAlert() {
     if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
       this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

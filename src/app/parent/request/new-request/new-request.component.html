@@ -1,48 +1,57 @@
-<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert"
+     style="border-radius: 0 0 5px 5px">
   {{updateMessage}}
-  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()"
+          style="float: right;"></button>
 </div>
-<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px"
+     #errorAlert>
   {{updateMessage}}
   <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
 </div>
 
-<div class="container mb-5 mt-5 pb-5">
-  <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Loading...</span>
+<section class="mt-4 container pb-4">
+  <div class="container mb-5 mt-5">
+    <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
     </div>
-  </div>
-  <div class="row h-100" *ngIf="!isLoading">
-    <div class="col-12 col-lg-12 ">
-      <div class="card shadow-lg " style="border-radius: 1rem;">
-        <div class="card-body px-3 px-sm-4 p-4 text-dark row">
+    <div class="row h-100" *ngIf="!isLoading">
+      <div class="col-12 col-lg-12 ">
+        <div class="card shadow-lg " style="border-radius: 1rem;">
+          <div class="card-body px-3 px-sm-4 p-4 text-dark row">
 
-          <h2 class="mb-4 text-dark">Creare cerere</h2>
-          <div class="col-12 col-sm-6 col-lg-4 d-flex position-relative mb-3">
-            <div class="text-start col-8">
-              <label for="type" class="form-label ms-2">Alege tipul cererii</label>
-              <select id="type" class="form-control" (change)="handleTypeChange($event)">
-                <option selected value="registration">Înregistrare</option>
-                <option value="extension">Prelungire</option>
-              </select>
+            <h2 class="mb-4 text-dark">Creare cerere</h2>
+            <div class="col-12 col-sm-6 col-lg-4 d-flex position-relative mb-3">
+              <div class="text-start col-8">
+                <label for="type" class="form-label ms-2">Alege tipul cererii</label>
+                <select id="type" class="form-control" (change)="handleTypeChange($event)">
+                  <option selected value="registration">Înregistrare</option>
+                  <option value="extension">Prelungire</option>
+                </select>
+              </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                   class="bi bi-download col-4" viewBox="0 0 16 16" (click)="downloadPdf()">
+                <path
+                  d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
+                <path
+                  d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
+              </svg>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                 class="bi bi-download col-4" viewBox="0 0 16 16" (click)="downloadPdf()">
-              <path
-                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-              <path
-                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-            </svg>
+
+            <hr>
+
+            <h3>Completare formular</h3>
+
+            <app-parent-registration-request *ngIf="requestType==='registration'"
+                                             (submitEvent)="handleSubmitForm($event)"></app-parent-registration-request>
+            <app-parent-extension-request *ngIf="requestType==='extension'"
+                                          (submitEvent)="handleSubmitForm($event)"></app-parent-extension-request>
           </div>
-
-          <hr>
-
-          <h3>Completare formular</h3>
-          <app-registration-request *ngIf="requestType==='registration'" (submitEvent)="handleSubmitForm($event)"></app-registration-request>
-          <app-extension-request *ngIf="requestType==='extension'" (submitEvent)="handleSubmitForm($event)"></app-extension-request>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>

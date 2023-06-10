@@ -4,11 +4,13 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()"
           style="float: right;"></button>
 </div>
+
 <div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px"
      #errorAlert>
   S-a produs o eroare, te rugăm încearcă mai târziu
   <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
 </div>
+
 <section class="pb-4">
   <div class="container mb-5 pt-lg-6">
     <div class="row d-flex justify-content-center align-items-center h-100 pb-4">
@@ -19,6 +21,7 @@
             <h3 class="mb-4 text-dark text-center">Adăugare cont</h3>
 
             <form class="text-start" [formGroup]="loginAdminForm" (ngSubmit)="handleSubmit()">
+
               <div class="form-outline mb-3">
                 <label class="form-label" for="username">Nume utilizator</label>
                 <input type="text" id="username" formControlName="username" class="form-control"/>

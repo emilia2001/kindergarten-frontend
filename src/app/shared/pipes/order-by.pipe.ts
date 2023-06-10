@@ -9,8 +9,8 @@ export class OrderByPipe implements PipeTransform {
     if (!Array.isArray(array) || !sortKey) {
       return array;
     }
-    console.log(array)
     const sortedArray = [...array]; // Create a new array to avoid modifying the original array
+    console.log(sortedArray)
     sortedArray.sort((a, b) => {
       const valueA = this.getPropertyValue(a, sortKey);
       const valueB = this.getPropertyValue(b, sortKey);
@@ -25,7 +25,7 @@ export class OrderByPipe implements PipeTransform {
         return valueA > valueB ? -1 : 1;
       }
     });
-
+console.log(sortedArray)
     return sortedArray;
   }
 
@@ -44,7 +44,7 @@ export class OrderByPipe implements PipeTransform {
         return undefined;
       }
     }
-
+    console.log(value)
     return value;
   }
 

@@ -15,6 +15,8 @@ import {FirebaseService} from "../../../services/firebase/firebase.service";
   styleUrls: ['./announcement-edit.component.scss']
 })
 export class AnnouncementEditComponent implements OnInit {
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
   announcementForm!: FormGroup;
   isLoading!: boolean;
   id!: number;
@@ -26,16 +28,13 @@ export class AnnouncementEditComponent implements OnInit {
   updateMessage: string = '';
   showSuccessAlert: any;
   showErrorAlert: any;
-  @ViewChild('successAlert') successAlertRef!: ElementRef;
-  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
     private _announcementService: AnnouncementService,
     private _firebaseService: FirebaseService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.announcementForm = this._formBuilder.group({
@@ -82,7 +81,7 @@ export class AnnouncementEditComponent implements OnInit {
     console.log(this.announcementForm)
     if (this.announcementForm.touched && this.announcementForm.valid) {
       console.log("pl")
-      this.isLoadingUpdate = true; // Set loading state to true
+      this.isLoadingUpdate = true;
 
       const updateObservable = this.id
         ? this._announcementService.update(this.announcement)
@@ -90,7 +89,7 @@ export class AnnouncementEditComponent implements OnInit {
 
       updateObservable.pipe(
         take(1),
-        finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
+        finalize(() => this.isLoadingUpdate = false)
       ).subscribe({
         next: (_) => {
           this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Anunțul a fost adăgat în sistem";
@@ -103,9 +102,6 @@ export class AnnouncementEditComponent implements OnInit {
         }
       });
     }
-
-    // if (this.id) this._announcementService.update(this.announcement).subscribe(data => console.log(data))
-    // else this._announcementService.add(this.announcement).subscribe(data => console.log(data));
   }
 
   onImageSelected($event: any) {
@@ -154,7 +150,6 @@ export class AnnouncementEditComponent implements OnInit {
   scrollToErrorAlert() {
     if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
       this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

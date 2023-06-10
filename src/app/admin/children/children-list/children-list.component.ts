@@ -22,7 +22,7 @@ export class ChildrenListComponent implements OnInit {
    constructor(
     private _childrenService: ChildrenService,
     private _router: Router
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.refreshChildrenList();
@@ -35,15 +35,6 @@ export class ChildrenListComponent implements OnInit {
       }
     )
   }
-
-  // deleteChild(id?: number) {
-  //   this._childrenService.deleteChild( id).subscribe(
-  //     response => {
-  //       this.message = `Delete of Child ${id} Successful!`;
-  //       this.refreshChildrenList();
-  //     }
-  //   )
-  // }
 
   updateChild(id?: number) {
     this._router.navigate(['admin/children', id])

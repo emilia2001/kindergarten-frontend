@@ -9,9 +9,9 @@
   S-a produs o eroare, te rugăm încearcă mai târziu
   <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
 </div>
+
 <section class="container pb-4">
   <div class="container mb-4">
-
     <section class="mt-4 text-start text-light row mx-1">
       <div class="col-6 mb-3  d-flex justify-content-between">
         <div class="form-group mb-3">
@@ -23,13 +23,12 @@
             <option value="-1" selected>Toate</option>
           </select>
         </div>
+
         <div class="form-group mb-3">
           <label for="currentMonth" class="form-label ms-2">Lună</label>
           <input id="currentMonth" type="month" class="form-control" name="currentMonth"
                  required="required" [value]="currentMonth | async" (change)="handleMonthChange($event)">
         </div>
-
-
       </div>
     </section>
 
@@ -82,9 +81,10 @@
           </div>
         </div>
       </div>
+
       <div class="row justify-content-end mt-2">
         <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
-          <button class="btn btn-primary text-light text-center" (click)="handleSaveAttendances()">
+          <button class="btn btn-primary text-light text-center" (click)="handleSaveAttendances()" [disabled]="isLoading">
             Salvare prezențe
           </button>
         </div>

@@ -15,8 +15,7 @@ export class TeacherListComponent {
 
   constructor(
     private _teacherService: TeacherService
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.refreshGroupList();

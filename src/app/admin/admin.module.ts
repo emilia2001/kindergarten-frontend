@@ -9,15 +9,12 @@ import {AdminComponent} from "./admin.component";
 import {TeacherListComponent} from './teacher/teacher-list/teacher-list.component';
 import {TeacherEditComponent} from './teacher/teacher-edit/teacher-edit.component';
 import {ClassBookComponent} from './classbook/class-book.component';
-import {RequestListComponent} from './request/request-list/request-list.component';
-import {RequestEditComponent} from './request/request-edit/request-edit.component';
-import {PaymentListComponent} from './payment-list/payment-list.component';
+import {AdminRequestListComponent} from './request/admin-request-list/admin-request-list.component';
+import {AdminRequestEditComponent} from './request/admin-request-edit/admin-request-edit.component';
+import {AdminPaymentListComponent} from './admin-payment-list/admin-payment-list.component';
 import {ChildrenListComponent} from "./children/children-list/children-list.component";
 import {ChildrenEditComponent} from "./children/children-edit/children-edit.component";
 import {SharedModule} from "../shared/shared.module";
-import {ConfirmationModalComponent} from "../shared/modals/confirmation-modal/confirmation-modal.component";
-import {AdminExtensionRequestComponent} from './request/admin-extension-request/admin-extension-request.component';
-import {AdminRegistrationRequestComponent} from "./request/admin-registration-request/admin-registration-request.component";
 import { AddAccountComponent } from './add-account/add-account.component';
 
 @NgModule({
@@ -26,13 +23,11 @@ import { AddAccountComponent } from './add-account/add-account.component';
         ChildrenListComponent,
         ChildrenEditComponent,
         ClassBookComponent,
-        PaymentListComponent,
-        RequestListComponent,
-        RequestEditComponent,
+        AdminPaymentListComponent,
+        AdminRequestListComponent,
+        AdminRequestEditComponent,
         TeacherListComponent,
         TeacherEditComponent,
-        AdminRegistrationRequestComponent,
-        AdminExtensionRequestComponent,
         AddAccountComponent,
     ],
     imports: [
@@ -42,13 +37,6 @@ import { AddAccountComponent } from './add-account/add-account.component';
         FormsModule,
         SharedModule,
         BsDatepickerModule
-    ],
-  exports: [
-    AdminRegistrationRequestComponent,
-    AdminExtensionRequestComponent
-  ],
-    providers: [
-        ConfirmationModalComponent
     ]
 })
 export class AdminModule {

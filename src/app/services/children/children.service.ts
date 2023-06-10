@@ -32,15 +32,10 @@ export class ChildrenService {
   }
 
   add(child: IChild): Observable<any> {
-    // debugger;
-    // console.log(`${api}${children}${add}`)
-    // return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
-
     return this._httpClient.post(`${api}${children}${add}`, child);
   }
 
   addChild(child: IChild): Observable<any> {
-    // return this._httpClient.get<IChild[]>(`${api}${children}${all}`);
     return this._httpClient.post(`${api}${children}${add}`, child);
 
   }

@@ -1,7 +1,8 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
 
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, finalize, take} from "rxjs";
 import {defineLocale, roLocale} from "ngx-bootstrap/chronos";
+import {BsLocaleService} from "ngx-bootstrap/datepicker";
 
 import {ChildrenService} from "../../services/children/children.service";
 import {IChild} from "../../shared/models/IChild";
@@ -9,7 +10,6 @@ import {GroupService} from "../../services/group/group.service";
 import {IGroup} from "../../shared/models/IGroup";
 import {IAttendance} from "../../shared/models/IAttendance";
 import {AttendanceService} from "../../services/attendance/attendance.service";
-import {BsDaterangepickerConfig, BsLocaleService} from "ngx-bootstrap/datepicker";
 
 @Component({
   selector: 'app-classbook',
@@ -17,6 +17,7 @@ import {BsDaterangepickerConfig, BsLocaleService} from "ngx-bootstrap/datepicker
   styleUrls: ['./class-book.component.scss']
 })
 export class ClassBookComponent {
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
   currentDate: Date;
   currentMonth: BehaviorSubject<string> = new BehaviorSubject<string>('');
   daysInMonth: BehaviorSubject<number[]> = new BehaviorSubject<number[]>([]);
@@ -30,9 +31,9 @@ export class ClassBookComponent {
   currentMonthValue!: string;
   showSuccessAlert: any;
   showErrorAlert: any;
-  @ViewChild('successAlert') successAlertRef!: ElementRef;
   sortKey: string = '';
   sortAsc: boolean = true;
+  isLoading: boolean = false;
 
   constructor(
     private _childrenService: ChildrenService,
@@ -58,8 +59,8 @@ export class ClassBookComponent {
     this.showSuccessAlert = false;
     this.showErrorAlert = false;
 
-    defineLocale('ro', roLocale); // Define the Romanian locale
-    this._localeService.use('ro'); // Set the locale to Romanian
+    defineLocale('ro', roLocale);
+    this._localeService.use('ro');
   }
 
   initializeDays(year: number, month: number) {
@@ -134,8 +135,12 @@ export class ClassBookComponent {
   }
 
   handleSaveAttendances() {
+    this.isLoading = true;
     if (this.currentAttendances.length > 0) {
-      this._attendanceService.saveAll(this.currentAttendances).subscribe({
+      this._attendanceService.saveAll(this.currentAttendances).pipe(
+        take(1),
+        finalize(() => this.isLoading = false)
+      ).subscribe({
         next: _ => {
           const previousAttendances = this.attendanceList.getValue(); // Get the previous value
           const updatedAttendances = [...previousAttendances, ...this.currentAttendances]; // Combine previous and current attendances

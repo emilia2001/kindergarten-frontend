@@ -3,7 +3,6 @@ a, a:hover {
   text-decoration: none;
 }
 
-/* Cards */
 .postcard {
   flex-wrap: wrap;
   display: flex;
@@ -140,7 +139,6 @@ a, a:hover {
     background: #e1e5ea;
   }
 }
-/* COLORS */
 .postcard .postcard_tagbox .play:hover {
   background: #c4c5d5;
   color: black;

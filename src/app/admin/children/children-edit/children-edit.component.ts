@@ -18,6 +18,12 @@ import {FirebaseService} from "../../../services/firebase/firebase.service";
   styleUrls: ['./children-edit.component.scss']
 })
 export class ChildrenEditComponent {
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
+  modalRef: NgbModalRef | undefined;
+  showSuccessAlert: any;
+  showErrorAlert: any;
   childForm!: FormGroup;
   isLoading: boolean = false;
   isLoadingDelete: boolean = false;
@@ -32,14 +38,8 @@ export class ChildrenEditComponent {
   groupList: IGroup[] = [];
   selectedFiles?: FileList;
   currentFileUpload?: FileUpload;
-  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
-  modalRef: NgbModalRef | undefined;
   minDate: any;
   maxDate: any;
-  showSuccessAlert: any;
-  showErrorAlert: any;
-  @ViewChild('successAlert') successAlertRef!: ElementRef;
-  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
@@ -49,9 +49,7 @@ export class ChildrenEditComponent {
     private _childrenService: ChildrenService,
     public modalService: NgbModal,
     private _firebaseService: FirebaseService
-  ) {
-  }
-
+  ) {}
 
   ngOnInit() {
     this.getGroupList();
@@ -110,26 +108,23 @@ export class ChildrenEditComponent {
 
   cnpValidator(control: FormControl): { [key: string]: any } | null{
     const value = control.value;
-    // Check if the CNP is empty
     if (!value) {
       return null;
     }
 
-    // Check CNP length
     if (value.length !== 13) {
       return { invalidCnpLength: true };
     }
 
-    // Extract date components from CNP
     const year = 2000 + Number(value.substr(1, 2));
     const month = Number(value.substr(3, 2));
     const day = Number(value.substr(5, 2));
 
-    // Validate date of birth
     const dateOfBirth = new Date(year, month - 1, day);
     const isValidDate = dateOfBirth.getFullYear() === year &&
       dateOfBirth.getMonth() === month - 1 &&
       dateOfBirth.getDate() === day;
+
     if (!isValidDate) {
       return { invalidDateOfBirth: true };
     }
@@ -170,6 +165,7 @@ export class ChildrenEditComponent {
       },
       picturePath: newPicture
     };
+
     if (this.childForm.touched && this.childForm.valid) {
       this.isLoadingUpdate = true; // Set loading state to true
 
@@ -196,7 +192,6 @@ export class ChildrenEditComponent {
     if (!this.childForm.valid) {
       this.errors = "Date invalide"
     }
-
   }
 
   onImageSelected($event: any) {
@@ -244,16 +239,12 @@ export class ChildrenEditComponent {
     this.isLoadingDelete = true;
     this.deleteMessage = '';
     this.deleteError = '';
-    // this._childrenService.deleteChild(this.child).subscribe(data => {
-    //   console.log(data);
-    //   this.modalRef?.close();
-    //   setTimeout(() => this._router.navigate(['/admin/children']), 1000);
-    // });
+
     this._childrenService.deleteChild(this.child).pipe(
       take(1),
       finalize(() => this.isLoadingDelete = false)
     ).subscribe({
-      next: data => {
+      next: _ => {
         this.deleteMessage = "Copilul a fost șters cu succes";
       },
       error: _ => {
@@ -278,17 +269,14 @@ export class ChildrenEditComponent {
   }
 
   scrollToSuccessAlert() {
-    console.log(this.successAlertRef)
     if (this.successAlertRef && this.successAlertRef.nativeElement) {
       this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      this.successAlertRef.nativeElement.focus();
     }
   }
 
   scrollToErrorAlert() {
     if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
       this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

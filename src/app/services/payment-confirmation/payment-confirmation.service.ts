@@ -13,8 +13,7 @@ export class PaymentConfirmationService {
 
   constructor(
     private _httpClient: HttpClient
-  ) {
-  }
+  ) {}
 
   getAll(): Observable<IPaymentConfirmation[]> {
     return this._httpClient.get<IPaymentConfirmation[]>(`${api}${paymentConfirmation}${all}`);

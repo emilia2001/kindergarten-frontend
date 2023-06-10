@@ -11,16 +11,16 @@ import {LoginGuard} from "./guards/login.guard";
 import {TeacherListComponent} from "./admin/teacher/teacher-list/teacher-list.component";
 import {TeacherEditComponent} from "./admin/teacher/teacher-edit/teacher-edit.component";
 import {HomepageComponent} from "./shared/homepage/homepage.component";
-import {SubmittedRequestsListComponent} from "./parent/request/submitted-requests-list/submitted-requests-list.component";
-import {PaymentListComponent} from "./admin/payment-list/payment-list.component";
-import {ParentPaymentListComponent} from "./parent/payment/parent-payment-list/parent-payment-list.component";
+import {ParentRequestsListComponent} from "./parent/request/parent-requests-list/parent-requests-list.component";
+import {AdminPaymentListComponent} from "./admin/admin-payment-list/admin-payment-list.component";
+import {ParentPaymentListComponent} from "./parent/parent-payment-list/parent-payment-list.component";
 import {AnnouncementListComponent} from "./shared/announcement/announcement-list/announcement-list.component";
 import {ClassBookComponent} from "./admin/classbook/class-book.component";
-import {RequestListComponent} from "./admin/request/request-list/request-list.component";
+import {AdminRequestListComponent} from "./admin/request/admin-request-list/admin-request-list.component";
 import {AnnouncementEditComponent} from "./shared/announcement/announcement-edit/announcement-edit.component";
 import {NewRequestComponent} from "./parent/request/new-request/new-request.component";
-import {EditRequestComponent} from "./parent/request/edit-request/edit-request.component";
-import {RequestEditComponent} from "./admin/request/request-edit/request-edit.component";
+import {ParentRequestEditComponent} from "./parent/request/parent-request-edit/parent-request-edit.component";
+import {AdminRequestEditComponent} from "./admin/request/admin-request-edit/admin-request-edit.component";
 import {RegisterComponent} from "./parent/register/register.component";
 import {AddAccountComponent} from "./admin/add-account/add-account.component";
 
@@ -62,12 +62,12 @@ const routes: Routes = [
       },
       {
         path: 'requests',
-        component: RequestListComponent,
+        component: AdminRequestListComponent,
         canActivate: [AuthGuard],
       },
       {
         path: 'requests/:id',
-        component: RequestEditComponent,
+        component: AdminRequestEditComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -87,7 +87,7 @@ const routes: Routes = [
       },
       {
         path: 'payments',
-        component: PaymentListComponent,
+        component: AdminPaymentListComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -116,7 +116,7 @@ const routes: Routes = [
       },
       {
         path: 'requests',
-        component: SubmittedRequestsListComponent,
+        component: ParentRequestsListComponent,
         canActivate: [AuthGuard],
       },
       {
@@ -126,7 +126,7 @@ const routes: Routes = [
       },
       {
         path: 'requests/:id',
-        component: EditRequestComponent,
+        component: ParentRequestEditComponent,
         canActivate: [AuthGuard],
       },
       {

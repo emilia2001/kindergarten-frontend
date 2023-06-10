@@ -2,14 +2,15 @@ import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/co
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 
+import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
+import {finalize, take} from "rxjs";
+
 import {GroupService} from "../../../services/group/group.service";
 import {IGroup} from "../../../shared/models/IGroup";
 import {TeacherService} from "../../../services/teacher/teacher.service";
 import {ITeacherAdd} from "../../../shared/models/ITeacher";
-import {finalize, take} from "rxjs";
 import {FileUpload} from "../../../shared/models/FileUpload";
 import {FirebaseService} from "../../../services/firebase/firebase.service";
-import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: 'app-teacher-edit',
@@ -17,6 +18,9 @@ import {NgbModal, NgbModalRef} from "@ng-bootstrap/ng-bootstrap";
   styleUrls: ['./teacher-edit.component.scss']
 })
 export class TeacherEditComponent implements OnInit {
+  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
   teacherForm!: FormGroup;
   groupList: IGroup[] = [];
   id: number | null = null;
@@ -25,7 +29,6 @@ export class TeacherEditComponent implements OnInit {
   currentFileUpload?: FileUpload;
   isLoading: boolean = false;
   errors: string = '';
-  @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
   modalRef: NgbModalRef | undefined;
   isLoadingDelete: boolean = false;
   deleteMessage: string = '';
@@ -37,8 +40,6 @@ export class TeacherEditComponent implements OnInit {
   maxDate: any;
   showSuccessAlert: any;
   showErrorAlert: any;
-  @ViewChild('successAlert') successAlertRef!: ElementRef;
-  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
@@ -48,8 +49,7 @@ export class TeacherEditComponent implements OnInit {
     private _firebaseService: FirebaseService,
      public modalService: NgbModal,
     private _router: Router,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
     this.getGroupList();
@@ -145,9 +145,6 @@ export class TeacherEditComponent implements OnInit {
       console.log(this.teacherForm)
       this.errors = "Date invalide"
     }
-
-    // if (this.id) this._teacherService.update(this.id, this.teacher).subscribe(data => console.log(data))
-    // else this._teacherService.add(this.teacher).subscribe(data => console.log(data));
   }
 
   onImageSelected($event: any) {
@@ -232,7 +229,6 @@ export class TeacherEditComponent implements OnInit {
   scrollToErrorAlert() {
     if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
       this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
-      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

@@ -6,7 +6,6 @@ a {
     //border-radius: 10px;
     border-bottom: 1px solid #fff;
   }
-
   &:hover {
     font-weight: 500;
   }
@@ -14,7 +13,6 @@ a {
 
 .logoTitle {
   height: 80px;
-
   @media screen and (max-width: 767px) {
     height: 60px;
   }
@@ -22,7 +20,6 @@ a {
 
 .logoImage {
   height: 80px;
-
   @media screen and (max-width: 767px) {
     height: 60px;
   }
@@ -39,18 +36,14 @@ a {
   opacity: 1;
   outline: none;
   border: none;
-  //box-shadow: none;
-
   &:active {
     color: white !important;
     font-weight: 500 !important;
-
   }
 }
 
 hr {
   display: none;
-
   @media screen and (max-width: 767px) {
     display: block;
   }

@@ -20,31 +20,14 @@ import {NgxCurrencyModule} from "ngx-currency";
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {BasicAuthInterceptor} from "./interceptors/basic-auth.interceptor";
-import {ParentComponent} from './parent/parent.component';
 import {AdminModule} from "./admin/admin.module";
 import {SharedModule} from "./shared/shared.module";
-import { SubmittedRequestsListComponent } from './parent/request/submitted-requests-list/submitted-requests-list.component';
-import { NewRequestComponent } from './parent/request/new-request/new-request.component';
-import { ParentPaymentListComponent } from './parent/payment/parent-payment-list/parent-payment-list.component';
 import { environment } from '../environments/environment';
-import { RegistrationRequestComponent } from './parent/request/registration-request/registration-request.component';
-import { ExtensionRequestComponent } from './parent/request/extension-request/extension-request.component';
-import { EditRequestComponent } from './parent/request/edit-request/edit-request.component';
-import { PaymentModalComponent } from './parent/payment/payment-modal/payment-modal.component';
-import { RegisterComponent } from './parent/register/register.component';
+import {ParentModule} from "./parent/parent.module";
 
 @NgModule({
   declarations: [
     AppComponent,
-    ParentComponent,
-    SubmittedRequestsListComponent,
-    NewRequestComponent,
-    ParentPaymentListComponent,
-    RegistrationRequestComponent,
-    ExtensionRequestComponent,
-    EditRequestComponent,
-    PaymentModalComponent,
-    RegisterComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,6 +35,7 @@ import { RegisterComponent } from './parent/register/register.component';
     HttpClientModule,
     AppRoutingModule,
     AdminModule,
+    ParentModule,
     SharedModule,
     FormsModule,
     HttpClientModule,

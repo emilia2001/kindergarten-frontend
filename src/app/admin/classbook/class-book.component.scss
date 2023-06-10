@@ -13,24 +13,20 @@ td {
     border-bottom: 4px solid darken($table-spacer-color, 3%) !important;
   }
 }
+
 .centered {
   vertical-align: middle;
 }
+
 td, th {
   padding: 20px 10px !important;
 }
 
 @media (max-width: 1400px) {
-
   td, th {
     padding: 10px 6px !important;
   }
-
-  .itemsContainer .table tbody td .img {
-    //width: 40px;
-    //height: 40px;
-  }
-
+  
   .nameCell {
     padding: 20px !important;
   }
@@ -39,6 +35,12 @@ td, th {
 .attendanceCheck {
   &:checked {
     background: green;
+  }
+}
+
+.container {
+  @media screen and (min-width: 1200px) {
+    max-width: 1200px ;
   }
 }
 

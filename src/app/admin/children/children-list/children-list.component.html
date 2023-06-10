@@ -2,6 +2,7 @@
   <div class="row justify-content-center">
     <h2 class="heading-section text-light">Listă copii înscriși</h2>
   </div>
+
   <div class="row justify-content-end mb-4 ">
     <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
       <a class="btn btn-primary text-light text-center" routerLink="/admin/children/add">
@@ -9,11 +10,13 @@
       </a>
     </div>
   </div>
+
   <form [formGroup]="searchForm">
     <div class="form-outline mb-3">
       <input type="text" formControlName="search" placeholder="Caută..." class="form-control"/>
     </div>
   </form>
+
   <div class="itemsContainer text-dark row pb-4">
     <div class="col-md-12">
       <div class="table-wrap">
@@ -127,7 +130,8 @@
                 <path fill-rule="evenodd"
                       d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
               </svg>
-            </a></td>
+            </a>
+            </td>
           </tr>
           </tbody>
         </table>

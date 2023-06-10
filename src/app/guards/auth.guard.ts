@@ -21,7 +21,6 @@ export class AuthGuard implements CanActivate {
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
     const role: Role = state.url.includes('admin') ? Role.ADMIN : Role.PARENT;
-    console.log(role)
     return this._accountService.getAuthenticatedToken() ? true : role == Role.ADMIN ? this._router.createUrlTree(['/admin/login']) : this._router.createUrlTree(['/login']);
   }
 

@@ -12,24 +12,17 @@ export class PdfViewerComponent implements OnInit {
 
   constructor(
     private _firebaseService: FirebaseService
-  ) {
-  }
+  ) {}
+
+  ngOnInit(): void {}
 
   downloadPdf() {
-    // Create an anchor element and set its href attribute to the PDF URL
     const link = document.createElement('a');
     link.href = this.pdfSrc;
     link.target = 'blank';
-
-    // Set the download attribute to the desired filename for the downloaded PDF
     link.download = 'document.pdf';
-
-    // Programmatically trigger the click event of the anchor element to initiate the download
     link.dispatchEvent(new MouseEvent('click'));
   }
 
-  ngOnInit(): void {
-    console.log(this.pdfSrc)
 
-  }
 }
