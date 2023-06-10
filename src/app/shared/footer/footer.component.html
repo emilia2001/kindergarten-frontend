@@ -1,7 +1,53 @@
 
-<footer class="footer bg-dark">
-  <div class="container">
-    <span class="text-muted">All Rights Reserved 2018 @in28minutes</span>
+<footer class="footer bg-dark d-md-flex justify-content-between p-3 text-light">
+  <div class="container text-start pt-3 ps-5 description">
+    <div class="row">
+      <div class="col-md-12">
+        <h5>Despre noi</h5>
+        <p>    Pentru a asigura o dezvoltare armonioasă, copilul are nevoie de un mediu propice, cald și iubitor. Ne concentrăm pe principii sănătoase de viață, virtuți, moralitate, libertate, respect de sine și respect față de ceilalți. Comunicarea activă între părinți și cadrele didactice este prioritară, iar dezvoltarea emoțională a copilului este centrală. Inspirăm metode și oferte educaționale din sisteme alternative, având în vedere natura umană și dezvoltarea personală.
+        </p>
+      </div>
+    </div>
   </div>
+  <div class="container text-start pt-3 ps-5">
+    <div class="row">
+      <div class="col-md-12">
+        <h5>Locație</h5>
+        <p><i class="bi bi-geo-alt-fill me-2"></i><span>Strada Cotești 17, Fălticeni 725200, Romania</span></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h5>Contact</h5>
+        <p><i class="bi bi-envelope-fill me-2"></i><span>dumbrava_minunata@gmail.com</span></p>
+        <p><i class="bi bi-phone-fill me-2"></i><span>+40740156922</span></p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12 ">
+        <h5>Social Media</h5>
+        <p>
+          <a href="https://www.facebook.com/profile.php?id=100054209063381" target="_blank"><i class="bi bi-facebook me-3 text-light"></i></a>
+          <a href="https://www.instagram.com/emilia_boamba/"><i class="bi bi-instagram me-3 text-light"></i></a>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container p-3 d-flex justify-content-center align-items-center">
+    <google-map class="map"
+                width="300px"
+                height="300px"
+                [center]="center"
+                [zoom]="zoom"
+                (mapClick)="moveMap($event)"
+                (mapMousemove)="move($event)">
+      <map-marker #marker="mapMarker" [position]="center" [title]="kindergartenTitle" (mapClick)="openInfo(marker)">
+        <map-info-window>Grădiniță <br> Dumbrava Minunată <br>Falticeni</map-info-window>
+      </map-marker>
+
+    </google-map>
+  </div>
+
 
 </footer>

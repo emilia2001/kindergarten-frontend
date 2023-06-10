@@ -14,7 +14,7 @@
       <input type="text" formControlName="search" placeholder="Caută..." class="form-control"/>
     </div>
   </form>
-  <div class="itemsContainer text-dark row">
+  <div class="itemsContainer text-dark row pb-4">
     <div class="col-md-12">
       <div class="table-wrap">
         <h5 *ngIf="(childrenList | filterChildren:searchForm.get('search')!.value!).length == 0" class="text-light">Nu a

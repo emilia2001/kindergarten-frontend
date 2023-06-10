@@ -1,5 +1,9 @@
 @import "../../../_variables.scss";
 
+.ng-invalid:not(form) {
+  border-left: 5px solid red;
+}
+
 :host {
   display: block;
   height: 100%;

@@ -1,6 +1,17 @@
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+  {{updateMessage}}
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+</div>
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+  S-a produs o eroare, te rugăm încearcă mai târziu
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
+</div>
+
+
 <ng-template #myModal let-modalRef="modalRef">
   <div class="modal-header">
-    <h4 class="modal-title text-dark">Efectuare plata</h4>
+    <h4 class="modal-title text-dark">Confirmare ștergere</h4>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
   </div>
   <div class="modal-body">
     <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
@@ -9,8 +20,10 @@
       </div>
     </div>
     <div *ngIf="!isLoading" >
-      <p>Ești sigur că dorești să ștergi copilul din sistem?</p>
+      <p>Ești sigur că dorești să ștergi educatoarea din sistem?</p>
     </div>
+    <div *ngIf="!isLoadingDelete" class="text-success">{{deleteMessage}}</div>
+    <div *ngIf="!isLoadingDelete" class="text-danger">{{deleteError}}</div>
     <div class="d-flex justify-content-between strong mt-4">
       <button class="btn btn-success btn-lg btn-block text-light" (click)="deleteTeacher()">Da
       </button>
@@ -63,6 +76,7 @@
                      [(ngModel)]="teacher.firstName"/>
             </div>
 
+
             <div class="form-group mb-3">
               <label class="form-label ms-2" for="description">Descriere</label>
               <textarea class="form-control" id="description" formControlName="description" rows="3"
@@ -72,9 +86,9 @@
             <div class="form-group mb-3">
               <label for="dateOfBirth" class="form-label ms-2">Zi de naștere</label>
               <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
-                     required="required" [(ngModel)]="teacher.dateOfBirth">
+                     required="required" [(ngModel)]="teacher.dateOfBirth" [min]="minDate"
+                     [max]="maxDate">
             </div>
-
             <div class="form-group mb-3">
               <label class="form-label ms-2" for="group">Grupă</label>
               <select id="group" class="form-control" formControlName="group" [(ngModel)]="teacher.groupId">
@@ -83,7 +97,15 @@
               </select>
             </div>
 
-            <div class="text-danger fw-semibold" *ngIf='errors && !isLoading'>{{errors}}</div>
+            <div class="text-danger fw-semibold text-center" *ngIf='errors && !isLoading'>{{errors}}</div>
+
+            <div class="fw-semibold text-center mt-4">
+              <div class="d-flex justify-content-center mt-2" *ngIf="isLoadingUpdate">
+                <div class="spinner-border" role="status">
+                  <span class="visually-hidden">Vă rugăm aștepați...</span>
+                </div>
+              </div>
+            </div>
 
             <div class="d-flex justify-content-center strong mt-4">
               <button type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light" (click)="handleSubmitTeacher()">Salvare

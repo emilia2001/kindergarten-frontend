@@ -1,3 +1,12 @@
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+  {{updateMessage}}
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+</div>
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+  S-a produs o eroare, te rugăm încearcă mai târziu
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
+</div>
+
 <div class="container mb-5 mt-5 pb-5">
   <div class="row h-100 container">
     <div class="col-12">
@@ -41,7 +50,13 @@
                           [(ngModel)]="announcement.description"></textarea>
               </div>
 
-              <div class="text-danger fw-semibold" *ngIf='errors && !isLoading'>{{errors}}</div>
+              <div class="fw-semibold text-center mt-4">
+                <div class="d-flex justify-content-center mt-2" *ngIf="isLoadingUpdate">
+                  <div class="spinner-border" role="status">
+                    <span class="visually-hidden">Vă rugăm aștepați...</span>
+                  </div>
+                </div>
+              </div>
 
               <div class="d-flex justify-content-center strong mt-4">
                 <button type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light">Salvare

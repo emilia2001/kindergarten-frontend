@@ -21,31 +21,35 @@ import {AdminRegistrationRequestComponent} from "./request/admin-registration-re
 import { AddAccountComponent } from './add-account/add-account.component';
 
 @NgModule({
-  declarations: [
-    AdminComponent,
-    ChildrenListComponent,
-    ChildrenEditComponent,
-    ClassBookComponent,
-    PaymentListComponent,
-    RequestListComponent,
-    RequestEditComponent,
-    TeacherListComponent,
-    TeacherEditComponent,
+    declarations: [
+        AdminComponent,
+        ChildrenListComponent,
+        ChildrenEditComponent,
+        ClassBookComponent,
+        PaymentListComponent,
+        RequestListComponent,
+        RequestEditComponent,
+        TeacherListComponent,
+        TeacherEditComponent,
+        AdminRegistrationRequestComponent,
+        AdminExtensionRequestComponent,
+        AddAccountComponent,
+    ],
+    imports: [
+        CommonModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        FormsModule,
+        SharedModule,
+        BsDatepickerModule
+    ],
+  exports: [
     AdminRegistrationRequestComponent,
-    AdminExtensionRequestComponent,
-    AddAccountComponent,
+    AdminExtensionRequestComponent
   ],
-  imports: [
-    CommonModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    FormsModule,
-    SharedModule,
-    BsDatepickerModule
-  ],
-  providers: [
-    ConfirmationModalComponent
-  ]
+    providers: [
+        ConfirmationModalComponent
+    ]
 })
 export class AdminModule {
 }

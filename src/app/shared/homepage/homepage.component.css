@@ -65,15 +65,12 @@ ngb-carousel {
 
 .team-boxed h2 {
   font-weight: bold;
-  margin-bottom: 40px;
-  padding-top: 40px;
+  padding-top: 20px;
   color: inherit;
 }
 
 @media (max-width: 767px) {
-  .team-boxed h2 {
-    margin-bottom: 25px;
-    padding-top: 25px;
+  .team-boxed h2, h2 {
     font-size: 24px;
   }
 }
@@ -88,7 +85,7 @@ ngb-carousel {
 }
 
 .team-boxed .people {
-  padding: 50px 0;
+  padding: 30px 0;
 }
 
 .team-boxed .item {
@@ -163,6 +160,45 @@ ngb-carousel {
 .item {
   flex: 0 0 auto;
   padding: 0 10px;
+}
+
+.features li {
+  list-style: none;
+  display: block;
+}
+
+.homepage-features {
+  margin: 20px;
+}
+@media (max-width: 767px) {
+  .homepage-features {
+    margin: 0;
+  }
+}
+
+.homepage-features h2 {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.homepage-features ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.homepage-features li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 10px;
+}
+@media (max-width: 767px) {
+  .homepage-features li {
+    padding-left: 0;
+  }
+}
+
+.icon-bold {
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=homepage.component.css.map */

@@ -1,3 +1,12 @@
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+  {{updateMessage}}
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+</div>
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+  {{updateMessage}}
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
+</div>
+
 <div class="container mb-5 mt-5 pb-5">
   <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
     <div class="spinner-border" role="status">
@@ -30,8 +39,8 @@
           <hr>
 
           <h3>Completare formular</h3>
-          <app-registration-request *ngIf="requestType==='registration'"></app-registration-request>
-          <app-extension-request *ngIf="requestType==='extension'"></app-extension-request>
+          <app-registration-request *ngIf="requestType==='registration'" (submitEvent)="handleSubmitForm($event)"></app-registration-request>
+          <app-extension-request *ngIf="requestType==='extension'" (submitEvent)="handleSubmitForm($event)"></app-extension-request>
         </div>
       </div>
     </div>

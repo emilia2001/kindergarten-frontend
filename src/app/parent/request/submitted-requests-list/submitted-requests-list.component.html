@@ -1,7 +1,9 @@
-<section class="mt-4 container">
+<section class="mt-4 container pb-4">
   <div class="row justify-content-center">
     <h2 class="text-light heading-section">Cereri depuse</h2>
   </div>
+  <h5 *ngIf="registrationRequestList.length == 0 && extensionRequestList.length == 0" class="text-light mt-3">
+    Nu aveți nicio cerere momentan</h5>
   <div class="row justify-content-end mb-4 ">
     <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
       <a class="btn btn-primary text-light text-center" routerLink="/requests/add">
@@ -9,7 +11,7 @@
       </a>
     </div>
   </div>
-  <div class="accordion" id="accordionExample">
+  <div *ngIf="registrationRequestList.length > 0 || extensionRequestList.length > 0" class="accordion pb-4" id="accordionExample">
     <div class="item mb-3" *ngFor="let request of extensionRequestList; let i = index">
       <div class="item-header" id="heading{{i}}">
         <h5 class="mb-0">

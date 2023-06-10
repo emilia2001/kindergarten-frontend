@@ -1,6 +1,6 @@
 import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CurrencyPipe} from "@angular/common";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 
 import {NgbModal, NgbModalRef} from '@ng-bootstrap/ng-bootstrap';
 import jwt_decode from 'jwt-decode';
@@ -34,6 +34,7 @@ export class ParentPaymentListComponent implements OnInit {
   modalRef: NgbModalRef | undefined;
   isLoading: boolean = false;
   amount: string | undefined;
+  currentAmount: string | undefined;
   paymentForm!: FormGroup;
   paymentId: number | undefined;
   isPaymentLoading: boolean = false;
@@ -48,7 +49,7 @@ export class ParentPaymentListComponent implements OnInit {
     private modalService: NgbModal,
     private _currencyPipe: CurrencyPipe,
     private _formBuilder: FormBuilder,
-    private _paymentConfirmationService : PaymentConfirmationService,
+    private _paymentConfirmationService: PaymentConfirmationService,
     private _firebaseService: FirebaseService
   ) {
     // @ts-ignore
@@ -72,7 +73,7 @@ export class ParentPaymentListComponent implements OnInit {
     }
 
     this.paymentForm = this._formBuilder.group({
-        amountInput: ["", Validators.required]
+        amountInput: ["", [Validators.required, this.amountValidator()]]
       }
     )
 
@@ -95,25 +96,33 @@ export class ParentPaymentListComponent implements OnInit {
     });
   }
 
-  charge(amount: number, token: string) {
-    this._paymentService.charge(amount, token, 1);
+  amountValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      console.log("pl")
+      const amountInput = parseInt(control.value?.split(' ')[1]!);
+      const amount = parseInt(this.currentAmount!);
+      if (amountInput && amountInput > amount) {
+        return {'amountExceeded': true};
+      }
+      return null;
+    };
   }
 
   openModal(template: TemplateRef<any>, totalAmount: number, id: number | undefined, child: IChild) {
     this.currentChild = child;
     this.amount = totalAmount.toString();
+    this.currentAmount = totalAmount.toString();
     this.paymentId = id;
-
     if (this.myModal) {
       this.modalRef = this.modalService.open(this.myModal);
 
       this.modalRef.result.then(
         () => {
-          this.status =''
+          this.status = ''
           console.log('Modal closed');
         },
         () => {
-          this.status =''
+          this.status = ''
           console.log('Modal dismissed');
         }
       );
@@ -130,35 +139,58 @@ export class ParentPaymentListComponent implements OnInit {
   }
 
   async handleSubmit() {
-    this.isPaymentLoading = true;
-    const {token, error} = await this.stripe.createToken(this.cardElement);
-    this.errors = ''
-    const errorElement = document.getElementById('card-errors');
-    errorElement!.textContent = "";
-    if (error) {
+    if (this.paymentForm.touched && this.paymentForm.valid) {
+      this.isPaymentLoading = true;
+      const {token, error} = await this.stripe.createToken(this.cardElement);
+      console.log(token, error)
+      this.errors = ''
       const errorElement = document.getElementById('card-errors');
-      errorElement!.textContent = error.message;
-      this.isPaymentLoading = false
-    } else {
-      this._paymentService.charge(parseInt(this.amount?.split(' ')[1]!), token.id, this.paymentId!).subscribe({
-        next: data => {
-          const newList = this.paymentList.value.map(request => {
-            if (request.id === this.paymentId) {
-              return data.payment;
+      errorElement!.textContent = "";
+      setTimeout(() => {
+        if (error) {
+          const errorElement = document.getElementById('card-errors');
+          errorElement!.textContent = error.message;
+          this.isPaymentLoading = false
+        } else {
+          this._paymentService.charge(parseInt(this.amount?.split(' ')[1]!), token.id, this.paymentId!).subscribe({
+            next: data => {
+              const newList = this.paymentList.value.map(request => {
+                if (request.id === this.paymentId) {
+                  return data.payment;
+                }
+                return request;
+              });
+              this.paymentList.next(newList);
+              this.isPaymentLoading = false;
+              this.status = 'success';
+              this.generatePDF();
+            },
+            error: errors => {
+              this.isPaymentLoading = false;
+              this.errors = errors.error.status
+              let error = errors.error.status;
+              if (error == "Your card was declined.")
+                this.errors = "Cardul a fost respins";
+              if (error == "Your card has insufficient funds.")
+                this.errors = "Fonduri insuficiente";
+              if (error == "Lost card decline")
+                this.errors = "Card pierdut";
+              if (error == "Stolen card decline")
+                this.errors = "Card furat";
+              if (error == "Expired card decline")
+                this.errors = "Card expirat";
+              if (error == "Incorrect CVC decline")
+                this.errors = "CVC incorect";
+              if (error == "Processing error decline")
+                this.errors = "Eroare procesare card";
+              if (error == "Incorrect number decline")
+                this.errors = "Număr card incorect";
             }
-            return request;
           });
-          this.paymentList.next(newList);
-          this.isPaymentLoading = false;
-          this.status = 'success';
-          this.generatePDF();
-        },
-        error: errors => {
-          console.log(errors)
-          this.isPaymentLoading = false;
-          this.errors = errors.error.status
         }
-      });
+      }, 0);
+    } else {
+      this.errors = "Datele sunt invalide"
     }
   }
 
@@ -173,15 +205,15 @@ export class ParentPaymentListComponent implements OnInit {
       console.log(firstName, lastName)
 
       const tableData = [
-        [{ text: 'Unitate', bold: true }, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
-        [{ text: 'Cod fiscal (C.I.F)', bold: true }, '18260453'],
-        [{ text: 'Sediul', bold: true }, 'str. Tarancutei, nr. 19, Falticeni'],
-        [{ text: 'Judetul', bold: true }, 'Suceava'],
+        [{text: 'Unitate', bold: true}, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
+        [{text: 'Cod fiscal (C.I.F)', bold: true}, '18260453'],
+        [{text: 'Sediul', bold: true}, 'str. Tarancutei, nr. 19, Falticeni'],
+        [{text: 'Judetul', bold: true}, 'Suceava'],
       ];
 
       const documentDefinition: TDocumentDefinitions = {
         content: [
-          { text: 'Chitanta', style: 'title' },
+          {text: 'Chitanta', style: 'title'},
           {
             table: {
               headerRows: 1,
@@ -197,12 +229,12 @@ export class ParentPaymentListComponent implements OnInit {
               widths: ['auto', '*'],
               body: [
                 [
-                  { text: 'Data: ', bold: true, style: 'columnHeader' },
-                  { text: new Date().toLocaleDateString(), style: 'columnContent' },
+                  {text: 'Data: ', bold: true, style: 'columnHeader'},
+                  {text: new Date().toLocaleDateString(), style: 'columnContent'},
                 ],
                 [
-                  { text: 'Numar chitanta: ', bold: true, style: 'columnHeader' },
-                  { text: id.toString(), style: 'columnContent' },
+                  {text: 'Numar chitanta: ', bold: true, style: 'columnHeader'},
+                  {text: id.toString(), style: 'columnContent'},
                 ],
               ],
             },
@@ -226,7 +258,7 @@ export class ParentPaymentListComponent implements OnInit {
               ' ' +
               this.currentChild?.lastName,
           },
-          { text: 'Plata efectuata cu cardul ', bold: true, marginTop: 10 }
+          {text: 'Plata efectuata cu cardul ', bold: true, marginTop: 10}
         ],
         styles: {
           title: {
@@ -245,11 +277,9 @@ export class ParentPaymentListComponent implements OnInit {
       };
 
 
-
-
       const pdfDocGenerator = pdfMake.createPdf(documentDefinition)
       pdfDocGenerator.getBlob((blob: Blob) => {
-        const file = new File([blob], `confirmation${id}.pdf`, { type: 'application/pdf' });
+        const file = new File([blob], `confirmation${id}.pdf`, {type: 'application/pdf'});
         this.upload(file, id)
       });
 
@@ -257,36 +287,44 @@ export class ParentPaymentListComponent implements OnInit {
 
   }
 
-  upload(file: File, id: number): void {
-      if (file) {
-        const currentFileUpload = new FileUpload(file);
+  upload(file
+           :
+           File, id
+           :
+           number
+  ):
+    void {
+    if (file) {
+      const currentFileUpload = new FileUpload(file);
 
-        this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
-          (downloadURL: string) => {
-            console.log('File is accessible:', downloadURL);
-            const paymentConfirmation: IPaymentConfirmation= {
-              id: id, path: downloadURL, paymentId: this.paymentId!
-            }
-            this._paymentConfirmationService.add(paymentConfirmation).subscribe({
+      this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
+        (downloadURL: string) => {
+          console.log('File is accessible:', downloadURL);
+          const paymentConfirmation: IPaymentConfirmation = {
+            id: id, path: downloadURL, paymentId: this.paymentId!
+          }
+          this._paymentConfirmationService.add(paymentConfirmation).subscribe({
               next: data => {
                 const newList = this.paymentConfirmationList.getValue();
                 newList.push(paymentConfirmation);
                 this.paymentConfirmationList.next(newList);
               }, error: err => {
                 console.log(err);
-                }
               }
-
-            );
-          },
-          (error) => {
-            console.error('Error occurred during file upload:', error);
-          }
-        );
+            }
+          );
+        },
+        (error) => {
+          console.error('Error occurred during file upload:', error);
+        }
+      );
     }
   }
 
-  getConfirmationForPayment(id: number) {
+  getConfirmationForPayment(id
+                              :
+                              number
+  ) {
     return this.paymentConfirmationList.getValue().filter(confirmation => confirmation.paymentId == id);
   }
 }

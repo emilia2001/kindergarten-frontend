@@ -20,8 +20,14 @@ export class PreviousMonthPipe implements PipeTransform {
     const previousYear = date.getFullYear();
     const previousMonth = date.getMonth() + 1;
 
+    const months = [
+      'Ianuarie', 'Februarie', 'Martie', 'Aprilie', 'Mai', 'Iunie',
+      'Iulie', 'August', 'Septembrie', 'Octombrie', 'Noiembrie', 'Decembrie'
+    ];
+
     // Return the previous year and month as a string
-    return `${previousYear}-${previousMonth.toString().padStart(2, '0')}`;
+    return `${months[previousMonth - 1]} ${previousYear}`;
   }
+
 
 }

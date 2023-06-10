@@ -10,13 +10,47 @@ a:hover {
 .logoTitle {
   height: 80px;
 }
+@media screen and (max-width: 767px) {
+  .logoTitle {
+    height: 60px;
+  }
+}
 
 .logoImage {
   height: 80px;
 }
+@media screen and (max-width: 767px) {
+  .logoImage {
+    height: 60px;
+  }
+}
 
 .navbar-brand:hover {
   cursor: pointer;
+}
+
+.navbar-toggler {
+  padding: 4px 8px;
+  opacity: 1;
+  outline: none;
+  border: none;
+}
+.navbar-toggler:active {
+  color: white !important;
+  font-weight: 500 !important;
+}
+
+hr {
+  display: none;
+}
+@media screen and (max-width: 767px) {
+  hr {
+    display: block;
+  }
+}
+
+.custom-toggler:active .navbar-toggler-icon {
+  font-weight: bold;
 }
 
 /*# sourceMappingURL=header.component.css.map */

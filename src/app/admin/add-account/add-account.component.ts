@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 
@@ -18,6 +18,10 @@ export class AddAccountComponent {
   errors: string = '';
   hidePassword = true;
   role!: Role;
+  showSuccessAlert: any;
+  showErrorAlert: any;
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(private _formBuilder: FormBuilder,
               private _router: Router,
@@ -45,16 +49,38 @@ export class AddAccountComponent {
           finalize(() => this.isLoading = false)
         ).subscribe({
           next: data => {
-            console.log(data)
-
-            this.errors = '';
+            this.showSuccessAlert = true;
+            setTimeout(() => this.scrollToSuccessAlert(), 0);
           },
           error: err => {
             this.loginAdminForm.reset();
-            this.errors = err.errors.status;
+            this.showErrorAlert = true;
+            setTimeout(() => this.scrollToErrorAlert(), 0);
           }
         }
       )
+    }
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+  }
+
+  closeErrorAlert() {
+    this.showErrorAlert = false;
+  }
+
+  scrollToSuccessAlert() {
+    if (this.successAlertRef && this.successAlertRef.nativeElement) {
+      this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      this.successAlertRef.nativeElement.focus();
+    }
+  }
+
+  scrollToErrorAlert() {
+    if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
+      this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 
 import jwt_decode from "jwt-decode";
 
@@ -14,6 +14,12 @@ export class NewRequestComponent implements OnInit {
   form: any;
   currentApplicationPdf!: string;
   requestType!: string;
+  showSuccessAlert: any;
+  showErrorAlert: any;
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
+  isLoadingUpdate: boolean = false;
+  updateMessage: string = '';
 
   constructor(
     private _accountService: AccountService
@@ -47,4 +53,41 @@ export class NewRequestComponent implements OnInit {
         this.requestType = 'extension';
     }
   }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+  }
+
+  closeErrorAlert() {
+    this.showErrorAlert = false;
+  }
+
+  scrollToSuccessAlert() {
+    console.log(this.successAlertRef)
+    if (this.successAlertRef && this.successAlertRef.nativeElement) {
+      this.successAlertRef.nativeElement.scrollIntoView({behavior: 'smooth'});
+      this.successAlertRef.nativeElement.focus();
+    }
+  }
+
+  scrollToErrorAlert() {
+    if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
+      this.errorAlertRef.nativeElement.scrollIntoView({behavior: 'smooth'});
+      // or use this.successAlertRef.nativeElement.focus();
+    }
+  }
+
+  handleSubmitForm($event: any) {
+    this.showErrorAlert = false;
+    this.showSuccessAlert = false;
+    this.updateMessage = $event["message"];
+    if ($event["type"] == "success") {
+      this.showSuccessAlert = true;
+      setTimeout(() => this.scrollToSuccessAlert(), 0);
+    }
+    if ($event["type"] == "error") {
+      this.showErrorAlert = true;
+      setTimeout(() => this.scrollToErrorAlert(), 0);
+    }
+  };
 }

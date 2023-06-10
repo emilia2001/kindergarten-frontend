@@ -1,3 +1,12 @@
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+  Notificarile s-au trimis cu succes
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+</div>
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+  S-a produs o eroare, te rugăm încearcă mai târziu
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
+</div>
+
 <ng-template #myModal let-modalRef="modalRef">
   <div class="modal-header">
     <h4 class="modal-title">Efectuare plata</h4>
@@ -27,7 +36,7 @@
         </div>
       </div>
       <div class="success" *ngIf="status == 'success'">
-        <span class="fw-semibold text-success">Plata s-a inregistrat cu succes</span>
+        <span class="fw-semibold text-success mt-2">Plata s-a inregistrat cu succes</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold class="bi bi-check-lg"
              viewBox="0 0 16 16">
           <path
@@ -50,7 +59,7 @@
       <div class="form-group mb-3">
         <label for="group" class="form-label ms-2">Grupă</label>
         <select id="group" class="form-control" (change)="handleGroupChange($event)">
-          <option selected disabled hidden>Alege grupa</option>
+          <option selected value="0">Toate</option>
           <option *ngFor="let group of groupList" [value]="group.id">{{group.name}} ({{group.groupType | groupType}})</option>
         </select>
       </div>
@@ -63,9 +72,15 @@
 
     <div class="col-6 my-4">
       <div class="addButtonContainer d-flex justify-content-end">
-        <button class="btn btn-primary text-light text-center" (click)="sendPaymentsEmail()">
+        <button class="btn btn-primary text-light text-center" (click)="sendPaymentsEmail()" [disabled]="isMailLoading">
           Trimitere mail plăți
         </button>
+
+      </div>
+      <div class="d-flex justify-content-end me-5 mt-2" *ngIf="isMailLoading">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Se incarca...</span>
+        </div>
       </div>
     </div>
   </section>
@@ -79,7 +94,9 @@
               <input type="text" formControlName="search" placeholder="Caută..." class="form-control"/>
             </div>
           </form>
-          <table class=" table table-responsive-xl">
+          <h5 *ngIf="(paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId).length == 0" class="text-light">Nu a
+            fost găsită nicio plată</h5>
+          <table class="table table-responsive-xl fw-semibold" *ngIf="(paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId).length > 0">
             <thead>
             <tr>
               <th></th>

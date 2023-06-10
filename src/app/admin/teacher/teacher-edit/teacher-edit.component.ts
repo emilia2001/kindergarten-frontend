@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 
@@ -27,6 +27,18 @@ export class TeacherEditComponent implements OnInit {
   errors: string = '';
   @ViewChild('myModal') myModal: TemplateRef<any> | undefined;
   modalRef: NgbModalRef | undefined;
+  isLoadingDelete: boolean = false;
+  deleteMessage: string = '';
+  deleteError: string = '';
+  isLoadingUpdate: boolean = false;
+  updateMessage: string = '';
+  updateError: string = '';
+  minDate: any;
+  maxDate: any;
+  showSuccessAlert: any;
+  showErrorAlert: any;
+  @ViewChild('successAlert') successAlertRef!: ElementRef;
+  @ViewChild('errorAlert') errorAlertRef!: ElementRef;
 
   constructor(
     private _route: ActivatedRoute,
@@ -42,12 +54,12 @@ export class TeacherEditComponent implements OnInit {
   ngOnInit() {
     this.getGroupList();
     this.teacherForm = this._formBuilder.group({
-      firstName: ["", Validators.required],
-      lastName: ["", Validators.required],
+      firstName: ["", [Validators.required, Validators.pattern("^[a-zA-Z -ăĂîÎâÂșȘțȚ]+$")]],
+      lastName: ["", [Validators.required, Validators.pattern("^[a-zA-Z -ăĂîÎâÂșȘțȚ]+$")]],
       description: ["", Validators.required],
       dateOfBirth: ["", Validators.required],
       group: ["", Validators.required],
-      profilePicture: ["", Validators.required]
+      profilePicture: [""]
     });
     const idParam = this._route.snapshot.paramMap.get('id');
     if (idParam) {
@@ -74,6 +86,11 @@ export class TeacherEditComponent implements OnInit {
         picturePath: './assets/images/default_picture.png'
       };
     }
+
+    const currentDate = new Date();
+    this.minDate = new Date(currentDate.getFullYear() - 50, 0, 2).toISOString().split('T')[0];
+    this.maxDate = new Date(currentDate.getFullYear() - 19, 0, 1).toISOString().split('T')[0];
+
   }
 
   getGroupList() {
@@ -87,6 +104,9 @@ export class TeacherEditComponent implements OnInit {
   handleSubmitTeacher() {
     const formValues = this.teacherForm.value;
     let newPicture = this.teacher.picturePath;
+    this.updateError = "";
+    this.updateMessage = "";
+    this.errors = "";
 
     this.teacher = {
       firstName: formValues.firstName,
@@ -94,11 +114,40 @@ export class TeacherEditComponent implements OnInit {
       description: formValues.description,
       dateOfBirth: formValues.dateOfBirth,
       groupId: formValues.group,
-      picturePath: newPicture
+      picturePath: newPicture,
+      id: this.teacher.id
     };
 
-    if (this.id) this._teacherService.update(this.id, this.teacher).subscribe(data => console.log(data))
-    else this._teacherService.add(this.teacher).subscribe(data => console.log(data));
+    if (this.teacherForm.touched && this.teacherForm.valid) {
+      this.isLoadingUpdate = true; // Set loading state to true
+
+      const updateObservable = this.id
+        ? this._teacherService.update(this.id, this.teacher)
+        : this._teacherService.add(this.teacher);
+
+      updateObservable.pipe(
+        take(1),
+        finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
+      ).subscribe({
+        next: (_) => {
+          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Educatoarea a fost adăgată în sistem";
+          this.showSuccessAlert = true;
+          setTimeout(() => this.scrollToSuccessAlert(), 0);
+        },
+        error: (_) => {
+          this.showErrorAlert = true;
+          setTimeout(() => this.scrollToErrorAlert(), 0);
+        }
+      });
+    }
+
+    if (!this.teacherForm.valid) {
+      console.log(this.teacherForm)
+      this.errors = "Date invalide"
+    }
+
+    // if (this.id) this._teacherService.update(this.id, this.teacher).subscribe(data => console.log(data))
+    // else this._teacherService.add(this.teacher).subscribe(data => console.log(data));
   }
 
   onImageSelected($event: any) {
@@ -129,6 +178,8 @@ export class TeacherEditComponent implements OnInit {
   }
 
   openModal(myModal: TemplateRef<any>) {
+    this.deleteError = "";
+    this.deleteMessage = "";
     if (this.myModal) {
       this.modalRef = this.modalService.open(this.myModal);
 
@@ -144,16 +195,44 @@ export class TeacherEditComponent implements OnInit {
   }
 
   deleteTeacher() {
-    this._teacherService.deleteTeacher(this.teacher.id!).subscribe(data => {
-      console.log(data);
-      this.modalRef?.close();
-      setTimeout(() => this._router.navigate(['/admin/teacher']), 1000);
+    this._teacherService.deleteTeacher(this.teacher.id!).pipe(
+      take(1),
+      finalize(() => this.isLoadingDelete = false)
+    ).subscribe({
+      next: data => {
+        this.deleteMessage = "Educatoarea a fost ștearsă din sistem cu succes";
+      },
+      error: _ => {
+        this.deleteError = 'S-a produs o eroare';
+      }
     });
   }
 
   closeModal() {
     if (this.myModal) {
       this.modalRef?.close()
+    }
+  }
+
+  closeSuccessAlert() {
+    this.showSuccessAlert = false;
+  }
+
+  closeErrorAlert() {
+    this.showErrorAlert = false;
+  }
+
+  scrollToSuccessAlert() {
+    if (this.successAlertRef && this.successAlertRef.nativeElement) {
+      this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      this.successAlertRef.nativeElement.focus();
+    }
+  }
+
+  scrollToErrorAlert() {
+    if (this.errorAlertRef && this.errorAlertRef.nativeElement) {
+      this.errorAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
+      // or use this.successAlertRef.nativeElement.focus();
     }
   }
 }

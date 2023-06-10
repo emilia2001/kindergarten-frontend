@@ -26,6 +26,7 @@ import { RequestStatusPipe } from './pipes/request-status.pipe';
 import { GroupTypePipe } from './pipes/group-type.pipe';
 import { OrderByPipe } from './pipes/order-by.pipe';
 import { RomanianMonthPipe } from './pipes/romanian-month.pipe';
+import {GoogleMapsModule} from "@angular/google-maps";
 
 
 @NgModule({
@@ -73,7 +74,8 @@ import { RomanianMonthPipe } from './pipes/romanian-month.pipe';
     PdfViewerModule,
     NgxExtendedPdfViewerModule,
     NgbCarouselModule,
-    SlickCarouselModule
+    SlickCarouselModule,
+    GoogleMapsModule
   ]
 })
 export class SharedModule {

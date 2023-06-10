@@ -40,7 +40,8 @@ export class TeacherService {
           description: teacher.description,
           dateOfBirth: teacher.dateOfBirth,
           groupId: teacher.groupDto.id!,
-          picturePath: teacher.picturePath
+          picturePath: teacher.picturePath,
+          id: teacher.id
         };
       }));
   }

@@ -27,7 +27,9 @@ export const environment = {
     paymentConfirmation: '/payment-confirmation',
     nextId: '/next-id',
     admin: '/admin',
-    sendEmail: '/send-email'
+    sendEmail: '/send-email',
+    updateByParent: '/update-by-parent',
+    updateByAdmin: '/update-by-admin',
   },
   web: {
     client_id: "820913190664-fbfch7ja0c8v88pqv0utku5p7gm3qabn.apps.googleusercontent.com",

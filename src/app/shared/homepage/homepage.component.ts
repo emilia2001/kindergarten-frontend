@@ -17,13 +17,8 @@ export class HomepageComponent implements OnInit {
     autoplay: true,
     autoplaySpeed: 2000
   };
-
-
   title = 'ngSlick';
-
-
   slides = [342, 453, 846, 855, 234, 564, 744, 243];
-
   slideConfig = {
     "slidesToShow": 3,
     "slidesToScroll": 1,
@@ -56,23 +51,6 @@ export class HomepageComponent implements OnInit {
     ]
   };
 
-  slickInit(e: any) {
-    console.log('slick initialized');
-  }
-
-  breakpoint(e: any) {
-    console.log('breakpoint');
-  }
-
-  afterChange(e: any) {
-    console.log('afterChange');
-  }
-
-  beforeChange(e: any) {
-    console.log('beforeChange');
-  }
-
-
   constructor(
     private _teacherService: TeacherService
   ) {
@@ -82,4 +60,17 @@ export class HomepageComponent implements OnInit {
     this._teacherService.getAll().subscribe(data => this.teacherList = data);
   }
 
+  computeAge(birthDate: Date): number {
+    birthDate = new Date(birthDate)
+    const today = new Date();
+
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+      age--;
+    }
+
+    return age;
+  }
 }

@@ -14,14 +14,48 @@ a {
 
 .logoTitle {
   height: 80px;
+
+  @media screen and (max-width: 767px) {
+    height: 60px;
+  }
 }
 
 .logoImage {
   height: 80px;
+
+  @media screen and (max-width: 767px) {
+    height: 60px;
+  }
 }
 
 .navbar-brand {
   &:hover {
     cursor: pointer;
   }
+}
+
+.navbar-toggler {
+  padding: 4px 8px;
+  opacity: 1;
+  outline: none;
+  border: none;
+  //box-shadow: none;
+
+  &:active {
+    color: white !important;
+    font-weight: 500 !important;
+
+  }
+}
+
+hr {
+  display: none;
+
+  @media screen and (max-width: 767px) {
+    display: block;
+  }
+}
+
+.custom-toggler:active .navbar-toggler-icon {
+  font-weight: bold;
 }

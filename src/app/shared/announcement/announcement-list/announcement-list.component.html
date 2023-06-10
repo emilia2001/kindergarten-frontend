@@ -1,5 +1,30 @@
-<section class="light container">
-  <div class="container pb-2">
+<ng-template #myModal let-modalRef="modalRef">
+  <div class="modal-header">
+    <h4 class="modal-title text-dark">Confirmare ștergere</h4>
+    <button type="button" class="btn-close" (click)="closeModal()"></button>
+  </div>
+  <div class="modal-body">
+    <div>
+      <p>Ești sigur că dorești să ștergi anunțul?</p>
+    </div>
+    <div class="d-flex justify-content-center mt-2" *ngIf="isLoadingDelete">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Vă rugăm aștepați...</span>
+      </div>
+    </div>
+    <div *ngIf="!isLoadingDelete" class="text-success">{{deleteMessage}}</div>
+    <div *ngIf="!isLoadingDelete" class="text-danger">{{deleteError}}</div>
+    <div class="d-flex justify-content-between strong mt-4">
+      <button class="btn btn-success btn-lg btn-block text-light" (click)="deleteAnnouncement()">Da
+      </button>
+      <button class="btn btn-danger btn-lg btn-block text-light" (click)="closeModal()">Nu
+      </button>
+    </div>
+  </div>
+</ng-template>
+
+<section class="light container pb-4">
+  <div class="container pb-4">
     <h2 class="text-light heading-section my-4" id="pageHeaderTitle">Anunțuri</h2>
 
     <div class="row justify-content-end mb-4 " *ngIf="isAdminLoggedIn">
@@ -17,7 +42,7 @@
         <img class="postcard_img" src="{{announcement.picturePath}}" alt="Image Title"/>
       </a>
       <div class="postcard_text t-dark">
-        <h1 class="postcard_title blue mb-4">{{announcement.title}}</h1>
+        <h1 class="postcard_title blue mb-4 text-dark">{{announcement.title}}</h1>
 
         <div class="postcard_preview-txt" style="white-space: pre-line">{{announcement.description}}</div>
         <ul class="postcard_tagbox text-light" *ngIf="isAdminLoggedIn">
@@ -31,7 +56,7 @@
             </svg>
             Editare
           </li>
-          <li class="tag_item" (click)="handleDeleteAnnouncement(announcement)">
+          <li class="tag_item" (click)="openModal(announcement)">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash3-fill"
                  viewBox="0 0 16 16">
               <path

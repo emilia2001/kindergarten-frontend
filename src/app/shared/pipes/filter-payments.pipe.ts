@@ -18,9 +18,7 @@ export class FilterPaymentsPipe implements PipeTransform {
         // payment.child.group.id === groupId);
     }
     if (!searchText) {
-      console.log(groupId)
       return payments.filter(payment => {
-        console.log( payment.child.group.id)
         return payment.child.group.id == groupId
       });
     }

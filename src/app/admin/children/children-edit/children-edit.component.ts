@@ -110,7 +110,6 @@ export class ChildrenEditComponent {
 
   cnpValidator(control: FormControl): { [key: string]: any } | null{
     const value = control.value;
-    console.log(value)
     // Check if the CNP is empty
     if (!value) {
       return null;
@@ -171,36 +170,6 @@ export class ChildrenEditComponent {
       },
       picturePath: newPicture
     };
-    // if (this.childForm.touched && this.childForm.valid) {
-    //   if (this.id) this._childrenService.update(this.id, this.child).pipe(
-    //     take(1),
-    //     finalize(() => this.isLoadingUpdate = false)
-    //   ).subscribe({
-    //     next: _ => {
-    //       this.updateMessage = "Modificările s-au salvat cu succes";
-    //       this.showSuccessAlert = true;
-    //       this.scrollToSuccessAlert();
-    //     },
-    //     error: _ => {
-    //       this.showErrorAlert = true;
-    //       this.scrollToErrorAlert();
-    //     }
-    //   })
-    //   else this._childrenService.add(this.child).pipe(
-    //     take(1),
-    //     finalize(() => this.isLoadingUpdate = false)
-    //   ).subscribe({
-    //     next: _ => {
-    //       this.updateMessage = "Copilul a fost adăgat în sistem";
-    //       this.showSuccessAlert = true;
-    //       this.scrollToSuccessAlert();
-    //     },
-    //     error: _ => {
-    //       this.showErrorAlert = true;
-    //       this.scrollToErrorAlert();
-    //     }
-    //   })
-    // }
     if (this.childForm.touched && this.childForm.valid) {
       this.isLoadingUpdate = true; // Set loading state to true
 

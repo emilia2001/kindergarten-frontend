@@ -43,7 +43,9 @@
     <div class="form-group mb-3">
       <label for="dateOfBirth" class="form-label ms-2">Zi de naștere</label>
       <input id="dateOfBirth" formControlName="dateOfBirth" type="date" class="form-control" name="dateOfBirth"
-             required="required" [(ngModel)]="request.child.dateOfBirth">
+             required="required" [(ngModel)]="request.child.dateOfBirth"
+             [min]="minDate"
+             [max]="maxDate">
     </div>
 
     <div class="form-group mb-3">
@@ -91,5 +93,15 @@
              (change)="onExtraDocumentsUpload($event)">
     </div>
   </fieldset>
-  <button type="submit" class="btn btn-primary text-light mt-4 offset-2 offset-sm-4 col-8 col-sm-4">Salvare</button>
+
+
+  <div class="d-flex justify-content-center mt-2" *ngIf="isLoadingUpdate">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+  </div>
+
+  <div class="text-danger fw-semibold text-center mt-2" *ngIf='errors && !isLoading'>{{errors}}</div>
+
+  <button type="submit" [disabled]="isLoadingUpdate" class="btn btn-primary text-light mt-4 offset-2 offset-sm-4 col-8 col-sm-4">Salvare</button>
 </form>

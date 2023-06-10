@@ -61,15 +61,12 @@ ngb-carousel {
 
 .team-boxed h2 {
   font-weight:bold;
-  margin-bottom:40px;
-  padding-top:40px;
+  padding-top:20px;
   color:inherit;
 }
 
 @media (max-width:767px) {
-  .team-boxed h2 {
-    margin-bottom:25px;
-    padding-top:25px;
+  .team-boxed h2, h2 {
     font-size:24px;
   }
 }
@@ -85,7 +82,7 @@ ngb-carousel {
 }
 
 .team-boxed .people {
-  padding:50px 0;
+  padding:30px 0;
 }
 
 .team-boxed .item {
@@ -161,3 +158,53 @@ ngb-carousel {
   flex: 0 0 auto;
   padding: 0 10px;
 }
+
+.features {
+  li {
+    list-style: none;
+    display: block;
+  }
+
+}
+
+.homepage-features {
+  margin: 20px;
+  @media (max-width:767px) {
+    margin: 0;
+  }
+}
+
+.homepage-features h2 {
+  //font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.homepage-features ul {
+  list-style-type: none;
+  padding-left: 20px;
+}
+
+.homepage-features li {
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 10px;
+  @media (max-width:767px) {
+    padding-left: 0;
+  }
+}
+
+//.homepage-features li::before {
+//  content: "";
+//  position: absolute;
+//  top: 5px;
+//  left: 0;
+//  width: 8px;
+//  height: 8px;
+//  background-color: blue; /* Adjust the color as needed */
+//  border-radius: 50%;
+//}
+.icon-bold {
+  font-weight: bold;
+}
+

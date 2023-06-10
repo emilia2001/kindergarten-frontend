@@ -4,7 +4,16 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 
 import {IExtensionRequest, IRegistrationRequest} from "../../shared/models/IRequest";
-import {add, all, api, extensionRequest, get, update} from "../../shared/utils/endpoints";
+import {
+  add,
+  all,
+  api,
+  extensionRequest,
+  get,
+  update,
+  updateByAdmin,
+  updateByParent
+} from "../../shared/utils/endpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +29,12 @@ export class ExtensionRequestService {
     return this._httpClient.post(`${api}${extensionRequest}${add}`, request);
   }
 
-  updateRequest(request: IExtensionRequest): Observable<any> {
-    return this._httpClient.put(`${api}${extensionRequest}${update}`, request);
+  updateRequestByAdmin(request: IExtensionRequest): Observable<any> {
+    return this._httpClient.put(`${api}${extensionRequest}${updateByAdmin}`, request);
+  }
+
+  updateRequestByParent(request: IExtensionRequest): Observable<any> {
+    return this._httpClient.put(`${api}${extensionRequest}${updateByParent}`, request);
   }
 
   getAllForParent(id: number): Observable<IExtensionRequest[]> {

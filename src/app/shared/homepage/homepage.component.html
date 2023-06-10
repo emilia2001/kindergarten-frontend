@@ -1,4 +1,4 @@
-<div class="mainContainer">
+<div class="mainContainer text-dark">
   <ngb-carousel>
     <ng-template ngbSlide>
       <img src="./assets/images/children/imag3.jpg" alt="Random first slide" class="w-100">
@@ -17,6 +17,20 @@
     </ng-template>
   </ngb-carousel>
 
+  <div class="homepage-features features text-start px-4 mt-4 pt-4">
+    <h2 class="fw-bold text-center pb-2">De ce să alegi Dumbrava Minunată?</h2>
+    <ul>
+      <li><i class="bi bi-arrow-right pe-2"></i>Supraveghere și protecție asigurată prin sistem video și alarmă</li>
+      <li><i class="bi bi-arrow-right pe-2"></i>Bucătărie proprie cu meniu diversificat și sănătos</li>
+      <li><i class="bi bi-arrow-right pe-2"></i>Dotări moderne precum laptopuri, imprimante, televizoare smart etc.</li>
+      <li><i class="bi bi-arrow-right pe-2"></i>Spațiu de joacă exterior și interior cu dotări la standarde înalte</li>
+      <li><i class="bi bi-arrow-right pe-2"></i>Personal didactic, nedidactic și didactic auxiliar foarte bine pregătit</li>
+      <li><i class="bi bi-arrow-right pe-2 icon-bold"></i>Activități extracurriculare variate (limba engleză, dans, canto, dezvoltare personală)</li>
+      <li><i class="bi bi-arrow-right pe-2 icon-bold"></i>Partneriate cu alte unități de învățământ, atât din nivelul școlar, cât și preșcolar, dar și cu Biserica "Sf. Constantin și Elena" Fălticeni</li>
+
+    </ul>
+  </div>
+
 
   <div class="team-boxed">
     <div class="container">
@@ -24,12 +38,12 @@
         <h2 class="text-center">Educatoare </h2>
       </div>
       <div class="row people slider">
-        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig" (init)="slickInit($event)"
-                            (breakpoint)="breakpoint($event)" (afterChange)="afterChange($event)" (beforeChange)="beforeChange($event)">
+        <ngx-slick-carousel class="carousel" #slickModal="slick-carousel" [config]="slideConfig" >
           <div ngxSlickItem class="col-md-6 col-lg-4 item" *ngFor="let teacher of teacherList">
             <div class="box"><img class="rounded-circle" [src]="teacher.picturePath">
               <h3 class="name">{{teacher.firstName}}<br>{{teacher.lastName}}</h3>
               <p class="title">{{teacher.groupDto.name}}</p>
+              <p class="title">{{ computeAge(teacher.dateOfBirth) }} ani</p>
               <p class="description">{{teacher.description}}</p>
             </div>
           </div>

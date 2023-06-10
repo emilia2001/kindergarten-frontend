@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {FormBuilder, Validators} from "@angular/forms";
 
@@ -27,7 +27,10 @@ export class RegistrationRequestComponent implements OnInit {
   id!: number;
   isLoading: boolean = false;
   errors: string = '';
-
+  minDate: any;
+  maxDate: any;
+  @Output() submitEvent: EventEmitter<any> = new EventEmitter<any>();
+  isLoadingUpdate: boolean = false;
   constructor(
     private _route: ActivatedRoute,
     private _formBuilder: FormBuilder,
@@ -43,22 +46,22 @@ export class RegistrationRequestComponent implements OnInit {
     this.currentParent = {
       firstName: "", lastName: "", phoneNumber: ""
     };
-    this.requestForm = this._formBuilder.group(
-      {
-      cnp: ["", Validators.required],
-      firstName: ["", Validators.required],
-      lastName: ["", Validators.required],
-      dateOfBirth: ["", Validators.required],
-      group: ["", Validators.required],
-      profilePicture: ["", Validators.required],
-      applicationPdf: ["", Validators.required],
-      parentIC: ["", Validators.required],
-      childBirthCertificate: ["", Validators.required],
-      parentsEmployeeCertificates: ["", Validators.required],
-      extraDocuments: [""],
-    });
     const idParam = this._route.snapshot.paramMap.get('id');
     if (idParam) {
+      this.requestForm = this._formBuilder.group(
+        {
+          cnp: ["", Validators.required],
+          firstName: ["", Validators.required],
+          lastName: ["", Validators.required],
+          dateOfBirth: ["", Validators.required],
+          group: ["", Validators.required],
+          profilePicture: [""],
+          applicationPdf: [""],
+          parentIC: [""],
+          childBirthCertificate: [""],
+          parentsEmployeeCertificates: [""],
+          extraDocuments: [""],
+        });
       this.id = +idParam;
       this.isLoading = true;
       this._requestService.getOneById(this.id)
@@ -73,6 +76,20 @@ export class RegistrationRequestComponent implements OnInit {
         error: errors => this.errors = errors
       });
     } else {
+      this.requestForm = this._formBuilder.group(
+        {
+          cnp: ["", Validators.required],
+          firstName: ["", Validators.required],
+          lastName: ["", Validators.required],
+          dateOfBirth: ["", Validators.required],
+          group: ["", Validators.required],
+          profilePicture: [""],
+          applicationPdf: ["", Validators.required],
+          parentIC: ["", Validators.required],
+          childBirthCertificate: ["", Validators.required],
+          parentsEmployeeCertificates: ["", Validators.required],
+          extraDocuments: [""],
+        });
       this.request = {
         applicationForm: "",
         child: {
@@ -99,6 +116,11 @@ export class RegistrationRequestComponent implements OnInit {
         status: ERequestStatus.PENDING
       };
     }
+
+    const currentDate = new Date();
+    this.minDate = new Date(currentDate.getFullYear() - 6, 0, 2).toISOString().split('T')[0];
+    this.maxDate = new Date(currentDate.getFullYear() - 2, 0, 1).toISOString().split('T')[0];
+
   }
 
   getGroupList() {
@@ -114,7 +136,33 @@ export class RegistrationRequestComponent implements OnInit {
     // @ts-ignore
     let id = jwt_decode(this._accountService.getAuthenticatedToken())['id'];
     this.request.child.parentId = id;
-    this._requestService.addRequest(this.request).subscribe(data => console.log(data));
+    // this._requestService.addRequest(this.request).subscribe(data => console.log(data));
+
+    if (this.requestForm.touched && this.requestForm.valid) {
+      this.isLoadingUpdate = true; // Set loading state to true
+      this.errors = "";
+
+      const updateObservable = this.id
+        ? this._requestService.updateRequestByParent(this.request)
+        : this._requestService.addRequest(this.request);
+      console.log(updateObservable)
+      updateObservable.pipe(
+        take(1),
+        finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
+      ).subscribe({
+        next: (_) => {
+          let updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Cererea a fost înregistrată cu succes";
+          this.submitEvent.emit({type: "success", message: updateMessage});
+        },
+        error: (_) => {
+          this.submitEvent.emit({type: "error", message: "S-a produs o eroare, te rugăm încearcă mai târziu"});
+        }
+      });
+    }
+
+    if (!this.requestForm.valid) {
+      this.errors = "Date invalide"
+    }
   }
 
   onImageSelected($event: any) {
@@ -248,4 +296,5 @@ export class RegistrationRequestComponent implements OnInit {
       }
     }
   }
+
 }

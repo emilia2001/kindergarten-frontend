@@ -10,6 +10,8 @@ import {ITeacher} from "../../../shared/models/ITeacher";
 })
 export class TeacherListComponent {
   teacherList: ITeacher[] = [];
+  sortKey: string = '';
+  sortAsc: boolean = true;
 
   constructor(
     private _teacherService: TeacherService
@@ -27,5 +29,13 @@ export class TeacherListComponent {
         this.teacherList = response;
       }
     )
+  }
+
+  getSortingIcon(column: string): string {
+    if (this.sortKey === column) {
+      return this.sortAsc ? 'up' : 'down';
+    }
+
+    return 'up';
   }
 }

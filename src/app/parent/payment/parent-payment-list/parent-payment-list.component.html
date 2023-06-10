@@ -18,15 +18,13 @@
         <div id="card-element" *ngIf="stripe"></div>
       </div>
       <div id="card-errors" role="alert"></div>
-      <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
-        Efectuează plata
-      </button>
+
       <div class="d-flex justify-content-center mt-2" *ngIf="isPaymentLoading">
         <div class="spinner-border" role="status">
           <span class="visually-hidden">Se incarca...</span>
         </div>
       </div>
-      <div class="success" *ngIf="status == 'success'">
+      <div class="success mt-2" *ngIf="status == 'success'">
         <span class="fw-semibold text-success">Plata s-a efectuat cu succes</span>
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="green" fw-bold class="bi bi-check-lg"
              viewBox="0 0 16 16">
@@ -34,9 +32,14 @@
             d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"/>
         </svg>
       </div>
-      <div *ngIf="errors" class="text-danger">
+      <div *ngIf="errors" class="text-danger mt-2">
         {{errors}}
       </div>
+
+      <button type="submit" class="btn btn-primary text-light mt-3" [disabled]="status == 'success' || isPaymentLoading">
+        Efectuează plata
+      </button>
+
     </form>
   </div>
 </ng-template>
@@ -51,7 +54,9 @@
     <div class="itemsContainer text-dark row">
       <div class="col-md-12">
         <div class="table-wrap">
-          <table class=" table table-responsive-xl">
+          <h5 *ngIf="paymentList.getValue().length == 0" class="text-light">
+            Nu aveți nimic de plată momentan</h5>
+          <table *ngIf="paymentList.getValue().length > 0" class=" table table-responsive-xl fw-semibold">
             <thead>
             <tr>
               <th></th>
@@ -94,7 +99,7 @@
                   </svg>
                 </div>
                 <div [ngClass]="payment.status.toLowerCase()" *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
-                     class="fw-normal fs-6">
+                     class="fs-6">
                   <span class="text-dark">Restantă în luna următoare</span>
                 </div>
               </td>

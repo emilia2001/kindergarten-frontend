@@ -4,7 +4,16 @@ import {HttpClient} from "@angular/common/http";
 import {map, Observable} from "rxjs";
 
 import {IRegistrationRequest} from "../../shared/models/IRequest";
-import {add, all, api, get, registrationRequest, update} from "../../shared/utils/endpoints";
+import {
+  add,
+  all,
+  api,
+  get,
+  registrationRequest,
+  update,
+  updateByAdmin,
+  updateByParent
+} from "../../shared/utils/endpoints";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +29,12 @@ export class RegistrationRequestService {
     return this._httpClient.post(`${api}${registrationRequest}${add}`, request);
   }
 
-  updateRequest(request: IRegistrationRequest): Observable<any> {
-    return this._httpClient.put(`${api}${registrationRequest}${update}`, request);
+  updateRequestByAdmin(request: IRegistrationRequest): Observable<any> {
+    return this._httpClient.put(`${api}${registrationRequest}${updateByAdmin}`, request);
+  }
+
+  updateRequestByParent(request: IRegistrationRequest): Observable<any> {
+    return this._httpClient.put(`${api}${registrationRequest}${updateByParent}`, request);
   }
 
   getAllForParent(id: number): Observable<IRegistrationRequest[]> {
