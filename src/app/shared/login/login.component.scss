@@ -1,11 +1,11 @@
 @import "../../../_variables.scss";
 
-:host {
-  display: block;
-  height: 100%;
-  background: rgb(47,49,92);
-  background: linear-gradient(180deg, rgba(47,49,92,1) 0%, rgba(196,197,213,1) 50%, rgba(47,49,92,1) 100%);
-}
+//:host {
+//  display: block;
+//  height: 100%;
+//  background: rgb(47,49,92);
+//  background: linear-gradient(180deg, rgba(47,49,92,1) 0%, rgba(196,197,213,1) 50%, rgba(47,49,92,1) 100%);
+//}
 
 .ng-invalid:not(form) {
   border-left: 5px solid red;

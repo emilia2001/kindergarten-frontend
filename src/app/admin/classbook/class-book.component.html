@@ -11,7 +11,7 @@
 </div>
 
 <section class="container pb-4">
-  <div class="container mb-4">
+  <div class="container mb-5">
     <section class="mt-4 text-start text-light row mx-1">
       <div class="col-6 mb-3  d-flex justify-content-between">
         <div class="form-group mb-3">
@@ -36,23 +36,15 @@
       <div class="itemsContainer text-dark row">
         <div class="col-md-12">
           <div class="table-wrap">
-            <table class=" table fw-semibold">
+            <h5 *ngIf="paginatedChildrenList.length == 0" class="text-light">Nu este niciun copil înscris în această grupă</h5>
+            <table class=" table fw-semibold" *ngIf="paginatedChildrenList.length > 0 ">
               <thead>
               <tr class="centered">
                 <th class="nameCell"></th>
-                <th (click)="sortKey = 'lastName'; sortAsc = !sortAsc" class="nameCell">
+                <th (click)="sortAsc = !sortAsc; updatePagination()" class="nameCell">
                   Nume
-                  <svg *ngIf="getSortingIcon('lastName') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
-                       height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
-                    <path
-                      d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
-                  </svg>
-                  <svg *ngIf="getSortingIcon('lastName') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
-                       height="16"
-                       fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-                    <path
-                      d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
-                  </svg>
+                  <i *ngIf="this.sortAsc" class="bi bi-sort-alpha-down"></i>
+                  <i *ngIf="!this.sortAsc" class="bi bi-sort-alpha-up"></i>
                 </th>
                 <td *ngFor="let day of daysInMonth.getValue(); "
                     [ngClass]="{'bold': weekendDays.getValue().indexOf(day)==-1, 'current-day': currentDate.getDate() === day || weekendDays.getValue().indexOf(day)==-1 }">{{day}}</td>
@@ -60,16 +52,16 @@
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let child of childrenList.getValue() | orderBy:sortKey:sortAsc" class="alert" role="alert">
+              <tr *ngFor="let child of paginatedChildrenList" class="alert" role="alert">
                 <td class="nameCell"><img class="img" [src]="child.picturePath" alt="Child Picture"></td>
                 <!--              <td>{{child.firstName}}{{child.lastName}}</td>-->
-                <td class="nameCell">{{child.firstName}}<br>{{child.lastName}}</td>
+                <td class="nameCell">{{child.lastName}}<br>{{child.firstName}}</td>
                 <td *ngFor="let day of daysInMonth.getValue()"
                     [ngClass]="{'current-day': currentDate.getDate() === day && (currentDate | date: 'yyyy-MM') === currentMonthValue}">
                   <!--      <div class="attendance-cell" [class.present]="child.attendance[day]"></div>-->
                   <input type="checkbox" class="attendanceCheck"
                          [disabled]="weekendDays.getValue().indexOf(day)!=-1 || day !== currentDate.getDate() || (currentDate | date: 'yyyy-MM') !== currentMonthValue || getAttendanceForChildAndDate(child.cnp, day)"
-                         [checked]="getAttendanceForChildAndDate(child.cnp, day)"
+                         [checked]="getAttendanceForChildAndDate(child.cnp, day) || checkTodayAttendance(child.cnp, day)"
                          (change)="handleAttendanceCheckboxChange($event, child.cnp, day)">
                 </td>
                 <td
@@ -82,7 +74,22 @@
         </div>
       </div>
 
-      <div class="row justify-content-end mt-2">
+      <div class="pagination d-flex justify-content-center" *ngIf="paginatedChildrenList.length > 0 ">
+        <button class="btn btn-primary text-light mx-1" (click)="goToPage( 1)" [disabled]="currentPage === 1">
+          <i class="bi bi-chevron-double-left"></i>
+        </button>
+        <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+          <i class="bi bi-chevron-left"></i>
+        </button>
+        <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">
+          <i class="bi bi-chevron-right"></i>
+        </button>
+        <button class="btn btn-primary text-light mx-1" (click)="goToPage(totalPages)" [disabled]="currentPage >= totalPages">
+          <i class="bi bi-chevron-double-right"></i>
+        </button>
+      </div>
+
+      <div class="row justify-content-end mt-2" *ngIf="paginatedChildrenList.length > 0 ">
         <div class="col-sm-3 addButtonContainer d-flex justify-content-end">
           <button class="btn btn-primary text-light text-center" (click)="handleSaveAttendances()" [disabled]="isLoading">
             Salvare prezențe

@@ -173,7 +173,6 @@ export class ParentRegistrationRequestComponent implements OnInit {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'children').subscribe(
           (downloadURL: string) => {
             this.request.child.picturePath = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);
@@ -194,7 +193,6 @@ export class ParentRegistrationRequestComponent implements OnInit {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
           (downloadURL: string) => {
             this.request.applicationForm = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);
@@ -215,7 +213,6 @@ export class ParentRegistrationRequestComponent implements OnInit {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
           (downloadURL: string) => {
             this.request.parentIdentityCard = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);
@@ -236,7 +233,6 @@ export class ParentRegistrationRequestComponent implements OnInit {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
           (downloadURL: string) => {
             this.request.childBirthCertificate = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);
@@ -257,7 +253,6 @@ export class ParentRegistrationRequestComponent implements OnInit {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
           (downloadURL: string) => {
             this.request.parentsEmployeeCertificates = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);
@@ -278,7 +273,6 @@ export class ParentRegistrationRequestComponent implements OnInit {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
           (downloadURL: string) => {
             this.request.extraDocuments = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);

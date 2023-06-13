@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, forkJoin} from "rxjs";
 
-import {IExtensionRequest, IRegistrationRequest} from "../../../shared/models/IRequest";
+import {IExtensionRequest, IRegistrationRequest, IRequest} from "../../../shared/models/IRequest";
 import {RegistrationRequestService} from "../../../services/registration-request/registration-request.service";
 import {ExtensionRequestService} from "../../../services/extension-request/extension-request.service";
 import {GroupService} from "../../../services/group/group.service";
 import {IGroup} from "../../../shared/models/IGroup";
+import {ITeacher} from "../../../shared/models/ITeacher";
 
 @Component({
   selector: 'app-admin-request-list',
@@ -16,13 +17,19 @@ import {IGroup} from "../../../shared/models/IGroup";
 export class AdminRequestListComponent implements OnInit {
   registrationRequestList: BehaviorSubject<IRegistrationRequest[]> = new BehaviorSubject<IRegistrationRequest[]>([]);
   registrationRequestListInitial!: IRegistrationRequest[];
+  paginatedRegistrationRequestList: IRegistrationRequest[] = [];
   extensionRequestList: BehaviorSubject<IExtensionRequest[]> = new BehaviorSubject<IExtensionRequest[]>([]);
   extensionRequestListInitial!: IExtensionRequest[];
+  paginatedExtensionRequestList: IRegistrationRequest[] = [];
   groupList: IGroup[] = [];
   selectedGroupId: number = 0;
   requestType!: string;
   selectedType!: string;
   selectedStatus!: string;
+  currentPage: number = 1;
+  pageSize: number = 3;
+  totalItems: number = 0;
+  totalPages: number = 0;
 
   constructor(
     private _groupService: GroupService,
@@ -31,18 +38,21 @@ export class AdminRequestListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.selectedGroupId = -1;
+    this.selectedType = 'registration';
+    this.selectedStatus = 'all';
+
     this._groupService.getAll().subscribe(data => this.groupList = data);
     this._registrationRequestService.getAll().subscribe(data => {
       this.registrationRequestList.next(data);
       this.registrationRequestListInitial = data;
+      this.updatePagination();
     });
     this._extensionRequestService.getAll().subscribe(data => {
-      this.extensionRequestList.next(data);
+      // this.extensionRequestList.next(data);
       this.extensionRequestListInitial = data;
     });
-    this.selectedGroupId = -1;
-    this.selectedType = 'all';
-    this.selectedStatus = 'all';
+
   }
 
   handleGroupChange($event: any) {
@@ -126,6 +136,8 @@ export class AdminRequestListComponent implements OnInit {
         }
       }
     }
+
+    this.updatePagination();
   }
 
   getClassForBadge(status: string) {
@@ -140,4 +152,38 @@ export class AdminRequestListComponent implements OnInit {
     return ""
 
   }
+
+  updatePagination() {
+    this.currentPage = 1;
+    if (this.selectedType == "registration") {
+      this.totalItems = this.registrationRequestList.getValue().length;
+      this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      this.paginatedExtensionRequestList = [];
+      this.paginatedRegistrationRequestList = this.applyPagination(this.registrationRequestList.getValue());
+    }
+    if (this.selectedType == "extension") {
+      this.totalItems = this.extensionRequestList.getValue().length;
+      this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+      this.paginatedRegistrationRequestList = [];
+      this.paginatedExtensionRequestList = this.applyPagination(this.extensionRequestList.getValue());
+    }
+  }
+
+  applyPagination(list: any[]): any[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+
+    return list.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      if (this.selectedType == "registration")
+        this.paginatedRegistrationRequestList = this.applyPagination(this.registrationRequestList.getValue());
+      else
+        this.paginatedExtensionRequestList = this.applyPagination(this.extensionRequestList.getValue())
+    }
+  }
+
 }

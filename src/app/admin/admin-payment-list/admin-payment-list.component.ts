@@ -17,6 +17,7 @@ import {IPaymentConfirmation} from "../../shared/models/IPaymentConfirmation";
 import {PaymentConfirmationService} from "../../services/payment-confirmation/payment-confirmation.service";
 import {FirebaseService} from "../../services/firebase/firebase.service";
 import {FileUpload} from "../../shared/models/FileUpload";
+import {ITeacher} from "../../shared/models/ITeacher";
 
 
 @Component({
@@ -52,6 +53,13 @@ export class AdminPaymentListComponent implements OnInit {
   currentChild: IChild | undefined;
   sortKey: string = '';
   sortAsc: boolean = true;
+  currentPage: number = 1;
+  pageSize: number = 4;
+  totalItems: number = 0;
+  totalPages: number = 0;
+  paginatedPaymentsList: IPayment[] = [];
+  isLoading = false;
+
 
   constructor(
     private _groupService: GroupService,
@@ -104,17 +112,22 @@ export class AdminPaymentListComponent implements OnInit {
 
   handleGroupChange($event: any) {
     this.selectedGroupId = $event.target.value;
+    this.updatePagination()
   }
 
   getPaymentListForMonth(month: string) {
-    this._paymentService.getAllForMonth(month).subscribe(data => this.paymentList.next(data));
+    this.isLoading = true;
+    this._paymentService.getAllForMonth(month).subscribe(data => {
+      this.isLoading = false;
+      this.paymentList.next(data)
+      this.updatePagination();
+    });
   }
 
   openModal(myModal: TemplateRef<any>, totalAmount: number, id: number | undefined, child: IChild) {
     this.currentChild = child;
     this.amount = totalAmount.toString();
     this.paymentId = id;
-    console.log(this.currentChild)
 
     if (this.myModal) {
       this.modalRef = this.modalService.open(this.myModal);
@@ -146,6 +159,7 @@ export class AdminPaymentListComponent implements OnInit {
         this.isPaymentLoading = false;
         this.status = 'success';
         this.generatePDF();
+        this.updatePagination()
       },
       error: _ => {
         this.isPaymentLoading = false;
@@ -161,8 +175,6 @@ export class AdminPaymentListComponent implements OnInit {
       id = data.id;
       var firstName = this.paymentForm.value.firstName;
       var lastName = this.paymentForm.value.lastName;
-      console.log(firstName, lastName)
-      console.log(this.currentChild)
       const tableData = [
         [{text: 'Unitate', bold: true}, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
         [{text: 'Cod fiscal (C.I.F)', bold: true}, '18260453'],
@@ -251,7 +263,6 @@ export class AdminPaymentListComponent implements OnInit {
 
       this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
         (downloadURL: string) => {
-          console.log('File is accessible:', downloadURL);
           const paymentConfirmation: IPaymentConfirmation = {
             id: id, path: downloadURL, paymentId: this.paymentId!
           }
@@ -309,7 +320,6 @@ export class AdminPaymentListComponent implements OnInit {
   }
 
   scrollToSuccessAlert() {
-    console.log(this.successAlertRef)
     if (this.successAlertRef && this.successAlertRef.nativeElement) {
       this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
       this.successAlertRef.nativeElement.focus();
@@ -328,5 +338,57 @@ export class AdminPaymentListComponent implements OnInit {
     }
 
     return 'up';
+  }
+
+  updatePagination() {
+    this.currentPage = 1;
+
+    let newPaymentsList: IPayment[] = this.paymentList.getValue();
+    const searchValue = this.searchForm.get('search')!.value!.toLowerCase();
+    if (this.selectedGroupId == 0)
+      newPaymentsList = this.paymentList.getValue().filter(payment => (
+        payment.child.lastName.toLowerCase().includes(searchValue) ||
+          payment.child.firstName.toLowerCase().includes(searchValue)
+      ))
+    else
+      newPaymentsList = this.paymentList.getValue().filter(payment => (
+        payment.child.lastName.toLowerCase().includes(searchValue) ||
+        payment.child.firstName.toLowerCase().includes(searchValue)
+      ) && payment.child.group.id == this.selectedGroupId)
+    if (this.sortAsc) {
+      newPaymentsList.sort((a, b) => {
+        if (a.child.lastName > b.child.lastName)
+          return 1;
+        if (a.child.lastName == b.child.lastName)
+          return a.child.firstName > b.child.firstName ? 1 : -1;
+        return -1;
+      })
+    } else {
+      newPaymentsList.sort((a, b) => {
+        if (a.child.lastName < b.child.lastName)
+          return 1;
+        if (a.child.lastName == b.child.lastName)
+          return a.child.firstName < b.child.firstName ? 1 : -1;
+        return -1;
+      })
+    }
+
+    this.totalItems = newPaymentsList.length;
+    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+    this.paginatedPaymentsList = this.applyPagination(newPaymentsList);
+
+  }
+
+  applyPagination(list: any[]): IPayment[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return list.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.paginatedPaymentsList = this.applyPagination(this.paymentList.getValue());
+    }
   }
 }

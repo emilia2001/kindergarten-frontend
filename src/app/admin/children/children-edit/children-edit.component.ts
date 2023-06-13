@@ -146,6 +146,7 @@ export class ChildrenEditComponent {
     this.updateError = "";
     this.updateMessage = "";
     this.errors = "";
+    this.showErrorAlert = false;
 
     this.child = {
       parent: {
@@ -178,7 +179,7 @@ export class ChildrenEditComponent {
         finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
       ).subscribe({
         next: (_) => {
-          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Copilul a fost adăgat în sistem";
+          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Copilul a fost adăugat în sistem";
           this.showSuccessAlert = true;
           setTimeout(() => this.scrollToSuccessAlert(), 0);
         },
@@ -210,7 +211,6 @@ export class ChildrenEditComponent {
         this._firebaseService.pushFileToStorage(this.currentFileUpload, 'children').subscribe(
           (downloadURL: string) => {
             this.child.picturePath = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);

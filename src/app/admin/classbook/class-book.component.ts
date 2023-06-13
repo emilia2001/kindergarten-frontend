@@ -34,6 +34,12 @@ export class ClassBookComponent {
   sortKey: string = '';
   sortAsc: boolean = true;
   isLoading: boolean = false;
+  currentPage: number = 1;
+  pageSize: number = 4;
+  totalItems: number = 0;
+  totalPages: number = 0;
+  currentGroup: number = -1;
+  paginatedChildrenList: any[] = [];
 
   constructor(
     private _childrenService: ChildrenService,
@@ -51,7 +57,8 @@ export class ClassBookComponent {
     _groupService.getAll().subscribe(data => this.groupList = data);
     _childrenService.getAll().subscribe(data => {
       this.allChildrenList = data;
-      this.childrenList.next(data)
+      this.childrenList.next(data);
+      this.updatePagination();
     });
     this.getAttendanceListForMonth(this.currentMonth.getValue());
 
@@ -86,7 +93,6 @@ export class ClassBookComponent {
   getAttendanceListForMonth(month: string) {
     this.totalAttendanceChild.next(new Map<string, number>());
     this._attendanceService.getAllForMonth(month).subscribe(data => {
-      console.log(data)
       this.attendanceList.next(data);
       this.attendanceList.getValue().forEach(attendance => {
         const cnp = attendance.childCnp;
@@ -104,7 +110,6 @@ export class ClassBookComponent {
     let newDate = new Date(this.currentDate);
     newDate.setDate(day);
     newDate.setMonth(Number.parseInt(this.currentMonthValue.split('-')[1]) - 1);
-    newDate.setFullYear(Number.parseInt(this.currentMonthValue.split('-')[0]))
     return this.attendanceList.getValue().filter(attendance => attendance.childCnp == childCnp && attendance.date == this.formatDate(newDate)).length !== 0;
   }
 
@@ -117,8 +122,10 @@ export class ClassBookComponent {
   }
 
   handleAttendanceCheckboxChange(event: any, childCnp: string, day: number) {
+    const monthStringArray = this.currentMonthValue.split('-');
     let newDate = new Date(this.currentDate);
     newDate.setDate(day);
+    newDate.setMonth(Number.parseInt(monthStringArray[1]) - 1)
     let attendance: IAttendance = {childCnp, date: this.formatDate(newDate)};
     if (event.target.checked) {
       this.currentAttendances.push(attendance);
@@ -146,6 +153,7 @@ export class ClassBookComponent {
           const updatedAttendances = [...previousAttendances, ...this.currentAttendances]; // Combine previous and current attendances
           this.attendanceList.next(updatedAttendances); // Update attendanceList with the updated array
           this.showSuccessAlert = true;
+          this.currentAttendances = [];
           setTimeout(() => this.scrollToSuccessAlert(), 0);
         },
         error: _ => this.showErrorAlert = true
@@ -161,10 +169,13 @@ export class ClassBookComponent {
   }
 
   handleGroupChange($event: any) {
+    this.currentPage = 1;
+    this.currentGroup = $event.target.value;
     if ($event.target.value == -1)
       this.childrenList.next(this.allChildrenList);
     else
       this.childrenList.next(this.allChildrenList.filter(child => child.group.id == $event.target.value));
+    this.updatePagination();
   }
 
   closeSuccessAlert() {
@@ -202,7 +213,59 @@ export class ClassBookComponent {
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
     const monthName = new Intl.DateTimeFormat('ro-RO', { month: 'long' }).format(currentDate);
-    console.log(`${year}-${month.toString().padStart(2, '0')} (${monthName})`)
     return `${year}-${month.toString().padStart(2, '0')} (${monthName})`;
+  }
+
+  updatePagination() {
+    this.currentPage = 1;
+
+    let filteredChildrenList;
+
+    if (this.currentGroup == -1)
+      filteredChildrenList = this.allChildrenList;
+    else
+      filteredChildrenList = this.allChildrenList.filter(child => child.group.id ==this.currentGroup);
+
+    if (this.sortAsc) {
+      filteredChildrenList.sort((a, b) => {
+        if (a.lastName > b.lastName)
+          return 1;
+        if (a.lastName == b.lastName)
+          return a.firstName > b.firstName ? 1 : -1;
+        return -1;
+      })
+    } else {
+      filteredChildrenList.sort((a, b) => {
+        if (a.lastName < b.lastName)
+          return 1;
+        if (a.lastName == b.lastName)
+          return a.firstName < b.firstName ? 1 : -1;
+        return -1;
+      })
+    }
+
+    this.totalItems = filteredChildrenList.length;
+    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+    this.paginatedChildrenList = this.applyPagination(filteredChildrenList);
+
+  }
+
+  applyPagination(list: any[]): any[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return list.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.paginatedChildrenList = this.applyPagination(this.childrenList.getValue());
+    }
+  }
+
+  checkTodayAttendance(cnp: any, day: number) {
+    let newDate = new Date(this.currentDate);
+    newDate.setDate(day);
+    return this.currentAttendances.filter(attendance => attendance.childCnp == cnp && attendance.date == this.formatDate(newDate)).length !== 0
   }
 }

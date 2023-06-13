@@ -16,6 +16,7 @@ import {ChildrenListComponent} from "./children/children-list/children-list.comp
 import {ChildrenEditComponent} from "./children/children-edit/children-edit.component";
 import {SharedModule} from "../shared/shared.module";
 import { AddAccountComponent } from './add-account/add-account.component';
+import {NgxPaginationModule} from "ngx-pagination";
 
 @NgModule({
     declarations: [
@@ -30,14 +31,15 @@ import { AddAccountComponent } from './add-account/add-account.component';
         TeacherEditComponent,
         AddAccountComponent,
     ],
-    imports: [
-        CommonModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        FormsModule,
-        SharedModule,
-        BsDatepickerModule
-    ]
+  imports: [
+    CommonModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    FormsModule,
+    SharedModule,
+    BsDatepickerModule,
+    NgxPaginationModule
+  ]
 })
 export class AdminModule {
 }

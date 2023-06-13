@@ -44,6 +44,12 @@ export class ParentPaymentListComponent implements OnInit {
   currentChild: IChild | undefined;
   sortKey: string = '';
   sortAsc: boolean = true;
+  currentPage: number = 1;
+  pageSize: number = 4;
+  totalItems: number = 0;
+  totalPages: number = 0;
+  currentGroup: number = -1;
+  paginatedPaymentList: any[] = [];
 
   constructor(
     private _paymentService: PaymentService,
@@ -58,6 +64,8 @@ export class ParentPaymentListComponent implements OnInit {
     var id = jwt_decode(_accountService.getAuthenticatedToken())['id'];
     _paymentService.getAllForParent(id).subscribe(data => {
       this.paymentList.next(data)
+      this.paginatedPaymentList = this.paymentList.getValue()
+      this.updatePagination()
     });
     const currentDate = new Date();
     const year = currentDate.getFullYear();
@@ -100,7 +108,6 @@ export class ParentPaymentListComponent implements OnInit {
 
   amountValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      console.log("pl")
       const amountInput = parseInt(control.value?.split(' ')[1]!);
       const amount = parseInt(this.currentAmount!);
       if (amountInput && amountInput > amount) {
@@ -141,10 +148,9 @@ export class ParentPaymentListComponent implements OnInit {
   }
 
   async handleSubmit() {
-    if (this.paymentForm.touched && this.paymentForm.valid) {
+    if (this.paymentForm.valid) {
       this.isPaymentLoading = true;
       const {token, error} = await this.stripe.createToken(this.cardElement);
-      console.log(token, error)
       this.errors = ''
       const errorElement = document.getElementById('card-errors');
       errorElement!.textContent = "";
@@ -163,6 +169,7 @@ export class ParentPaymentListComponent implements OnInit {
                 return request;
               });
               this.paymentList.next(newList);
+              this.updatePagination()
               this.isPaymentLoading = false;
               this.status = 'success';
               this.generatePDF();
@@ -204,7 +211,6 @@ export class ParentPaymentListComponent implements OnInit {
       var firstName = jwt_decode(this._accountService.getAuthenticatedToken())['firstName'];
       // @ts-ignore
       var lastName = jwt_decode(this._accountService.getAuthenticatedToken())['lastName'];
-      console.log(firstName, lastName)
 
       const tableData = [
         [{text: 'Unitate', bold: true}, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
@@ -295,7 +301,6 @@ export class ParentPaymentListComponent implements OnInit {
 
       this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
         (downloadURL: string) => {
-          console.log('File is accessible:', downloadURL);
           const paymentConfirmation: IPaymentConfirmation = {
             id: id, path: downloadURL, paymentId: this.paymentId!
           }
@@ -334,4 +339,59 @@ export class ParentPaymentListComponent implements OnInit {
       this.modalRef?.close();
     }
   }
+
+
+  updatePagination() {
+    this.currentPage = 1;
+
+    let newPayments = this.paymentList.getValue();
+
+    if (!this.sortAsc) {
+      newPayments.sort((a, b) => {
+        const monthA = parseInt(a.month.split('-')[1]);
+        const monthB = parseInt(b.month.split('-')[1]);
+
+        if (monthA > monthB) {
+          return 1;
+        }
+        if (monthA < monthB) {
+          return -1;
+        }
+        return 0;
+      });
+    } else {
+      newPayments.sort((a, b) => {
+        const monthA = parseInt(a.month.split('-')[1]);
+        const monthB = parseInt(b.month.split('-')[1]);
+
+        if (monthA < monthB) {
+          return 1;
+        }
+        if (monthA > monthB) {
+          return -1;
+        }
+        return 0;
+      });
+    }
+
+
+    this.totalItems = this.paymentList.getValue().length;
+    this.totalPages = Math.ceil(this.totalItems / this.pageSize);
+    this.paginatedPaymentList = this.applyPagination(newPayments);
+
+  }
+
+  applyPagination(list: any[]): any[] {
+    const startIndex = (this.currentPage - 1) * this.pageSize;
+    const endIndex = startIndex + this.pageSize;
+    return list.slice(startIndex, endIndex);
+  }
+
+  goToPage(page: number) {
+    if (page >= 1 && page <= this.totalPages) {
+      this.currentPage = page;
+      this.paginatedPaymentList = this.applyPagination(this.paymentList.getValue());
+    }
+  }
+
 }

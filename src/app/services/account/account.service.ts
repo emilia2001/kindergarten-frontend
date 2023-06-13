@@ -26,7 +26,7 @@ export class AccountService {
       .pipe(
         map(
           data => {
-            this._cookieService.set('Token', data.token)
+            this._cookieService.set('Token', data.token);
             return data;
           }
         )
@@ -66,9 +66,8 @@ export class AccountService {
   }
 
   logout(): void {
-    this._cookieService.deleteAll();
     this._cookieService.delete('Token');
-    window.location.reload();
+    // setTimeout( () => window.location.reload(), 0);
   }
 }
 

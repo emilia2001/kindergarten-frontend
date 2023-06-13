@@ -25,7 +25,6 @@ export class OrderByPipe implements PipeTransform {
         return valueA > valueB ? -1 : 1;
       }
     });
-console.log(sortedArray)
     return sortedArray;
   }
 

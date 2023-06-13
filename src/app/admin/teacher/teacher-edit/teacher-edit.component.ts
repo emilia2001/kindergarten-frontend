@@ -40,6 +40,7 @@ export class TeacherEditComponent implements OnInit {
   maxDate: any;
   showSuccessAlert: any;
   showErrorAlert: any;
+  pictureUpload: boolean = false;
 
   constructor(
     private _route: ActivatedRoute,
@@ -117,8 +118,7 @@ export class TeacherEditComponent implements OnInit {
       picturePath: newPicture,
       id: this.teacher.id
     };
-
-    if (this.teacherForm.touched && this.teacherForm.valid) {
+    if ((this.teacherForm.touched && this.teacherForm.valid) || this.pictureUpload) {
       this.isLoadingUpdate = true; // Set loading state to true
 
       const updateObservable = this.id
@@ -130,7 +130,7 @@ export class TeacherEditComponent implements OnInit {
         finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
       ).subscribe({
         next: (_) => {
-          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Educatoarea a fost adăgată în sistem";
+          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Educatoarea a fost adăugată în sistem";
           this.showSuccessAlert = true;
           setTimeout(() => this.scrollToSuccessAlert(), 0);
         },
@@ -142,7 +142,6 @@ export class TeacherEditComponent implements OnInit {
     }
 
     if (!this.teacherForm.valid) {
-      console.log(this.teacherForm)
       this.errors = "Date invalide"
     }
   }
@@ -162,8 +161,8 @@ export class TeacherEditComponent implements OnInit {
 
         this._firebaseService.pushFileToStorage(this.currentFileUpload, 'teachers').subscribe(
           (downloadURL: string) => {
+            this.pictureUpload = true;
             this.teacher.picturePath = downloadURL;
-            console.log('File is accessible:', downloadURL);
             // Perform further operations with the file
           },
           (error) => {
@@ -183,9 +182,13 @@ export class TeacherEditComponent implements OnInit {
       this.modalRef.result.then(
         () => {
           console.log('Modal closed');
+          if (this.deleteMessage)
+            this._router.navigate(["/admin/teachers"]);
         },
         () => {
           console.log('Modal dismissed');
+          if( this.deleteMessage)
+            this._router.navigate(["/admin/teachers"]);
         }
       );
     }
@@ -196,7 +199,7 @@ export class TeacherEditComponent implements OnInit {
       take(1),
       finalize(() => this.isLoadingDelete = false)
     ).subscribe({
-      next: data => {
+      next: _ => {
         this.deleteMessage = "Educatoarea a fost ștearsă din sistem cu succes";
       },
       error: _ => {

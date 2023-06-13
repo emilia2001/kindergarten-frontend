@@ -151,7 +151,6 @@ export class AdminRequestEditComponent implements OnInit {
   }
 
   scrollToSuccessAlert() {
-    console.log(this.successAlertRef)
     if (this.successAlertRef && this.successAlertRef.nativeElement) {
       this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
       this.successAlertRef.nativeElement.focus();

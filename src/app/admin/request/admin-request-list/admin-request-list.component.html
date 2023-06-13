@@ -16,9 +16,9 @@
       <div class="form-group mb-3">
         <label for="type" class="form-label ms-2">Alege tipul cererii</label>
         <select id="type" class="form-control" (change)="handleTypeChange($event)">
-          <option value="registration">Înregistrare</option>
+          <option value="registration" selected>Înregistrare</option>
           <option value="extension">Prelungire</option>
-          <option selected value="all">Toate</option>
+<!--          <option selected value="all">Toate</option>-->
         </select>
       </div>
 
@@ -35,7 +35,7 @@
     </div>
   </section>
 
-  <section class="container mb-4">
+  <section class="container mb-5">
     <div class="itemsContainer text-dark row">
       <div class="col-md-12">
         <div class="table-wrap">
@@ -53,10 +53,10 @@
             </tr>
             </thead>
             <tbody>
-            <tr *ngFor="let request of registrationRequestList.getValue() " class="alert fw-semibold" role="alert">
+            <tr *ngFor="let request of paginatedRegistrationRequestList " class="alert fw-semibold" role="alert">
               <td><img class="img" [src]="request.child.picturePath" alt="Child Picture"></td>
               <td class="">
-                {{request.child.firstName + ' ' + request.child.lastName}}
+                {{request.child.lastName + ' ' + request.child.firstName}}
               </td>
               <td>{{request.child.group.name}}</td>
               <td>Înregistrare</td>
@@ -69,7 +69,7 @@
                 </svg>
               </a></td>
             </tr>
-            <tr *ngFor="let request of extensionRequestList.getValue()" class="alert fw-semibold" role="alert">
+            <tr *ngFor="let request of paginatedExtensionRequestList" class="alert fw-semibold" role="alert">
               <td><img class="img" [src]="request.child.picturePath" alt="Child Picture"></td>
               <td class="">
                 {{request.child.firstName + ' ' + request.child.lastName}}
@@ -87,6 +87,21 @@
             </tr>
             </tbody>
           </table>
+
+          <div class="pagination d-flex justify-content-center" *ngIf="paginatedExtensionRequestList.length > 0 || paginatedRegistrationRequestList.length > 0">
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage( 1)" [disabled]="currentPage === 1">
+              <i class="bi bi-chevron-double-left"></i>
+            </button>
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(totalPages)" [disabled]="currentPage >= totalPages">
+              <i class="bi bi-chevron-double-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -51,14 +51,14 @@
 
       <button type="submit" class="btn btn-primary text-light mt-3"
               [disabled]="status == 'success' || isPaymentLoading">
-        Inregistreaza plata
+        Înregistrează plata
       </button>
 
     </form>
   </div>
 </ng-template>
 
-<div class="container pb-3">
+<div class="container pb-4">
   <div class="row justify-content-center">
     <h2 class="heading-section mt-4 text-light">Listă plăți</h2>
   </div>
@@ -94,35 +94,33 @@
     </div>
   </section>
 
-  <section class="container mb-4">
-    <div class="itemsContainer text-dark row">
+
+
+  <section class="container mb-5" >
+    <div class="d-flex justify-content-center text-white me-5 mt-2" *ngIf="isLoading">
+    <div class="spinner-border" role="status">
+      <span class="visually-hidden">Se incarca...</span>
+    </div>
+  </div>
+    <div class="itemsContainer text-dark row" *ngIf="!isLoading">
       <div class="col-md-12">
         <div class="table-wrap">
           <form [formGroup]="searchForm">
             <div class="form-outline mb-3">
-              <input type="text" formControlName="search" placeholder="Caută..." class="form-control"/>
+              <input type="text" formControlName="search" placeholder="Caută..." class="form-control" (input)="updatePagination()"/>
             </div>
           </form>
 
-          <h5 *ngIf="(paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId).length == 0" class="text-light">Nu a
+          <h5 *ngIf="paginatedPaymentsList.length == 0 && isLoading == false" class="text-light">Nu a
             fost găsită nicio plată</h5>
 
-          <table class="table table-responsive-xl fw-semibold" *ngIf="(paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId).length > 0">
+          <table class="table table-responsive-xl fw-semibold" *ngIf="paginatedPaymentsList.length > 0">
             <thead>
             <tr>
               <th></th>
-              <th (click)="sortKey = 'child.firstName'; sortAsc = !sortAsc">Plată pentru
-                <svg *ngIf="getSortingIcon('child.firstName') == 'down'" xmlns="http://www.w3.org/2000/svg" width="16"
-                     height="16" fill="currentColor" class="bi bi-sort-down" viewBox="0 0 16 16">
-                  <path
-                    d="M3.5 2.5a.5.5 0 0 0-1 0v8.793l-1.146-1.147a.5.5 0 0 0-.708.708l2 1.999.007.007a.497.497 0 0 0 .7-.006l2-2a.5.5 0 0 0-.707-.708L3.5 11.293V2.5zm3.5 1a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
-                </svg>
-                <svg *ngIf="getSortingIcon('child.firstName') == 'up'" xmlns="http://www.w3.org/2000/svg" width="16"
-                     height="16"
-                     fill="currentColor" class="bi bi-sort-up" viewBox="0 0 16 16">
-                  <path
-                    d="M3.5 12.5a.5.5 0 0 1-1 0V3.707L1.354 4.854a.5.5 0 1 1-.708-.708l2-1.999.007-.007a.498.498 0 0 1 .7.006l2 2a.5.5 0 1 1-.707.708L3.5 3.707V12.5zm3.5-9a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5zM7.5 6a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1h-5zm0 3a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zm0 3a.5.5 0 0 0 0 1h1a.5.5 0 0 0 0-1h-1z"/>
-                </svg>
+              <th (click)="sortAsc = !sortAsc; updatePagination()">Plată pentru
+                <i *ngIf="this.sortAsc" class="bi bi-sort-alpha-down"></i>
+                <i *ngIf="!this.sortAsc" class="bi bi-sort-alpha-up"></i>
               </th>
               <th>Suma restantă</th>
               <th>Suma actuală</th>
@@ -135,11 +133,11 @@
             </thead>
             <tbody>
             <tr
-              *ngFor="let payment of paymentList | async | filterPayments:searchForm.get('search')!.value!: selectedGroupId | orderBy:sortKey:sortAsc "
+              *ngFor="let payment of paginatedPaymentsList"
               class="alert" role="alert">
               <td><img class="img" [src]="payment.child.picturePath" alt="Child Picture"></td>
               <td class="">
-                {{payment.child.firstName + ' ' + payment.child.lastName}}
+                {{payment.child.lastName + ' ' + payment.child.firstName}}
               </td>
               <td>{{payment.outstandingAmount}} RON</td>
               <td>{{payment.currentAmount}} RON</td>
@@ -180,6 +178,21 @@
             </tr>
             </tbody>
           </table>
+
+          <div class="pagination d-flex justify-content-center" *ngIf="paginatedPaymentsList.length > 0 ">
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage( 1)" [disabled]="currentPage === 1">
+              <i class="bi bi-chevron-double-left"></i>
+            </button>
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+              <i class="bi bi-chevron-left"></i>
+            </button>
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">
+              <i class="bi bi-chevron-right"></i>
+            </button>
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(totalPages)" [disabled]="currentPage >= totalPages">
+              <i class="bi bi-chevron-double-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>

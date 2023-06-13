@@ -132,7 +132,6 @@ export class ParentExtensionRequestComponent {
       const updateObservable = this.id
         ? this._requestService.updateRequestByParent(this.request)
         : this._requestService.addRequest(this.request);
-      console.log(updateObservable)
       updateObservable.pipe(
         take(1),
         finalize(() => this.isLoadingUpdate = false) // Set loading state to false regardless of success or error
@@ -163,7 +162,6 @@ export class ParentExtensionRequestComponent {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'children').subscribe(
           (downloadURL: string) => {
             this.request.child.picturePath = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);
@@ -184,7 +182,6 @@ export class ParentExtensionRequestComponent {
         this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
           (downloadURL: string) => {
             this.request.applicationForm = downloadURL;
-            console.log('File is accessible:', downloadURL);
           },
           (error) => {
             console.error('Error occurred during file upload:', error);

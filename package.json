@@ -37,6 +37,7 @@
     "ngx-cookie-service": "^15.0.0",
     "ngx-currency": "^3.0.0",
     "ngx-extended-pdf-viewer": "^17.0.0-alpha.6",
+    "ngx-pagination": "^6.0.3",
     "ngx-slick-carousel": "^15.0.0",
     "pdfkit": "^0.13.0",
     "pdfmake": "^0.2.7",

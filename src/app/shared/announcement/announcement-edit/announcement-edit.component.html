@@ -1,72 +1,77 @@
-<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert"
+     style="border-radius: 0 0 5px 5px">
   {{updateMessage}}
-  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()"
+          style="float: right;"></button>
 </div>
 
-<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px"
+     #errorAlert>
   S-a produs o eroare, te rugăm încearcă mai târziu
   <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
 </div>
 
-<div class="container mb-5 mt-5 pb-5">
-  <div class="row h-100 container">
-    <div class="col-12">
-      <div class="card shadow-lg " style="border-radius: 1rem;">
+<section class="container pb-5">
+  <div class="container mb-5 mt-5 ">
+    <div class="row h-100 container">
+      <div class="col-12">
+        <div class="card shadow-lg " style="border-radius: 1rem;">
 
-        <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-        </div>
-        <div class="card-body px-3 px-sm-4 p-4 text-dark" *ngIf="!isLoading">
-
-          <h2 *ngIf="id" class="mb-4 text-dark">Editare informații anunț</h2>
-          <h2 *ngIf="!id" class="mb-4 text-dark">Adăugare anunț</h2>
-
-          <form class="text-start row" [formGroup]="announcementForm" (ngSubmit)="handleSubmitAnnouncement()">
-            <div
-              class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline col-12 col-md-4">
-              <img class="card-img-top" [src]="announcement.picturePath" alt="...">
-              <label class="form-label input-group-text" for="profilePicture">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                     class="bi bi-plus-circle" viewBox="0 0 16 16">
-                  <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
-                  <path
-                    d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
-                </svg>
-              </label>
-              <input type="file" id="profilePicture" class="form-control" formControlName="picture"
-                     (change)="onImageSelected($event)" accept="image/*">
+          <div class="d-flex justify-content-center mt-2" *ngIf="isLoading">
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
             </div>
-            <div class="col-12 col-md-8">
-              <div class="form-outline mb-3">
-                <label class="form-label ms-2" for="title">Titlu</label>
-                <input type="text" id="title" formControlName="title" class="form-control"
-                       [(ngModel)]="announcement.title"/>
-              </div>
+          </div>
+          <div class="card-body px-3 px-sm-4 p-4 text-dark" *ngIf="!isLoading">
 
-              <div class="form-outline mb-3">
-                <label class="form-label ms-2" for="description">Descriere</label>
-                <textarea class="form-control" id="description" formControlName="description" rows="10"
-                          [(ngModel)]="announcement.description"></textarea>
-              </div>
+            <h2 *ngIf="id" class="mb-4 text-dark">Editare informații anunț</h2>
+            <h2 *ngIf="!id" class="mb-4 text-dark">Adăugare anunț</h2>
 
-              <div class="fw-semibold text-center mt-4">
-                <div class="d-flex justify-content-center mt-2" *ngIf="isLoadingUpdate">
-                  <div class="spinner-border" role="status">
-                    <span class="visually-hidden">Vă rugăm aștepați...</span>
+            <form class="text-start row" [formGroup]="announcementForm" (ngSubmit)="handleSubmitAnnouncement()">
+              <div
+                class="form-outline img-container mb-4 d-flex justify-content-center align-items-baseline col-12 col-md-4">
+                <img class="card-img-top" [src]="announcement.picturePath" alt="...">
+                <label class="form-label input-group-text" for="profilePicture">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                       class="bi bi-plus-circle" viewBox="0 0 16 16">
+                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+                    <path
+                      d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+                  </svg>
+                </label>
+                <input type="file" id="profilePicture" class="form-control" formControlName="picture"
+                       (change)="onImageSelected($event)" accept="image/*">
+              </div>
+              <div class="col-12 col-md-8">
+                <div class="form-outline mb-3">
+                  <label class="form-label ms-2" for="title">Titlu</label>
+                  <input type="text" id="title" formControlName="title" class="form-control"
+                         [(ngModel)]="announcement.title"/>
+                </div>
+
+                <div class="form-outline mb-3">
+                  <label class="form-label ms-2" for="description">Descriere</label>
+                  <textarea class="form-control" id="description" formControlName="description" rows="10"
+                            [(ngModel)]="announcement.description"></textarea>
+                </div>
+
+                <div class="fw-semibold text-center mt-4">
+                  <div class="d-flex justify-content-center mt-2" *ngIf="isLoadingUpdate">
+                    <div class="spinner-border" role="status">
+                      <span class="visually-hidden">Vă rugăm aștepați...</span>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div class="d-flex justify-content-center strong mt-4">
-                <button type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light">Salvare
-                </button>
+                <div class="d-flex justify-content-center strong mt-4">
+                  <button type="submit" class="btn btn-primary btn-lg btn-block w-50 text-light">Salvare
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>

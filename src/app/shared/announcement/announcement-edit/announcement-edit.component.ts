@@ -77,10 +77,7 @@ export class AnnouncementEditComponent implements OnInit {
       title: formValues.title,
       description: formValues.description
     };
-    console.log(this.announcementForm.touched)
-    console.log(this.announcementForm)
     if (this.announcementForm.touched && this.announcementForm.valid) {
-      console.log("pl")
       this.isLoadingUpdate = true;
 
       const updateObservable = this.id
@@ -92,7 +89,7 @@ export class AnnouncementEditComponent implements OnInit {
         finalize(() => this.isLoadingUpdate = false)
       ).subscribe({
         next: (_) => {
-          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Anunțul a fost adăgat în sistem";
+          this.updateMessage = this.id ? "Modificările s-au salvat cu succes" : "Anunțul a fost salvat în sistem";
           this.showSuccessAlert = true;
           setTimeout(() => this.scrollToSuccessAlert(), 0);
         },
@@ -120,7 +117,6 @@ export class AnnouncementEditComponent implements OnInit {
         this._firebaseService.pushFileToStorage(this.currentFileUpload, 'announcements').subscribe(
           (downloadURL: string) => {
             this.announcement.picturePath = downloadURL;
-            console.log('File is accessible:', downloadURL);
             // Perform further operations with the file
           },
           (error) => {
@@ -140,7 +136,6 @@ export class AnnouncementEditComponent implements OnInit {
   }
 
   scrollToSuccessAlert() {
-    console.log(this.successAlertRef)
     if (this.successAlertRef && this.successAlertRef.nativeElement) {
       this.successAlertRef.nativeElement.scrollIntoView({ behavior: 'smooth' });
       this.successAlertRef.nativeElement.focus();

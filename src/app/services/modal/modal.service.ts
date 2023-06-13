@@ -9,7 +9,6 @@ export class ModalService {
 
   add(modal: any) {
     // ensure component has a unique id attribute
-    console.log(modal)
     if (!modal.id || this.modals.find(x => x.id === modal.id)) {
       throw new Error('modal must have a unique id attribute');
     }
