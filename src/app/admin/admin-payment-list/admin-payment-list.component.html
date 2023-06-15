@@ -1,9 +1,12 @@
-<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert" style="border-radius: 0 0 5px 5px">
+<div *ngIf="showSuccessAlert" #successAlert class="alert alert-success fw-semibold" role="alert"
+     style="border-radius: 0 0 5px 5px">
   Notificarile s-au trimis cu succes
-  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()" style="float: right;"></button>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeSuccessAlert()"
+          style="float: right;"></button>
 </div>
 
-<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px" #errorAlert>
+<div *ngIf="showErrorAlert" class="alert alert-danger fw-semibold" role="alert" style="border-radius: 0 0 5px 5px"
+     #errorAlert>
   S-a produs o eroare, te rugăm încearcă mai târziu
   <button type="button" class="btn-close" aria-label="Close" (click)="closeErrorAlert()" style="float: right;"></button>
 </div>
@@ -68,8 +71,9 @@
       <div class="form-group mb-3">
         <label for="group" class="form-label ms-2">Grupă</label>
         <select id="group" class="form-control" (change)="handleGroupChange($event)">
+          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}} ({{group.groupType | groupType}})
+          </option>
           <option selected value="0">Toate</option>
-          <option *ngFor="let group of groupList" [value]="group.id">{{group.name}} ({{group.groupType | groupType}})</option>
         </select>
       </div>
       <div class="form-group mb-3">
@@ -95,19 +99,19 @@
   </section>
 
 
-
-  <section class="container mb-5" >
+  <section class=" mb-5">
     <div class="d-flex justify-content-center text-white me-5 mt-2" *ngIf="isLoading">
-    <div class="spinner-border" role="status">
-      <span class="visually-hidden">Se incarca...</span>
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Se incarca...</span>
+      </div>
     </div>
-  </div>
     <div class="itemsContainer text-dark row" *ngIf="!isLoading">
       <div class="col-md-12">
         <div class="table-wrap">
           <form [formGroup]="searchForm">
             <div class="form-outline mb-3">
-              <input type="text" formControlName="search" placeholder="Caută..." class="form-control" (input)="updatePagination()"/>
+              <input type="text" formControlName="search" placeholder="Caută..." class="form-control"
+                     (input)="updatePagination()"/>
             </div>
           </form>
 
@@ -124,7 +128,7 @@
               </th>
               <th>Suma restantă</th>
               <th>Suma actuală</th>
-              <th>Total suma</th>
+              <th>Total sumă</th>
               <th>Rămas de plată</th>
               <th>Lună</th>
               <th>Status</th>
@@ -146,11 +150,11 @@
               <td>{{payment.month | previousMonth}}</td>
               <td>
                 <div [ngClass]="payment.status.toLowerCase()"
-                     *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month == currentMonthValue">
+                     *ngIf="payment.status.valueOf() == 'UNPAID' && (currentDate | date: 'yyyy-MM') === currentMonthValue">
                   <button class="text-light btn btn-primary"
-                     *ngIf="payment.status.valueOf() === 'UNPAID'"
-                     [disabled]="(currentDate | date: 'yyyy-MM') !== currentMonthValue"
-                     (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)">
+                          *ngIf="payment.status.valueOf() === 'UNPAID'"
+                          [disabled]="(currentDate | date: 'yyyy-MM') !== currentMonthValue"
+                          (click)="openModal(myModal, payment.totalUnpaidAmount, payment.id, payment.child)">
                     Efectuare plată
                   </button>
                 </div>
@@ -166,8 +170,8 @@
                 </div>
 
                 <div [ngClass]="payment.status.toLowerCase()"
-                     *ngIf="payment.status.valueOf() == 'UNPAID' && payment.month != currentMonthValue"
-                     class="fw-normal fs-6">
+                     *ngIf="payment.status.valueOf() == 'UNPAID' && (currentDate | date: 'yyyy-MM') !== currentMonthValue"
+                     class=" fs-6">
                   <span class="text-dark">Restantă în luna următoare</span>
                 </div>
               </td>
@@ -183,13 +187,16 @@
             <button class="btn btn-primary text-light mx-1" (click)="goToPage( 1)" [disabled]="currentPage === 1">
               <i class="bi bi-chevron-double-left"></i>
             </button>
-            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage - 1)" [disabled]="currentPage === 1">
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage - 1)"
+                    [disabled]="currentPage === 1">
               <i class="bi bi-chevron-left"></i>
             </button>
-            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage + 1)" [disabled]="currentPage >= totalPages">
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(currentPage + 1)"
+                    [disabled]="currentPage >= totalPages">
               <i class="bi bi-chevron-right"></i>
             </button>
-            <button class="btn btn-primary text-light mx-1" (click)="goToPage(totalPages)" [disabled]="currentPage >= totalPages">
+            <button class="btn btn-primary text-light mx-1" (click)="goToPage(totalPages)"
+                    [disabled]="currentPage >= totalPages">
               <i class="bi bi-chevron-double-right"></i>
             </button>
           </div>

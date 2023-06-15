@@ -19,14 +19,14 @@ td {
 }
 
 td, th {
-  padding: 20px 10px !important;
+  padding: 20px 6px !important;
 }
 
 @media (max-width: 1400px) {
   td, th {
     padding: 10px 6px !important;
   }
-  
+
   .nameCell {
     padding: 20px !important;
   }
@@ -40,7 +40,7 @@ td, th {
 
 .container {
   @media screen and (min-width: 1200px) {
-    max-width: 1200px ;
+    //max-width: 1200px ;
   }
 }
 

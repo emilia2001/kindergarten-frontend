@@ -213,15 +213,15 @@ export class ParentPaymentListComponent implements OnInit {
       var lastName = jwt_decode(this._accountService.getAuthenticatedToken())['lastName'];
 
       const tableData = [
-        [{text: 'Unitate', bold: true}, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
+        [{text: 'Unitate', bold: true}, 'Grădinița cu Program Prelungit "Dumbrava Minunată" Fălticeni'],
         [{text: 'Cod fiscal (C.I.F)', bold: true}, '18260453'],
-        [{text: 'Sediul', bold: true}, 'str. Tarancutei, nr. 19, Falticeni'],
-        [{text: 'Judetul', bold: true}, 'Suceava'],
+        [{text: 'Sediul', bold: true}, 'str. Țărancuței, nr. 19, Fălticeni'],
+        [{text: 'Județul', bold: true}, 'Suceava'],
       ];
 
       const documentDefinition: TDocumentDefinitions = {
         content: [
-          {text: 'Chitanta', style: 'title'},
+          {text: 'Chitanță', style: 'title'},
           {
             table: {
               headerRows: 1,
@@ -241,7 +241,7 @@ export class ParentPaymentListComponent implements OnInit {
                   {text: new Date().toLocaleDateString(), style: 'columnContent'},
                 ],
                 [
-                  {text: 'Numar chitanta: ', bold: true, style: 'columnHeader'},
+                  {text: 'Număr chitanță: ', bold: true, style: 'columnHeader'},
                   {text: id.toString(), style: 'columnContent'},
                 ],
               ],
@@ -261,12 +261,12 @@ export class ParentPaymentListComponent implements OnInit {
               firstName +
               ' suma de ' +
               parseInt(this.amount?.split(' ')[1]!) +
-              ' RON reprezentand contravaloare prezenta gradinita pentru ' +
+              ' RON reprezentând contravaloare prezență grădiniță pentru ' +
               this.currentChild?.firstName +
               ' ' +
               this.currentChild?.lastName,
           },
-          {text: 'Plata efectuata cu cardul ', bold: true, marginTop: 10}
+          {text: 'Plată efectuată cu cardul ', bold: true, marginTop: 10}
         ],
         styles: {
           title: {
@@ -299,7 +299,7 @@ export class ParentPaymentListComponent implements OnInit {
     if (file) {
       const currentFileUpload = new FileUpload(file);
 
-      this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
+      this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation', file.name).subscribe(
         (downloadURL: string) => {
           const paymentConfirmation: IPaymentConfirmation = {
             id: id, path: downloadURL, paymentId: this.paymentId!
@@ -324,14 +324,6 @@ export class ParentPaymentListComponent implements OnInit {
 
   getConfirmationForPayment(id: number) {
     return this.paymentConfirmationList.getValue().filter(confirmation => confirmation.paymentId == id);
-  }
-
-  getSortingIcon(column: string): string {
-    if (this.sortKey === column) {
-      return this.sortAsc ? 'up' : 'down';
-    }
-
-    return 'up';
   }
 
   closeModal() {

@@ -114,7 +114,7 @@ export class AnnouncementEditComponent implements OnInit {
       if (file) {
         this.currentFileUpload = new FileUpload(file);
 
-        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'announcements').subscribe(
+        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'announcements', file.name).subscribe(
           (downloadURL: string) => {
             this.announcement.picturePath = downloadURL;
             // Perform further operations with the file

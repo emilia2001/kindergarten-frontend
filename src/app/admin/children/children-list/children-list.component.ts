@@ -68,14 +68,6 @@ export class ChildrenListComponent implements OnInit {
     this._router.navigate(['admin/children', child.cnp])
   }
 
-  getSortingIcon(column: string): string {
-    if (this.sortKey === column) {
-      return this.sortAsc ? 'up' : 'down';
-    }
-
-    return 'up';
-  }
-
   updatePaginationAndFiltering() {
     this.currentPage = 1;
 
@@ -84,13 +76,13 @@ export class ChildrenListComponent implements OnInit {
     if (this.currentGroup != 0) {
       filteredChildrenList = this.allChildrenList.filter(child =>{
         return (child.firstName.toLowerCase().includes(searchValue) ||
-          child.lastName.toString().toLowerCase().includes(searchValue)) && child.group.id == this.currentGroup
+          child.lastName.toLowerCase().includes(searchValue)) && child.group.id == this.currentGroup
       }
       );
     } else {
       filteredChildrenList = this.allChildrenList.filter(child =>
         child.firstName.toLowerCase().includes(searchValue) ||
-          child.lastName.toString().toLowerCase().includes(searchValue)
+          child.lastName.toLowerCase().includes(searchValue)
       );
     }
 
@@ -129,10 +121,5 @@ export class ChildrenListComponent implements OnInit {
       this.currentPage = page;
       this.paginatedChildrenList = this.applyPagination(this.childrenList);
     }
-  }
-
-  onSearchChange() {
-    // Whenever the search input value changes, update the pagination and filtering
-    this.updatePaginationAndFiltering();
   }
 }

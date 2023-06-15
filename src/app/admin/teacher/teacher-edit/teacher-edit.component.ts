@@ -159,7 +159,7 @@ export class TeacherEditComponent implements OnInit {
       if (file) {
         this.currentFileUpload = new FileUpload(file);
 
-        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'teachers').subscribe(
+        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'teachers', file.name).subscribe(
           (downloadURL: string) => {
             this.pictureUpload = true;
             this.teacher.picturePath = downloadURL;

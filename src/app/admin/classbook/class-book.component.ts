@@ -200,14 +200,6 @@ export class ClassBookComponent {
     }
   }
 
-  getSortingIcon(column: string): string {
-    if (this.sortKey === column) {
-      return this.sortAsc ? 'up' : 'down';
-    }
-
-    return 'up';
-  }
-
   getCurrentMonthRomanian(): string {
     const currentDate = new Date();
     const year = currentDate.getFullYear();

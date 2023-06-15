@@ -35,14 +35,6 @@ export class TeacherListComponent {
     )
   }
 
-  getSortingIcon(column: string): string {
-    if (this.sortKey === column) {
-      return this.sortAsc ? 'up' : 'down';
-    }
-
-    return 'up';
-  }
-
   updatePagination() {
     this.currentPage = 1;
 

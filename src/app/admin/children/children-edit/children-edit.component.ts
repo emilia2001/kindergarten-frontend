@@ -205,10 +205,12 @@ export class ChildrenEditComponent {
       const file: File | null = this.selectedFiles.item(0);
       this.selectedFiles = undefined;
 
+      console.log(file)
+
       if (file) {
         this.currentFileUpload = new FileUpload(file);
 
-        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'children').subscribe(
+        this._firebaseService.pushFileToStorage(this.currentFileUpload, 'children', file.name).subscribe(
           (downloadURL: string) => {
             this.child.picturePath = downloadURL;
           },

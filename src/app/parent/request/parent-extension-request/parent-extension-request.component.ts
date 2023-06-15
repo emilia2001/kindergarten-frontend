@@ -159,7 +159,7 @@ export class ParentExtensionRequestComponent {
       if (file) {
         const currentFileUpload = new FileUpload(file);
 
-        this._firebaseService.pushFileToStorage(currentFileUpload, 'children').subscribe(
+        this._firebaseService.pushFileToStorage(currentFileUpload, 'children', this.request.child.cnp + file.name).subscribe(
           (downloadURL: string) => {
             this.request.child.picturePath = downloadURL;
           },
@@ -179,7 +179,7 @@ export class ParentExtensionRequestComponent {
       if (file) {
         const currentFileUpload = new FileUpload(file);
 
-        this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration').subscribe(
+        this._firebaseService.pushFileToStorage(currentFileUpload, 'requests/registration', this.request.child.cnp + file.name).subscribe(
           (downloadURL: string) => {
             this.request.applicationForm = downloadURL;
           },

@@ -18,6 +18,7 @@ import {PaymentConfirmationService} from "../../services/payment-confirmation/pa
 import {FirebaseService} from "../../services/firebase/firebase.service";
 import {FileUpload} from "../../shared/models/FileUpload";
 import {ITeacher} from "../../shared/models/ITeacher";
+import {payment} from "../../shared/utils/endpoints";
 
 
 @Component({
@@ -34,6 +35,7 @@ export class AdminPaymentListComponent implements OnInit {
   showErrorAlert: any;
   groupList: IGroup[] = [];
   paymentList: BehaviorSubject<IPayment[]> = new BehaviorSubject<IPayment[]>([]);
+  allPaymentList: IPayment[] = [];
   paymentConfirmationList: BehaviorSubject<IPaymentConfirmation[]> = new BehaviorSubject<IPaymentConfirmation[]>([]);
   searchForm = new FormGroup({
     search: new FormControl('')
@@ -107,11 +109,18 @@ export class AdminPaymentListComponent implements OnInit {
   }
 
   handleMonthChange($event: any) {
-    this.currentMonth.next($event.target.value)
+    this.currentMonth.next($event.target.value);
+
   }
 
   handleGroupChange($event: any) {
     this.selectedGroupId = $event.target.value;
+
+    if ($event.target.value == 0)
+      this.paymentList.next(this.allPaymentList);
+    else
+      this.paymentList.next(this.allPaymentList.filter(payment => payment.child.group.id == $event.target.value));
+    console.log(this.paymentList.getValue())
     this.updatePagination()
   }
 
@@ -119,7 +128,25 @@ export class AdminPaymentListComponent implements OnInit {
     this.isLoading = true;
     this._paymentService.getAllForMonth(month).subscribe(data => {
       this.isLoading = false;
+      if (this.sortAsc) {
+        data.sort((a, b) => {
+          if (a.child.lastName > b.child.lastName)
+            return 1;
+          if (a.child.lastName == b.child.lastName)
+            return a.child.firstName > b.child.firstName ? 1 : -1;
+          return -1;
+        })
+      } else {
+        data.sort((a, b) => {
+          if (a.child.lastName < b.child.lastName)
+            return 1;
+          if (a.child.lastName == b.child.lastName)
+            return a.child.firstName < b.child.firstName ? 1 : -1;
+          return -1;
+        })
+      }
       this.paymentList.next(data)
+      this.allPaymentList = data;
       this.updatePagination();
     });
   }
@@ -156,6 +183,7 @@ export class AdminPaymentListComponent implements OnInit {
           return request;
         });
         this.paymentList.next(newList);
+        this.allPaymentList = newList;
         this.isPaymentLoading = false;
         this.status = 'success';
         this.generatePDF();
@@ -168,7 +196,6 @@ export class AdminPaymentListComponent implements OnInit {
     });
   }
 
-
   generatePDF() {
     let id: number;
     this._paymentConfirmationService.getNextId().subscribe(data => {
@@ -176,15 +203,15 @@ export class AdminPaymentListComponent implements OnInit {
       var firstName = this.paymentForm.value.firstName;
       var lastName = this.paymentForm.value.lastName;
       const tableData = [
-        [{text: 'Unitate', bold: true}, 'Gradinita cu Program Prelungit "Dumbrava Minunata" Falticeni'],
+        [{text: 'Unitate', bold: true}, 'Grădinița cu Program Prelungit "Dumbrava Minunată" Fălticeni'],
         [{text: 'Cod fiscal (C.I.F)', bold: true}, '18260453'],
-        [{text: 'Sediul', bold: true}, 'str. Tarancutei, nr. 19, Falticeni'],
-        [{text: 'Judetul', bold: true}, 'Suceava'],
+        [{text: 'Sediul', bold: true}, 'str. Țărancuței, nr. 19, Fălticeni'],
+        [{text: 'Județul', bold: true}, 'Suceava'],
       ];
 
       const documentDefinition: TDocumentDefinitions = {
         content: [
-          {text: 'Chitanta', style: 'title'},
+          {text: 'Chitanță', style: 'title'},
           {
             table: {
               headerRows: 1,
@@ -204,7 +231,7 @@ export class AdminPaymentListComponent implements OnInit {
                   {text: new Date().toLocaleDateString(), style: 'columnContent'},
                 ],
                 [
-                  {text: 'Numar chitanta: ', bold: true, style: 'columnHeader'},
+                  {text: 'Număr chitanță: ', bold: true, style: 'columnHeader'},
                   {text: id.toString(), style: 'columnContent'},
                 ],
               ],
@@ -224,12 +251,12 @@ export class AdminPaymentListComponent implements OnInit {
               firstName +
               ' suma de ' +
               parseInt(this.amount?.split(' ')[1]!) +
-              ' RON reprezentand contravaloare prezenta gradinita pentru ' +
+              ' RON reprezentând contravaloare prezență grădiniță pentru ' +
               this.currentChild?.firstName +
               ' ' +
               this.currentChild?.lastName,
           },
-          {text: 'Plata efectuata la sediul gradinitei ', bold: true, marginTop: 10}
+          {text: 'Plată efectuată la sediul grădiniței ', bold: true, marginTop: 10}
         ],
         styles: {
           title: {
@@ -261,7 +288,7 @@ export class AdminPaymentListComponent implements OnInit {
     if (file) {
       const currentFileUpload = new FileUpload(file);
 
-      this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation').subscribe(
+      this._firebaseService.pushFileToStorage(currentFileUpload, 'payment-confirmation', file.name).subscribe(
         (downloadURL: string) => {
           const paymentConfirmation: IPaymentConfirmation = {
             id: id, path: downloadURL, paymentId: this.paymentId!
@@ -332,26 +359,18 @@ export class AdminPaymentListComponent implements OnInit {
     }
   }
 
-  getSortingIcon(column: string): string {
-    if (this.sortKey === column) {
-      return this.sortAsc ? 'up' : 'down';
-    }
-
-    return 'up';
-  }
-
   updatePagination() {
     this.currentPage = 1;
 
-    let newPaymentsList: IPayment[] = this.paymentList.getValue();
+    let newPaymentsList: IPayment[];
     const searchValue = this.searchForm.get('search')!.value!.toLowerCase();
     if (this.selectedGroupId == 0)
-      newPaymentsList = this.paymentList.getValue().filter(payment => (
+      newPaymentsList = this.allPaymentList.filter(payment => (
         payment.child.lastName.toLowerCase().includes(searchValue) ||
           payment.child.firstName.toLowerCase().includes(searchValue)
       ))
     else
-      newPaymentsList = this.paymentList.getValue().filter(payment => (
+      newPaymentsList = this.allPaymentList.filter(payment => (
         payment.child.lastName.toLowerCase().includes(searchValue) ||
         payment.child.firstName.toLowerCase().includes(searchValue)
       ) && payment.child.group.id == this.selectedGroupId)

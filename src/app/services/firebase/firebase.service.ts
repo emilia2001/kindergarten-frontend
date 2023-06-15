@@ -15,8 +15,8 @@ export class FirebaseService {
     private _firebaseStorage: AngularFireStorage)
   { }
 
-  pushFileToStorage(fileUpload: FileUpload, path: string): Observable<string> {
-    const filePath = `${this.basePath}/${path}/${fileUpload.file.name}`;
+  pushFileToStorage(fileUpload: FileUpload, path: string, name: string): Observable<string> {
+    const filePath = `${this.basePath}/${path}/${name}`;
     const storageRef = this._firebaseStorage.ref(filePath);
     const uploadTask = this._firebaseStorage.upload(filePath, fileUpload.file);
 
