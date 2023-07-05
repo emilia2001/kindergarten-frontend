@@ -137,7 +137,7 @@ export class ClassBookComponent {
     } else {
       const oldAttendances = this.totalAttendanceChild.getValue().get(childCnp)!;
       this.totalAttendanceChild.getValue().set(childCnp, oldAttendances - 1);
-      this.currentAttendances = this.currentAttendances.filter(attendance => attendance.childCnp != childCnp && attendance.date != this.formatDate(newDate));
+      this.currentAttendances = this.currentAttendances.filter(attendance => attendance.childCnp != childCnp);
     }
   }
 

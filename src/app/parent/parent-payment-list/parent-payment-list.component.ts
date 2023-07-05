@@ -122,6 +122,7 @@ export class ParentPaymentListComponent implements OnInit {
     this.amount = totalAmount.toString();
     this.currentAmount = totalAmount.toString();
     this.paymentId = id;
+    this.errors = ''
     if (this.myModal) {
       this.modalRef = this.modalService.open(this.myModal);
 
